@@ -177,7 +177,7 @@ namespace Jil.Common
 
         public static Dictionary<PropertyInfo, List<FieldInfo>> PropertyFieldUsage(Type t)
         {
-#if NETCORE
+#if NETSTANDARD1_6
             return new Dictionary<PropertyInfo, List<FieldInfo>>();
 #else
             var ret = new Dictionary<PropertyInfo, List<FieldInfo>>();
@@ -216,7 +216,7 @@ namespace Jil.Common
         
         public static List<Tuple<OpCode, int?, long?, double?, FieldInfo>> Decompile(MethodBase mtd)
         {
-#if NETCORE
+#if NETSTANDARD1_6
             return null;
 #else
             var mtdBody = mtd.GetMethodBody();
@@ -253,7 +253,7 @@ namespace Jil.Common
 
         private static List<int> _GetFieldHandles(MethodInfo mtd)
         {
-#if NETCORE
+#if NETSTANDARD1_6
             return new List<int>();
 #else
             var mtdBody = mtd.GetMethodBody();
@@ -533,7 +533,7 @@ namespace Jil.Common
                 return GetAnonymousNameToConstructorMap_Decompile(objType, cons, consInstrs);
             }
 
-            // If we're in a case where the decompiler isn't available (right now, that means you NETCORE)
+            // If we're in a case where the decompiler isn't available (right now, that means you NETSTANDARD1_6)
             //   then we fall back to guessing.
             // It's possible to fail here, which sucks, but is better than just not deserializing
             //   anonymous types
@@ -625,7 +625,7 @@ namespace Jil.Common
 
             if (remainingProps.Count > 0)
             {
-                throw new ConstructionException("Due to a limitation in .netcore - could not guess property <-> parameter mapping necessary to deserialize an anonymous type");
+                throw new ConstructionException("Due to a limitation in .NETSTANDARD1_6 - could not guess property <-> parameter mapping necessary to deserialize an anonymous type");
             }
 
             var ret = new Dictionary<string, Tuple<Type, int>>();

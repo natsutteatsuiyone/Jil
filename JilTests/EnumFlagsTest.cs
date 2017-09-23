@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Jil;
 using JilTests.Hashbrowns.Shared.Enums;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Xunit;
 
 namespace JilTests
 {
@@ -25,20 +26,20 @@ namespace JilTests
         }
     }
 
-    [TestClass]
+    
     public class EnumFlagsTest
     {
-        [TestMethod]
+        [Fact]
         public void TestEnumFlagsSerialize()
         {
             APIRoles roles = APIRoles.AllRoles;
 
             string data = JSON.Serialize(roles);
 
-            Assert.AreEqual(data, "\"Trial,Tier1,Tier2,Tier3,AllRoles\"");
+            Assert.Equal("\"Trial,Tier1,Tier2,Tier3,AllRoles\"", data);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestEnumFlagsDeserialize()
         {
             APIRoles roles;
@@ -47,10 +48,10 @@ namespace JilTests
 
             roles = JSON.Deserialize<APIRoles>(data);
 
-            Assert.AreEqual(roles, APIRoles.AllRoles);
+            Assert.Equal(APIRoles.AllRoles, roles);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestEnumFlagsDeserialize2()
         {
             APIRoles roles;
@@ -59,10 +60,10 @@ namespace JilTests
 
             roles = JSON.Deserialize<APIRoles>(data);
 
-            Assert.AreEqual(roles, APIRoles.AllRoles);
+            Assert.Equal(APIRoles.AllRoles, roles);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestEnumFlagsDeserialize3()
         {
             APIRoles roles;
@@ -71,7 +72,7 @@ namespace JilTests
 
             roles = JSON.Deserialize<APIRoles>(data);
 
-            Assert.AreEqual(roles, APIRoles.Tier2);
+            Assert.Equal(APIRoles.Tier2, roles);
         }
     }
 }

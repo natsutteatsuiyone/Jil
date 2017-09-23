@@ -1,5 +1,5 @@
 ﻿using Jil;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace JilTests
 {
@@ -32,7 +33,7 @@ namespace JilTests
         int C { get; set; }
     }
 
-    [TestClass]
+    
     public class DeserializeTests
     {
 #pragma warning disable 0649
@@ -43,14 +44,14 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void ValueTypes()
         {
             using (var str = new StringReader("{\"A\":\"hello\\u0000world\", \"B\":12345}"))
             {
                 var res = JSON.Deserialize<_ValueTypes>(str);
-                Assert.AreEqual("hello\0world", res.A);
-                Assert.AreEqual(12345, res.B);
+                Assert.Equal("hello\0world", res.A);
+                Assert.Equal(12345, res.B);
             }
         }
 
@@ -62,14 +63,14 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void LargeCharBuffer()
         {
             using (var str = new StringReader("{\"Date\": \"2013-12-30T04:17:21Z\", \"String\": \"hello world\"}"))
             {
                 var res = JSON.Deserialize<_LargeCharBuffer>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(2013, 12, 30, 4, 17, 21, DateTimeKind.Utc), res.Date);
-                Assert.AreEqual("hello world", res.String);
+                Assert.Equal(new DateTime(2013, 12, 30, 4, 17, 21, DateTimeKind.Utc), res.Date);
+                Assert.Equal("hello world", res.String);
             }
         }
 
@@ -81,27 +82,27 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void SmallCharBuffer()
         {
             using (var str = new StringReader("{\"Date\": 1388377041, \"String\": \"hello world\"}"))
             {
                 var res = JSON.Deserialize<_SmallCharBuffer>(str, Options.SecondsSinceUnixEpoch);
-                Assert.AreEqual(new DateTime(2013, 12, 30, 4, 17, 21, DateTimeKind.Utc), res.Date);
-                Assert.AreEqual("hello world", res.String);
+                Assert.Equal(new DateTime(2013, 12, 30, 4, 17, 21, DateTimeKind.Utc), res.Date);
+                Assert.Equal("hello world", res.String);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void IDictionaryIntToInt()
         {
             using (var str = new StringReader("{\"1\":2, \"3\":4, \"5\": 6}"))
             {
                 var res = JSON.Deserialize<IDictionary<int, int>>(str);
-                Assert.AreEqual(3, res.Count);
-                Assert.AreEqual(2, res[1]);
-                Assert.AreEqual(4, res[3]);
-                Assert.AreEqual(6, res[5]);
+                Assert.Equal(3, res.Count);
+                Assert.Equal(2, res[1]);
+                Assert.Equal(4, res[3]);
+                Assert.Equal(6, res[5]);
             }
         }
 
@@ -153,500 +154,500 @@ namespace JilTests
             B
         }
 
-        [TestMethod]
+        [Fact]
         public void DictionaryEnumKeys()
         {
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys1, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys1.A]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys1.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys1, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys1.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys1.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys1.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys1.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys2, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys2.A]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys2.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys2, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys2.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys2.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys2.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys2.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys3, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys3.A]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys3.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys3, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys3.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys3.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys3.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys3.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys4, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys4.A]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys4.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys4, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys4.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys4.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys4.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys4.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys5, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys5.A]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys5.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys5, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys5.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys5.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys5.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys5.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys6, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys6.A]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys6.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys6, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys6.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys6.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys6.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys6.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys7, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys7.A]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys7.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys7, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys7.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys7.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys7.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys7.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys8, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys8.A]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys8.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<_DictionaryEnumKeys8, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys8.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys8.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys8.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys8.B]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void IReadOnlyDictionaryEnumKeys()
         {
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys1, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys1.A]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys1.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys1, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys1.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys1.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys1.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys1.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys2, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys2.A]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys2.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys2, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys2.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys2.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys2.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys2.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys3, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys3.A]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys3.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys3, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys3.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys3.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys3.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys3.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys4, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys4.A]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys4.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys4, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys4.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys4.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys4.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys4.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys5, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys5.A]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys5.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys5, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys5.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys5.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys5.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys5.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys6, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys6.A]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys6.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys6, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys6.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys6.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys6.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys6.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys7, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys7.A]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys7.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys7, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys7.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys7.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys7.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys7.B]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys8, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys8.A]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys8.A]);
             }
 
             using (var str = new StringReader("{\"A\":\"hello world\",\"B\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<_DictionaryEnumKeys8, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[_DictionaryEnumKeys8.A]);
-                Assert.AreEqual("fizz buzz", res[_DictionaryEnumKeys8.B]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[_DictionaryEnumKeys8.A]);
+                Assert.Equal("fizz buzz", res[_DictionaryEnumKeys8.B]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DictionaryNumberKeys()
         {
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<byte, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"2\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<byte, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[2]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[2]);
             }
 
             using (var str = new StringReader("{\"-1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<sbyte, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[-1]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[-1]);
             }
 
             using (var str = new StringReader("{\"-1\":\"hello world\",\"2\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<sbyte, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[-1]);
-                Assert.AreEqual("fizz buzz", res[2]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[-1]);
+                Assert.Equal("fizz buzz", res[2]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<short, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"-22\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<short, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[-22]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[-22]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<ushort, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"234\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<ushort, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[234]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[234]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<int, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"2\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<int, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[2]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[2]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<uint, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"2456789\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<uint, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[2456789]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[2456789]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<long, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"-1234567890\":\"hello world\",\"2\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<long, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[-1234567890]);
-                Assert.AreEqual("fizz buzz", res[2]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[-1234567890]);
+                Assert.Equal("fizz buzz", res[2]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<ulong, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Single(res);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"" + ulong.MaxValue + "\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<Dictionary<ulong, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[ulong.MaxValue]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[ulong.MaxValue]);
             }
         }
 
 
-        [TestMethod]
+        [Fact]
         public void IReadOnlyDictionaryNumberKeys()
         {
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<byte, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"2\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<byte, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[2]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[2]);
             }
 
             using (var str = new StringReader("{\"-1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<sbyte, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[-1]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[-1]);
             }
 
             using (var str = new StringReader("{\"-1\":\"hello world\",\"2\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<sbyte, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[-1]);
-                Assert.AreEqual("fizz buzz", res[2]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[-1]);
+                Assert.Equal("fizz buzz", res[2]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<short, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"-22\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<short, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[-22]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[-22]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<ushort, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"234\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<ushort, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[234]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[234]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<int, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"2\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<int, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[2]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[2]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<uint, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"2456789\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<uint, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[2456789]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[2456789]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<long, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"-1234567890\":\"hello world\",\"2\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<long, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[-1234567890]);
-                Assert.AreEqual("fizz buzz", res[2]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[-1234567890]);
+                Assert.Equal("fizz buzz", res[2]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<ulong, string>>(str);
-                Assert.AreEqual(1, res.Count);
-                Assert.AreEqual("hello world", res[1]);
+                Assert.Equal(1, res.Count);
+                Assert.Equal("hello world", res[1]);
             }
 
             using (var str = new StringReader("{\"1\":\"hello world\",\"" + ulong.MaxValue + "\":\"fizz buzz\"}"))
             {
                 var res = JSON.Deserialize<IReadOnlyDictionary<ulong, string>>(str);
-                Assert.AreEqual(2, res.Count);
-                Assert.AreEqual("hello world", res[1]);
-                Assert.AreEqual("fizz buzz", res[ulong.MaxValue]);
+                Assert.Equal(2, res.Count);
+                Assert.Equal("hello world", res[1]);
+                Assert.Equal("fizz buzz", res[ulong.MaxValue]);
             }
         }
 
@@ -658,35 +659,35 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void IDictionaries()
         {
             using (var str = new StringReader("{\"StringToBytes\":{\"a\":-1,\"b\":127,\"c\":8},\"StringToStringToBytes\":{\"foo\":{\"bar\":123}, \"fizz\":{\"buzz\":456, \"bar\":789}}}"))
             {
                 var res = JSON.Deserialize<_IDictionaries>(str);
-                Assert.IsNotNull(res);
+                Assert.NotNull(res);
 
-                Assert.IsNotNull(res.StringToBytes);
-                Assert.AreEqual(3, res.StringToBytes.Count);
-                Assert.IsTrue(res.StringToBytes.ContainsKey("a"));
-                Assert.AreEqual((sbyte)-1, res.StringToBytes["a"]);
-                Assert.IsTrue(res.StringToBytes.ContainsKey("b"));
-                Assert.AreEqual((sbyte)127, res.StringToBytes["b"]);
-                Assert.IsTrue(res.StringToBytes.ContainsKey("c"));
-                Assert.AreEqual((sbyte)8, res.StringToBytes["c"]);
+                Assert.NotNull(res.StringToBytes);
+                Assert.Equal(3, res.StringToBytes.Count);
+                Assert.True(res.StringToBytes.ContainsKey("a"));
+                Assert.Equal((sbyte)-1, res.StringToBytes["a"]);
+                Assert.True(res.StringToBytes.ContainsKey("b"));
+                Assert.Equal((sbyte)127, res.StringToBytes["b"]);
+                Assert.True(res.StringToBytes.ContainsKey("c"));
+                Assert.Equal((sbyte)8, res.StringToBytes["c"]);
 
-                Assert.IsNotNull(res.StringToStringToBytes);
-                Assert.AreEqual(2, res.StringToStringToBytes.Count);
-                Assert.IsTrue(res.StringToStringToBytes.ContainsKey("foo"));
-                Assert.AreEqual(1, res.StringToStringToBytes["foo"].Count);
-                Assert.IsTrue(res.StringToStringToBytes["foo"].ContainsKey("bar"));
-                Assert.AreEqual(123, res.StringToStringToBytes["foo"]["bar"]);
-                Assert.IsTrue(res.StringToStringToBytes.ContainsKey("fizz"));
-                Assert.AreEqual(2, res.StringToStringToBytes["fizz"].Count);
-                Assert.IsTrue(res.StringToStringToBytes["fizz"].ContainsKey("buzz"));
-                Assert.AreEqual(456, res.StringToStringToBytes["fizz"]["buzz"]);
-                Assert.IsTrue(res.StringToStringToBytes["fizz"].ContainsKey("bar"));
-                Assert.AreEqual(789, res.StringToStringToBytes["fizz"]["bar"]);
+                Assert.NotNull(res.StringToStringToBytes);
+                Assert.Equal(2, res.StringToStringToBytes.Count);
+                Assert.True(res.StringToStringToBytes.ContainsKey("foo"));
+                Assert.Equal(1, res.StringToStringToBytes["foo"].Count);
+                Assert.True(res.StringToStringToBytes["foo"].ContainsKey("bar"));
+                Assert.Equal(123, res.StringToStringToBytes["foo"]["bar"]);
+                Assert.True(res.StringToStringToBytes.ContainsKey("fizz"));
+                Assert.Equal(2, res.StringToStringToBytes["fizz"].Count);
+                Assert.True(res.StringToStringToBytes["fizz"].ContainsKey("buzz"));
+                Assert.Equal(456, res.StringToStringToBytes["fizz"]["buzz"]);
+                Assert.True(res.StringToStringToBytes["fizz"].ContainsKey("bar"));
+                Assert.Equal(789, res.StringToStringToBytes["fizz"]["bar"]);
             }
         }
 
@@ -698,35 +699,35 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void IReadOnlyDictionaries()
         {
             using (var str = new StringReader("{\"StringToBytes\":{\"a\":-1,\"b\":127,\"c\":8},\"StringToStringToBytes\":{\"foo\":{\"bar\":123}, \"fizz\":{\"buzz\":456, \"bar\":789}}}"))
             {
                 var res = JSON.Deserialize<_IReadOnlyDictionaries>(str);
-                Assert.IsNotNull(res);
+                Assert.NotNull(res);
 
-                Assert.IsNotNull(res.StringToBytes);
-                Assert.AreEqual(3, res.StringToBytes.Count);
-                Assert.IsTrue(res.StringToBytes.ContainsKey("a"));
-                Assert.AreEqual((sbyte)-1, res.StringToBytes["a"]);
-                Assert.IsTrue(res.StringToBytes.ContainsKey("b"));
-                Assert.AreEqual((sbyte)127, res.StringToBytes["b"]);
-                Assert.IsTrue(res.StringToBytes.ContainsKey("c"));
-                Assert.AreEqual((sbyte)8, res.StringToBytes["c"]);
+                Assert.NotNull(res.StringToBytes);
+                Assert.Equal(3, res.StringToBytes.Count);
+                Assert.True(res.StringToBytes.ContainsKey("a"));
+                Assert.Equal((sbyte)-1, res.StringToBytes["a"]);
+                Assert.True(res.StringToBytes.ContainsKey("b"));
+                Assert.Equal((sbyte)127, res.StringToBytes["b"]);
+                Assert.True(res.StringToBytes.ContainsKey("c"));
+                Assert.Equal((sbyte)8, res.StringToBytes["c"]);
 
-                Assert.IsNotNull(res.StringToStringToBytes);
-                Assert.AreEqual(2, res.StringToStringToBytes.Count);
-                Assert.IsTrue(res.StringToStringToBytes.ContainsKey("foo"));
-                Assert.AreEqual(1, res.StringToStringToBytes["foo"].Count);
-                Assert.IsTrue(res.StringToStringToBytes["foo"].ContainsKey("bar"));
-                Assert.AreEqual(123, res.StringToStringToBytes["foo"]["bar"]);
-                Assert.IsTrue(res.StringToStringToBytes.ContainsKey("fizz"));
-                Assert.AreEqual(2, res.StringToStringToBytes["fizz"].Count);
-                Assert.IsTrue(res.StringToStringToBytes["fizz"].ContainsKey("buzz"));
-                Assert.AreEqual(456, res.StringToStringToBytes["fizz"]["buzz"]);
-                Assert.IsTrue(res.StringToStringToBytes["fizz"].ContainsKey("bar"));
-                Assert.AreEqual(789, res.StringToStringToBytes["fizz"]["bar"]);
+                Assert.NotNull(res.StringToStringToBytes);
+                Assert.Equal(2, res.StringToStringToBytes.Count);
+                Assert.True(res.StringToStringToBytes.ContainsKey("foo"));
+                Assert.Equal(1, res.StringToStringToBytes["foo"].Count);
+                Assert.True(res.StringToStringToBytes["foo"].ContainsKey("bar"));
+                Assert.Equal(123, res.StringToStringToBytes["foo"]["bar"]);
+                Assert.True(res.StringToStringToBytes.ContainsKey("fizz"));
+                Assert.Equal(2, res.StringToStringToBytes["fizz"].Count);
+                Assert.True(res.StringToStringToBytes["fizz"].ContainsKey("buzz"));
+                Assert.Equal(456, res.StringToStringToBytes["fizz"]["buzz"]);
+                Assert.True(res.StringToStringToBytes["fizz"].ContainsKey("bar"));
+                Assert.Equal(789, res.StringToStringToBytes["fizz"]["bar"]);
             }
         }
 
@@ -738,35 +739,35 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void ILists()
         {
             using (var str = new StringReader("{\"Bytes\":[255,0,128],\"IntsOfInts\":[[1,2,3],[4,5,6],[7,8,9]]}"))
             {
                 var res = JSON.Deserialize<_ILists>(str);
-                Assert.IsNotNull(res);
+                Assert.NotNull(res);
 
-                Assert.IsNotNull(res.Bytes);
-                Assert.AreEqual(3, res.Bytes.Count);
-                Assert.AreEqual(255, res.Bytes[0]);
-                Assert.AreEqual(0, res.Bytes[1]);
-                Assert.AreEqual(128, res.Bytes[2]);
+                Assert.NotNull(res.Bytes);
+                Assert.Equal(3, res.Bytes.Count);
+                Assert.Equal(255, res.Bytes[0]);
+                Assert.Equal(0, res.Bytes[1]);
+                Assert.Equal(128, res.Bytes[2]);
 
-                Assert.IsNotNull(res.IntsOfInts);
-                Assert.AreEqual(3, res.IntsOfInts.Count);
-                Assert.IsNotNull(res.IntsOfInts[0]);
-                Assert.AreEqual(3, res.IntsOfInts[0].Count);
-                Assert.AreEqual(1, res.IntsOfInts[0][0]);
-                Assert.AreEqual(2, res.IntsOfInts[0][1]);
-                Assert.AreEqual(3, res.IntsOfInts[0][2]);
-                Assert.AreEqual(3, res.IntsOfInts[1].Count);
-                Assert.AreEqual(4, res.IntsOfInts[1][0]);
-                Assert.AreEqual(5, res.IntsOfInts[1][1]);
-                Assert.AreEqual(6, res.IntsOfInts[1][2]);
-                Assert.AreEqual(3, res.IntsOfInts[2].Count);
-                Assert.AreEqual(7, res.IntsOfInts[2][0]);
-                Assert.AreEqual(8, res.IntsOfInts[2][1]);
-                Assert.AreEqual(9, res.IntsOfInts[2][2]);
+                Assert.NotNull(res.IntsOfInts);
+                Assert.Equal(3, res.IntsOfInts.Count);
+                Assert.NotNull(res.IntsOfInts[0]);
+                Assert.Equal(3, res.IntsOfInts[0].Count);
+                Assert.Equal(1, res.IntsOfInts[0][0]);
+                Assert.Equal(2, res.IntsOfInts[0][1]);
+                Assert.Equal(3, res.IntsOfInts[0][2]);
+                Assert.Equal(3, res.IntsOfInts[1].Count);
+                Assert.Equal(4, res.IntsOfInts[1][0]);
+                Assert.Equal(5, res.IntsOfInts[1][1]);
+                Assert.Equal(6, res.IntsOfInts[1][2]);
+                Assert.Equal(3, res.IntsOfInts[2].Count);
+                Assert.Equal(7, res.IntsOfInts[2][0]);
+                Assert.Equal(8, res.IntsOfInts[2][1]);
+                Assert.Equal(9, res.IntsOfInts[2][2]);
             }
         }
 
@@ -778,35 +779,35 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void IReadOnlyLists()
         {
             using (var str = new StringReader("{\"Bytes\":[255,0,128],\"IntsOfInts\":[[1,2,3],[4,5,6],[7,8,9]]}"))
             {
                 var res = JSON.Deserialize<_IReadOnlyLists>(str);
-                Assert.IsNotNull(res);
+                Assert.NotNull(res);
 
-                Assert.IsNotNull(res.Bytes);
-                Assert.AreEqual(3, res.Bytes.Count);
-                Assert.AreEqual(255, res.Bytes[0]);
-                Assert.AreEqual(0, res.Bytes[1]);
-                Assert.AreEqual(128, res.Bytes[2]);
+                Assert.NotNull(res.Bytes);
+                Assert.Equal(3, res.Bytes.Count);
+                Assert.Equal(255, res.Bytes[0]);
+                Assert.Equal(0, res.Bytes[1]);
+                Assert.Equal(128, res.Bytes[2]);
 
-                Assert.IsNotNull(res.IntsOfInts);
-                Assert.AreEqual(3, res.IntsOfInts.Count);
-                Assert.IsNotNull(res.IntsOfInts[0]);
-                Assert.AreEqual(3, res.IntsOfInts[0].Count);
-                Assert.AreEqual(1, res.IntsOfInts[0][0]);
-                Assert.AreEqual(2, res.IntsOfInts[0][1]);
-                Assert.AreEqual(3, res.IntsOfInts[0][2]);
-                Assert.AreEqual(3, res.IntsOfInts[1].Count);
-                Assert.AreEqual(4, res.IntsOfInts[1][0]);
-                Assert.AreEqual(5, res.IntsOfInts[1][1]);
-                Assert.AreEqual(6, res.IntsOfInts[1][2]);
-                Assert.AreEqual(3, res.IntsOfInts[2].Count);
-                Assert.AreEqual(7, res.IntsOfInts[2][0]);
-                Assert.AreEqual(8, res.IntsOfInts[2][1]);
-                Assert.AreEqual(9, res.IntsOfInts[2][2]);
+                Assert.NotNull(res.IntsOfInts);
+                Assert.Equal(3, res.IntsOfInts.Count);
+                Assert.NotNull(res.IntsOfInts[0]);
+                Assert.Equal(3, res.IntsOfInts[0].Count);
+                Assert.Equal(1, res.IntsOfInts[0][0]);
+                Assert.Equal(2, res.IntsOfInts[0][1]);
+                Assert.Equal(3, res.IntsOfInts[0][2]);
+                Assert.Equal(3, res.IntsOfInts[1].Count);
+                Assert.Equal(4, res.IntsOfInts[1][0]);
+                Assert.Equal(5, res.IntsOfInts[1][1]);
+                Assert.Equal(6, res.IntsOfInts[1][2]);
+                Assert.Equal(3, res.IntsOfInts[2].Count);
+                Assert.Equal(7, res.IntsOfInts[2][0]);
+                Assert.Equal(8, res.IntsOfInts[2][1]);
+                Assert.Equal(9, res.IntsOfInts[2][2]);
             }
         }
 
@@ -819,32 +820,32 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void ISets()
         {
             using (var str = new StringReader("{\"IntSet\":[17,23],\"StringHashSet\":[\"Hello\",\"Hash\",\"Set\"],\"IntSortedSet\":[1,2,3]}"))
             {
                 var res = JSON.Deserialize<_ISets>(str);
-                Assert.IsNotNull(res);
+                Assert.NotNull(res);
 
 
-                Assert.IsNotNull(res.IntSet);
-                Assert.IsInstanceOfType(res.IntSet, typeof(HashSet<int>));
-                Assert.AreEqual(2, res.IntSet.Count);
-                Assert.IsTrue(res.IntSet.Contains(17));
-                Assert.IsTrue(res.IntSet.Contains(23));
+                Assert.NotNull(res.IntSet);
+                Assert.IsType<HashSet<int>>(res.IntSet);
+                Assert.Equal(2, res.IntSet.Count);
+                Assert.True(res.IntSet.Contains(17));
+                Assert.True(res.IntSet.Contains(23));
 
-                Assert.IsNotNull(res.StringHashSet);
-                Assert.AreEqual(3, res.StringHashSet.Count);
-                Assert.IsTrue(res.StringHashSet.Contains("Hello"));
-                Assert.IsTrue(res.StringHashSet.Contains("Hash"));
-                Assert.IsTrue(res.StringHashSet.Contains("Set"));
+                Assert.NotNull(res.StringHashSet);
+                Assert.Equal(3, res.StringHashSet.Count);
+                Assert.Contains("Hello", res.StringHashSet);
+                Assert.Contains("Hash", res.StringHashSet);
+                Assert.Contains("Set", res.StringHashSet);
 
-                Assert.IsNotNull(res.IntSortedSet);
-                Assert.AreEqual(3, res.IntSortedSet.Count);
-                Assert.IsTrue(res.IntSortedSet.Contains(1));
-                Assert.IsTrue(res.IntSortedSet.Contains(2));
-                Assert.IsTrue(res.IntSortedSet.Contains(3));
+                Assert.NotNull(res.IntSortedSet);
+                Assert.Equal(3, res.IntSortedSet.Count);
+                Assert.Contains(1, res.IntSortedSet);
+                Assert.Contains(2, res.IntSortedSet);
+                Assert.Contains(3, res.IntSortedSet);
             }
         }
 
@@ -856,7 +857,7 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void InfoFailure()
         {
             {
@@ -864,9 +865,9 @@ namespace JilTests
                 using (var str = new StringReader(data))
                 {
                     var res = JSON.Deserialize<_InfoFailure>(str, Options.ISO8601);
-                    Assert.IsNotNull(res);
-                    Assert.AreEqual(0, res.questions_per_minute);
-                    Assert.AreEqual(null, res.answers_per_minute);
+                    Assert.NotNull(res);
+                    Assert.Equal(0, res.questions_per_minute);
+                    Assert.Null(res.answers_per_minute);
                 }
             }
 
@@ -875,583 +876,583 @@ namespace JilTests
                 using (var str = new StringReader(data))
                 {
                     var res = JSON.Deserialize<_InfoFailure>(str, Options.ISO8601);
-                    Assert.IsNotNull(res);
-                    Assert.AreEqual(0, res.questions_per_minute);
+                    Assert.NotNull(res);
+                    Assert.Equal(0, res.questions_per_minute);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Zeros()
         {
             using (var str = new StringReader("0"))
             {
                 var ret = JSON.Deserialize<int>(str);
-                Assert.AreEqual(0, ret);
+                Assert.Equal(0, ret);
             }
 
             using (var str = new StringReader("0"))
             {
                 var ret = JSON.Deserialize<float>(str);
-                Assert.AreEqual(0f, ret);
+                Assert.Equal(0f, ret);
             }
 
             using (var str = new StringReader("0"))
             {
                 var ret = JSON.Deserialize<double>(str);
-                Assert.AreEqual(0.0, ret);
+                Assert.Equal(0.0, ret);
             }
 
             using (var str = new StringReader("0"))
             {
                 var ret = JSON.Deserialize<decimal>(str);
-                Assert.AreEqual(0m, ret);
+                Assert.Equal(0m, ret);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Arrays()
         {
             using (var str = new StringReader("[0,1,2,3,4,5]"))
             {
                 var ret = JSON.Deserialize<int[]>(str);
-                Assert.AreEqual(6, ret.Length);
-                Assert.AreEqual(0, ret[0]);
-                Assert.AreEqual(1, ret[1]);
-                Assert.AreEqual(2, ret[2]);
-                Assert.AreEqual(3, ret[3]);
-                Assert.AreEqual(4, ret[4]);
-                Assert.AreEqual(5, ret[5]);
+                Assert.Equal(6, ret.Length);
+                Assert.Equal(0, ret[0]);
+                Assert.Equal(1, ret[1]);
+                Assert.Equal(2, ret[2]);
+                Assert.Equal(3, ret[3]);
+                Assert.Equal(4, ret[4]);
+                Assert.Equal(5, ret[5]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseISO8601()
         {
             using (var str = new StringReader("\"1900\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1991-02\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1991, 02, 1, 0, 0, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1991, 02, 1, 0, 0, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 0, 0, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 0, 0, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 0, 0, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 0, 0, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 0, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 0, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12,5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12.5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34,5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34.5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56,5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56.5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T12\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 0, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 0, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T12,5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T12.5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T1234\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T1234,5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T1234.5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T123456\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T123456,5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"19890131T123456.5\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 0, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 0, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12,5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12.5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34,5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34.5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56,5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56.5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T12Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 0, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 0, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T12,5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T12.5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 30, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T1234Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T1234,5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T1234.5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 30, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T123456Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T123456,5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"19890131T123456.5Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1989, 01, 31, 12, 34, 56, 500, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 00, 0, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12,5+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 30, 0, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12.5+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 30, 0, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 0, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34,5+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 30, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34.5+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 30, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56,5+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, 500, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56.5+01:23\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, 500, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T12+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 0, 0, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T12,5+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 30, 0, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T12.5+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 30, 0, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T1234+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 0, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T1234,5+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 30, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T1234.5+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 30, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T123456+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T123456,5+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, 500, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T123456.5+0123\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, 500, new TimeSpan(01, 23, 00));
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 0, 0, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12,5-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 30, 0, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12.5-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 30, 0, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 0, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34,5-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 30, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34.5-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 30, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56,5-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, 500, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1989-01-31T12:34:56.5-11:45\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, 500, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T12-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 0, 0, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T12,5-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 30, 0, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T12.5-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 30, 0, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T1234-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 0, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T1234,5-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 30, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T1234.5-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 30, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T123456-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T123456,5-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, 500, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"19890131T123456.5-1145\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
                 var shouldMatch = new DateTimeOffset(1989, 01, 31, 12, 34, 56, 500, (new TimeSpan(11, 45, 0)).Negate());
-                Assert.AreEqual(shouldMatch.UtcDateTime, dt);
+                Assert.Equal(shouldMatch.UtcDateTime, dt);
             }
 
             using (var str = new StringReader("\"1900-01-01 12:30Z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1900, 01, 01, 12, 30, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1900, 01, 01, 12, 30, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1900-01-01t12:30+00\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1900, 01, 01, 12, 30, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1900, 01, 01, 12, 30, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"1900-01-01 12:30z\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(1900, 01, 01, 12, 30, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(1900, 01, 01, 12, 30, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"2004-366\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(2004, 12, 31, 0, 0, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(2004, 12, 31, 0, 0, 0, DateTimeKind.Local), dt);
             }
 
             using (var str = new StringReader("\"2004366\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(2004, 12, 31, 0, 0, 0, DateTimeKind.Local), dt);
+                Assert.Equal(new DateTime(2004, 12, 31, 0, 0, 0, DateTimeKind.Local), dt);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MalformedISO8601()
         {
             using (var str = new StringReader("\"99\""))
@@ -1459,11 +1460,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("ISO8601 date must begin with a 4 character year", e.Message);
+                    Assert.Equal("ISO8601 date must begin with a 4 character year", e.Message);
                 }
             }
 
@@ -1472,11 +1473,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("ISO8601 year 0000 cannot be converted to a DateTime", e.Message);
+                    Assert.Equal("ISO8601 year 0000 cannot be converted to a DateTime", e.Message);
                 }
             }
 
@@ -1485,11 +1486,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected month to be between 01 and 12", e.Message);
+                    Assert.Equal("Expected month to be between 01 and 12", e.Message);
                 }
             }
 
@@ -1498,11 +1499,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected day to be between 01 and 31", e.Message);
+                    Assert.Equal("Expected day to be between 01 and 31", e.Message);
                 }
             }
 
@@ -1511,11 +1512,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected day to be between 01 and 31", e.Message);
+                    Assert.Equal("Expected day to be between 01 and 31", e.Message);
                 }
             }
 
@@ -1524,11 +1525,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("ISO8601 date is too long, expected " + Jil.Deserialize.Methods.CharBufferSize + " characters or less", e.Message);
+                    Assert.Equal("ISO8601 date is too long, expected " + Jil.Deserialize.Methods.CharBufferSize + " characters or less", e.Message);
                 }
             }
 
@@ -1537,11 +1538,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Unexpected separator in ISO8601 time", e.Message);
+                    Assert.Equal("Unexpected separator in ISO8601 time", e.Message);
                 }
             }
 
@@ -1550,11 +1551,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Unexpected date string length", e.Message);
+                    Assert.Equal("Unexpected date string length", e.Message);
                 }
             }
 
@@ -1563,11 +1564,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Unexpected date string length", e.Message);
+                    Assert.Equal("Unexpected date string length", e.Message);
                 }
             }
 
@@ -1576,11 +1577,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected digit", e.Message);
+                    Assert.Equal("Expected digit", e.Message);
                 }
             }
 
@@ -1589,11 +1590,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("ISO8601 time must begin with a 2 character hour", e.Message);
+                    Assert.Equal("ISO8601 time must begin with a 2 character hour", e.Message);
                 }
             }
 
@@ -1602,11 +1603,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected minute part of ISO8601 time", e.Message);
+                    Assert.Equal("Expected minute part of ISO8601 time", e.Message);
                 }
             }
 
@@ -1615,11 +1616,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected hour part of ISO8601 timezone offset", e.Message);
+                    Assert.Equal("Expected hour part of ISO8601 timezone offset", e.Message);
                 }
             }
 
@@ -1628,11 +1629,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Not enough character for ISO8601 timezone offset", e.Message);
+                    Assert.Equal("Not enough character for ISO8601 timezone offset", e.Message);
                 }
             }
 
@@ -1641,11 +1642,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Ordinal day can only be 366 in a leap year", e.Message);
+                    Assert.Equal("Ordinal day can only be 366 in a leap year", e.Message);
                 }
             }
 
@@ -1654,11 +1655,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Ordinal day can only be 366 in a leap year", e.Message);
+                    Assert.Equal("Ordinal day can only be 366 in a leap year", e.Message);
                 }
             }
 
@@ -1667,11 +1668,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected ordinal day to be between 001 and 366", e.Message);
+                    Assert.Equal("Expected ordinal day to be between 001 and 366", e.Message);
                 }
             }
 
@@ -1680,11 +1681,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected ordinal day to be between 001 and 366", e.Message);
+                    Assert.Equal("Expected ordinal day to be between 001 and 366", e.Message);
                 }
             }
 
@@ -1693,11 +1694,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected ordinal day to be between 001 and 366", e.Message);
+                    Assert.Equal("Expected ordinal day to be between 001 and 366", e.Message);
                 }
             }
 
@@ -1706,11 +1707,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected ordinal day to be between 001 and 366", e.Message);
+                    Assert.Equal("Expected ordinal day to be between 001 and 366", e.Message);
                 }
             }
 
@@ -1719,12 +1720,12 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("ISO8601 date could not be mapped to DateTime", e.Message);
-                    Assert.IsNotNull(e.InnerException);
+                    Assert.Equal("ISO8601 date could not be mapped to DateTime", e.Message);
+                    Assert.NotNull(e.InnerException);
                 }
             }
 
@@ -1733,11 +1734,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected day to be a digit between 1 and 7", e.Message);
+                    Assert.Equal("Expected day to be a digit between 1 and 7", e.Message);
                 }
             }
 
@@ -1746,11 +1747,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected day to be a digit between 1 and 7", e.Message);
+                    Assert.Equal("Expected day to be a digit between 1 and 7", e.Message);
                 }
             }
 
@@ -1759,11 +1760,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected day to be a digit between 1 and 7", e.Message);
+                    Assert.Equal("Expected day to be a digit between 1 and 7", e.Message);
                 }
             }
 
@@ -1772,11 +1773,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected day to be a digit between 1 and 7", e.Message);
+                    Assert.Equal("Expected day to be a digit between 1 and 7", e.Message);
                 }
             }
 
@@ -1785,11 +1786,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Unexpected date string length", e.Message);
+                    Assert.Equal("Unexpected date string length", e.Message);
                 }
             }
 
@@ -1798,11 +1799,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Unexpected date string length", e.Message);
+                    Assert.Equal("Unexpected date string length", e.Message);
                 }
             }
 
@@ -1811,11 +1812,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected week to be between 01 and 53", e.Message);
+                    Assert.Equal("Expected week to be between 01 and 53", e.Message);
                 }
             }
 
@@ -1824,11 +1825,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected week to be between 01 and 53", e.Message);
+                    Assert.Equal("Expected week to be between 01 and 53", e.Message);
                 }
             }
 
@@ -1837,11 +1838,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected week to be between 01 and 53", e.Message);
+                    Assert.Equal("Expected week to be between 01 and 53", e.Message);
                 }
             }
 
@@ -1850,16 +1851,16 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Expected week to be between 01 and 53", e.Message);
+                    Assert.Equal("Expected week to be between 01 and 53", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue143DateTime() 
         {
             var date = new DateTime(21, DateTimeKind.Utc);
@@ -1867,14 +1868,14 @@ namespace JilTests
             
             // ThunkReader
             var result = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-            Assert.AreEqual(date.Ticks, result.Ticks);
+            Assert.Equal(date.Ticks, result.Ticks);
 
             // TextReader
             result = JSON.Deserialize<DateTime>(new StringReader(str), Options.ISO8601);
-            Assert.AreEqual(date.Ticks, result.Ticks);
+            Assert.Equal(date.Ticks, result.Ticks);
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue143DateTimeFractionOverflow() 
         {
             var date = new DateTime(21, DateTimeKind.Utc);
@@ -1882,14 +1883,14 @@ namespace JilTests
 
             // ThunkReader
             var result = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-            Assert.AreEqual(date.Ticks, result.Ticks);
+            Assert.Equal(date.Ticks, result.Ticks);
 
             // TextReader
             result = JSON.Deserialize<DateTime>(new StringReader(str), Options.ISO8601);
-            Assert.AreEqual(date.Ticks, result.Ticks);
+            Assert.Equal(date.Ticks, result.Ticks);
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue143TimeSpan() 
         {
             var span = new TimeSpan(21);
@@ -1897,15 +1898,15 @@ namespace JilTests
 
             // ThunkReader
             var result = JSON.Deserialize<TimeSpan>(str, Options.ISO8601);
-            Assert.AreEqual(span.Ticks, result.Ticks);
+            Assert.Equal(span.Ticks, result.Ticks);
 
             // TextReader
             result = JSON.Deserialize<TimeSpan>(new StringReader(str), Options.ISO8601);
-            Assert.AreEqual(span.Ticks, result.Ticks);
+            Assert.Equal(span.Ticks, result.Ticks);
         }
 
 
-        [TestMethod]
+        [Fact]
         public void Issue143TimeSpanFractionOverflow() 
         {
             var date = new TimeSpan(21);
@@ -1913,14 +1914,14 @@ namespace JilTests
 
             // ThunkReader
             var result = JSON.Deserialize<TimeSpan>(str, Options.ISO8601);
-            Assert.AreEqual(date.Ticks, result.Ticks);
+            Assert.Equal(date.Ticks, result.Ticks);
 
             // TextReader
             result = JSON.Deserialize<TimeSpan>(new StringReader(str), Options.ISO8601);
-            Assert.AreEqual(date.Ticks, result.Ticks);
+            Assert.Equal(date.Ticks, result.Ticks);
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue143DateTimeOffset() 
         {
             var offset = new DateTimeOffset(new DateTime(21, DateTimeKind.Utc), TimeSpan.Zero);
@@ -1928,15 +1929,15 @@ namespace JilTests
 
             // ThunkReader
             var result = JSON.Deserialize<DateTimeOffset>(str, Options.ISO8601);
-            Assert.AreEqual(offset.Ticks, result.Ticks);
+            Assert.Equal(offset.Ticks, result.Ticks);
 
             // TextReader
             result = JSON.Deserialize<DateTimeOffset>(new StringReader(str), Options.ISO8601);
-            Assert.AreEqual(offset.Ticks, result.Ticks);
+            Assert.Equal(offset.Ticks, result.Ticks);
         }
 
 
-        [TestMethod]
+        [Fact]
         public void Issue143DateTimeOffsetFractionOverflow() 
         {
             var offset = new DateTimeOffset(new DateTime(21, DateTimeKind.Utc), TimeSpan.Zero);
@@ -1944,14 +1945,14 @@ namespace JilTests
 
             // ThunkReader
             var result = JSON.Deserialize<DateTimeOffset>(str, Options.ISO8601);
-            Assert.AreEqual(offset.Ticks, result.Ticks);
+            Assert.Equal(offset.Ticks, result.Ticks);
 
             // TextReader
             result = JSON.Deserialize<DateTimeOffset>(new StringReader(str), Options.ISO8601);
-            Assert.AreEqual(offset.Ticks, result.Ticks);
+            Assert.Equal(offset.Ticks, result.Ticks);
         }
 
-        [TestMethod]
+        [Fact]
         public void SecondDateTimes()
         {
             var dt = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -1964,18 +1965,18 @@ namespace JilTests
             {
                 var dtRet = JSON.Deserialize<DateTime>(str, Options.SecondsSinceUnixEpoch);
                 var delta = (dtRet - dt).Duration().TotalSeconds;
-                Assert.IsTrue(delta < 1);
+                Assert.True(delta < 1);
             }
 
             using (var str = new StringReader(nowStr))
             {
                 var nowRet = JSON.Deserialize<DateTime>(str, Options.SecondsSinceUnixEpoch);
                 var delta = (nowRet - now).Duration().TotalSeconds;
-                Assert.IsTrue(delta < 1);
+                Assert.True(delta < 1);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MillisecondDateTimes()
         {
             var dt = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -1988,18 +1989,18 @@ namespace JilTests
             {
                 var dtRet = JSON.Deserialize<DateTime>(str, Options.MillisecondsSinceUnixEpoch);
                 var delta = (dtRet - dt).Duration().TotalMilliseconds;
-                Assert.IsTrue(delta < 1);
+                Assert.True(delta < 1);
             }
 
             using (var str = new StringReader(nowStr))
             {
                 var nowRet = JSON.Deserialize<DateTime>(str, Options.MillisecondsSinceUnixEpoch);
                 var delta = (nowRet - now).Duration().TotalMilliseconds;
-                Assert.IsTrue(delta < 1);
+                Assert.True(delta < 1);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NewtsoftDateTimes()
         {
             var dt = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -2012,18 +2013,18 @@ namespace JilTests
             {
                 var dtRet = JSON.Deserialize<DateTime>(str);
                 var delta = (dtRet - dt).Duration().TotalMilliseconds;
-                Assert.IsTrue(delta < 1);
+                Assert.True(delta < 1);
             }
 
             using (var str = new StringReader(nowStr))
             {
                 var nowRet = JSON.Deserialize<DateTime>(str);
                 var delta = (nowRet - now).Duration().TotalMilliseconds;
-                Assert.IsTrue(delta < 1);
+                Assert.True(delta < 1);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MicrosoftDateTimesWithTimeZones()
         {
             var newtonsoft = Newtonsoft.Json.JsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings
@@ -2043,7 +2044,7 @@ namespace JilTests
                 {
                     newtonsoft.Serialize(str, dtLocal);
                     asStr = str.ToString();
-                    Assert.IsTrue(asStr.Contains('-') || asStr.Contains('+'));
+                    Assert.True(asStr.Contains('-') || asStr.Contains('+'));
                 }
 
                 DateTime shouldMatch, shouldMatchUtc;
@@ -2060,13 +2061,13 @@ namespace JilTests
                     jilDtUtc = jilDt.ToUniversalTime();
                 }
 
-                Assert.IsTrue((dtUtc - shouldMatchUtc).Duration().TotalMilliseconds < 1);
-                Assert.IsTrue((dtUtc - jilDtUtc).Duration().TotalMilliseconds < 1);
-                Assert.IsTrue((shouldMatchUtc - jilDtUtc).Duration().TotalMilliseconds == 0);
+                Assert.True((dtUtc - shouldMatchUtc).Duration().TotalMilliseconds < 1);
+                Assert.True((dtUtc - jilDtUtc).Duration().TotalMilliseconds < 1);
+                Assert.True((shouldMatchUtc - jilDtUtc).Duration().TotalMilliseconds == 0);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Guids()
         {
             var guid = Guid.NewGuid();
@@ -2074,17 +2075,17 @@ namespace JilTests
             using (var str = new StringReader("\"" + guid.ToString("d").ToUpper() + "\""))
             {
                 var g = JSON.Deserialize<Guid>(str);
-                Assert.AreEqual(guid, g);
+                Assert.Equal(guid, g);
             }
 
             using (var str = new StringReader("\"" + guid.ToString("d").ToLower() + "\""))
             {
                 var g = JSON.Deserialize<Guid>(str);
-                Assert.AreEqual(guid, g);
+                Assert.Equal(guid, g);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Overflow()
         {
             // byte
@@ -2094,13 +2095,13 @@ namespace JilTests
                     using (var str = new StringReader("1234"))
                     {
                         JSON.Deserialize<byte>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Number did not end when expected, may overflow", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Number did not end when expected, may overflow", e.Message);
                 }
 
                 try
@@ -2108,13 +2109,13 @@ namespace JilTests
                     using (var str = new StringReader("257"))
                     {
                         JSON.Deserialize<byte>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
             }
 
@@ -2125,13 +2126,13 @@ namespace JilTests
                     using (var str = new StringReader("1234"))
                     {
                         JSON.Deserialize<sbyte>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Number did not end when expected, may overflow", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Number did not end when expected, may overflow", e.Message);
                 }
 
                 try
@@ -2139,13 +2140,13 @@ namespace JilTests
                     using (var str = new StringReader("128"))
                     {
                         JSON.Deserialize<sbyte>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
 
                 try
@@ -2153,13 +2154,13 @@ namespace JilTests
                     using (var str = new StringReader("-129"))
                     {
                         JSON.Deserialize<sbyte>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
             }
 
@@ -2170,13 +2171,13 @@ namespace JilTests
                     using (var str = new StringReader("320000"))
                     {
                         JSON.Deserialize<short>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Number did not end when expected, may overflow", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Number did not end when expected, may overflow", e.Message);
                 }
 
                 try
@@ -2184,13 +2185,13 @@ namespace JilTests
                     using (var str = new StringReader("32768"))
                     {
                         JSON.Deserialize<short>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
 
                 try
@@ -2198,13 +2199,13 @@ namespace JilTests
                     using (var str = new StringReader("-32769"))
                     {
                         JSON.Deserialize<short>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
             }
 
@@ -2215,13 +2216,13 @@ namespace JilTests
                     using (var str = new StringReader("320000"))
                     {
                         JSON.Deserialize<ushort>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Number did not end when expected, may overflow", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Number did not end when expected, may overflow", e.Message);
                 }
 
                 try
@@ -2229,13 +2230,13 @@ namespace JilTests
                     using (var str = new StringReader("65536"))
                     {
                         JSON.Deserialize<ushort>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
             }
 
@@ -2246,13 +2247,13 @@ namespace JilTests
                     using (var str = new StringReader("21474830000"))
                     {
                         JSON.Deserialize<int>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Number did not end when expected, may overflow", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Number did not end when expected, may overflow", e.Message);
                 }
 
                 try
@@ -2260,13 +2261,13 @@ namespace JilTests
                     using (var str = new StringReader("2147483648"))
                     {
                         JSON.Deserialize<int>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
 
                 try
@@ -2274,13 +2275,13 @@ namespace JilTests
                     using (var str = new StringReader("-2147483649"))
                     {
                         JSON.Deserialize<int>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
             }
 
@@ -2291,13 +2292,13 @@ namespace JilTests
                     using (var str = new StringReader("42949670000"))
                     {
                         JSON.Deserialize<uint>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Number did not end when expected, may overflow", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Number did not end when expected, may overflow", e.Message);
                 }
 
                 try
@@ -2305,13 +2306,13 @@ namespace JilTests
                     using (var str = new StringReader("4294967296"))
                     {
                         JSON.Deserialize<uint>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
             }
 
@@ -2322,13 +2323,13 @@ namespace JilTests
                     using (var str = new StringReader("92233720368547750000"))
                     {
                         JSON.Deserialize<long>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Number did not end when expected, may overflow", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Number did not end when expected, may overflow", e.Message);
                 }
 
                 try
@@ -2336,13 +2337,13 @@ namespace JilTests
                     using (var str = new StringReader("9223372036854775808"))
                     {
                         JSON.Deserialize<long>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
 
                 try
@@ -2350,13 +2351,13 @@ namespace JilTests
                     using (var str = new StringReader("-9223372036854775809"))
                     {
                         JSON.Deserialize<long>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
             }
 
@@ -2367,13 +2368,13 @@ namespace JilTests
                     using (var str = new StringReader("184467440737095510000"))
                     {
                         JSON.Deserialize<ulong>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Number did not end when expected, may overflow", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Number did not end when expected, may overflow", e.Message);
                 }
 
                 try
@@ -2381,18 +2382,18 @@ namespace JilTests
                     using (var str = new StringReader("18446744073709551616"))
                     {
                         JSON.Deserialize<ulong>(str);
-                        Assert.Fail("Shouldn't be possible");
+                        Assert.True(false, "Shouldn't be possible");
                     }
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsInstanceOfType(e.InnerException, typeof(OverflowException));
-                    Assert.AreEqual("Arithmetic operation resulted in an overflow.", e.Message);
+                    Assert.IsType<OverflowException>(e.InnerException);
+                    Assert.Equal("Arithmetic operation resulted in an overflow.", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Decimals()
         {
             for (var i = -11.1m; i <= 22.2m; i += 0.03m)
@@ -2402,8 +2403,8 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<decimal>(str);
 
-                    Assert.AreEqual(asStr, res.ToString(CultureInfo.InvariantCulture));
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(asStr, res.ToString(CultureInfo.InvariantCulture));
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2411,16 +2412,16 @@ namespace JilTests
             {
                 var res = JSON.Deserialize<decimal>(str);
 
-                Assert.AreEqual(0m, res);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(0m, res);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("0.0"))
             {
                 var res = JSON.Deserialize<decimal>(str);
 
-                Assert.AreEqual(0m, res);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(0m, res);
+                Assert.Equal(-1, str.Peek());
             }
 
             var rand = new Random();
@@ -2435,8 +2436,8 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<decimal>(str);
 
-                    Assert.AreEqual(asStr, res.ToString(CultureInfo.InvariantCulture));
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(asStr, res.ToString(CultureInfo.InvariantCulture));
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2465,13 +2466,13 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<decimal>(str);
 
-                    Assert.AreEqual(decimal.Parse(i, NumberStyles.Float, CultureInfo.InvariantCulture), res);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(decimal.Parse(i, NumberStyles.Float, CultureInfo.InvariantCulture), res);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Doubles()
         {
             for (var i = -11.1; i <= 22.2; i += 0.03)
@@ -2481,8 +2482,8 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<double>(str);
 
-                    Assert.AreEqual(asStr, res.ToString(CultureInfo.InvariantCulture));
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(asStr, res.ToString(CultureInfo.InvariantCulture));
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2490,16 +2491,16 @@ namespace JilTests
             {
                 var res = JSON.Deserialize<double>(str);
 
-                Assert.AreEqual(0.0, res);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(0.0, res);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("0.0"))
             {
                 var res = JSON.Deserialize<double>(str);
 
-                Assert.AreEqual(0.0, res);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(0.0, res);
+                Assert.Equal(-1, str.Peek());
             }
 
             var rand = new Random();
@@ -2514,8 +2515,8 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<double>(str);
 
-                    Assert.AreEqual(asStr, res.ToString(CultureInfo.InvariantCulture));
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(asStr, res.ToString(CultureInfo.InvariantCulture));
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2547,13 +2548,13 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<double>(str);
 
-                    Assert.AreEqual(double.Parse(i, CultureInfo.InvariantCulture), res);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(double.Parse(i, CultureInfo.InvariantCulture), res);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Floats()
         {
             for (var i = -11.1f; i <= 22.2f; i += 0.03f)
@@ -2563,8 +2564,8 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<float>(str);
 
-                    Assert.AreEqual(asStr, res.ToString(CultureInfo.InvariantCulture));
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(asStr, res.ToString(CultureInfo.InvariantCulture));
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2572,16 +2573,16 @@ namespace JilTests
             {
                 var res = JSON.Deserialize<float>(str);
 
-                Assert.AreEqual(0f, res);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(0f, res);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("0.0"))
             {
                 var res = JSON.Deserialize<float>(str);
 
-                Assert.AreEqual(0f, res);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(0f, res);
+                Assert.Equal(-1, str.Peek());
             }
 
             var rand = new Random();
@@ -2596,8 +2597,8 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<float>(str);
 
-                    Assert.AreEqual(asStr, res.ToString(CultureInfo.InvariantCulture));
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(asStr, res.ToString(CultureInfo.InvariantCulture));
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2626,125 +2627,125 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<float>(str);
 
-                    Assert.AreEqual(float.Parse(i, CultureInfo.InvariantCulture), res);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(float.Parse(i, CultureInfo.InvariantCulture), res);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Longs()
         {
             using (var str = new StringReader("0"))
             {
                 var i = JSON.Deserialize<long>(str);
 
-                Assert.AreEqual(0L, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(0L, i);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(long.MaxValue.ToString()))
             {
                 var i = JSON.Deserialize<long>(str);
 
-                Assert.AreEqual(long.MaxValue, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(long.MaxValue, i);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(long.MinValue.ToString()))
             {
                 var i = JSON.Deserialize<long>(str);
 
-                Assert.AreEqual(long.MinValue, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(long.MinValue, i);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ULongs()
         {
             using (var str = new StringReader("0"))
             {
                 var i = JSON.Deserialize<ulong>(str);
 
-                Assert.AreEqual((ulong)0, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal((ulong)0, i);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(ulong.MaxValue.ToString()))
             {
                 var i = JSON.Deserialize<ulong>(str);
 
-                Assert.AreEqual(ulong.MaxValue, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(ulong.MaxValue, i);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(ulong.MinValue.ToString()))
             {
                 var i = JSON.Deserialize<ulong>(str);
 
-                Assert.AreEqual(ulong.MinValue, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(ulong.MinValue, i);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Ints()
         {
             using (var str = new StringReader("0"))
             {
                 var i = JSON.Deserialize<int>(str);
 
-                Assert.AreEqual(0, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(0, i);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(int.MaxValue.ToString()))
             {
                 var i = JSON.Deserialize<int>(str);
 
-                Assert.AreEqual(int.MaxValue, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(int.MaxValue, i);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(int.MinValue.ToString()))
             {
                 var i = JSON.Deserialize<int>(str);
 
-                Assert.AreEqual(int.MinValue, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(int.MinValue, i);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UInts()
         {
             using (var str = new StringReader("0"))
             {
                 var i = JSON.Deserialize<uint>(str);
 
-                Assert.AreEqual((uint)0, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal((uint)0, i);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(uint.MaxValue.ToString()))
             {
                 var i = JSON.Deserialize<uint>(str);
 
-                Assert.AreEqual(uint.MaxValue, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(uint.MaxValue, i);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(uint.MinValue.ToString()))
             {
                 var i = JSON.Deserialize<uint>(str);
 
-                Assert.AreEqual(uint.MinValue, i);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(uint.MinValue, i);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Shorts()
         {
             for (int i = short.MinValue; i <= short.MaxValue; i++)
@@ -2753,8 +2754,8 @@ namespace JilTests
                 {
                     var b = JSON.Deserialize<short>(str);
 
-                    Assert.AreEqual((short)i, b);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal((short)i, b);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2766,8 +2767,8 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<short>(str);
 
-                        Assert.AreEqual((short)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((short)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
@@ -2780,8 +2781,8 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<short>(str);
 
-                        Assert.AreEqual((short)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((short)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
@@ -2794,14 +2795,14 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<short>(str);
 
-                        Assert.AreEqual((short)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((short)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UShort()
         {
             for (int i = ushort.MinValue; i <= ushort.MaxValue; i++)
@@ -2810,8 +2811,8 @@ namespace JilTests
                 {
                     var b = JSON.Deserialize<ushort>(str);
 
-                    Assert.AreEqual((ushort)i, b);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal((ushort)i, b);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2823,8 +2824,8 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<ushort>(str);
 
-                        Assert.AreEqual((ushort)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((ushort)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
@@ -2837,8 +2838,8 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<ushort>(str);
 
-                        Assert.AreEqual((ushort)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((ushort)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
@@ -2851,14 +2852,14 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<ushort>(str);
 
-                        Assert.AreEqual((ushort)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((ushort)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Bytes()
         {
             for (int i = byte.MinValue; i <= byte.MaxValue; i++)
@@ -2867,8 +2868,8 @@ namespace JilTests
                 {
                     var b = JSON.Deserialize<byte>(str);
 
-                    Assert.AreEqual((byte)i, b);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal((byte)i, b);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2880,8 +2881,8 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<byte>(str);
 
-                        Assert.AreEqual((byte)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((byte)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
@@ -2894,8 +2895,8 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<byte>(str);
 
-                        Assert.AreEqual((byte)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((byte)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
@@ -2908,14 +2909,14 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<byte>(str);
 
-                        Assert.AreEqual((byte)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((byte)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SBytes()
         {
             for (int i = sbyte.MinValue; i <= sbyte.MaxValue; i++)
@@ -2924,8 +2925,8 @@ namespace JilTests
                 {
                     var b = JSON.Deserialize<sbyte>(str);
 
-                    Assert.AreEqual((sbyte)i, b);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal((sbyte)i, b);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -2937,8 +2938,8 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<sbyte>(str);
 
-                        Assert.AreEqual((sbyte)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((sbyte)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
@@ -2951,8 +2952,8 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<sbyte>(str);
 
-                        Assert.AreEqual((sbyte)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((sbyte)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
@@ -2965,94 +2966,94 @@ namespace JilTests
                     {
                         var b = JSON.Deserialize<sbyte>(str);
 
-                        Assert.AreEqual((sbyte)i, b);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal((sbyte)i, b);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Strings()
         {
             using (var str = new StringReader("null"))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.IsNull(c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Null(c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"a\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("a", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("a", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\\\\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("\\", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("\\", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\/\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("/", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("/", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\b\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("\b", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("\b", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\f\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("\f", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("\f", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\r\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("\r", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("\r", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\n\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("\n", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("\n", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\t\""))
             {
                 var c = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("\t", c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("\t", c);
+                Assert.Equal(-1, str.Peek());
             }
 
             for (var i = 0; i <= 2048; i++)
@@ -3065,8 +3066,8 @@ namespace JilTests
 
                     var shouldBe = "" + (char)i;
 
-                    Assert.AreEqual(shouldBe, c);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(shouldBe, c);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
 
@@ -3074,32 +3075,32 @@ namespace JilTests
             {
                 var s = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("abc", s);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("abc", s);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"abcd\""))
             {
                 var s = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("abcd", s);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("abcd", s);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\b\\f\\t\""))
             {
                 var s = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("\b\f\t", s);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("\b\f\t", s);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\b\\f\\t\\r\""))
             {
                 var s = JSON.Deserialize<string>(str);
 
-                Assert.AreEqual("\b\f\t\r", s);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal("\b\f\t\r", s);
+                Assert.Equal(-1, str.Peek());
             }
 
             for (var i = 0; i <= 2048; i++)
@@ -3116,78 +3117,78 @@ namespace JilTests
 
                         var shouldBe = new string((char)i, j);
 
-                        Assert.AreEqual(shouldBe, c);
-                        Assert.AreEqual(-1, str.Peek());
+                        Assert.Equal(shouldBe, c);
+                        Assert.Equal(-1, str.Peek());
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Chars()
         {
             using (var str = new StringReader("\"a\""))
             {
                 var c = JSON.Deserialize<char>(str);
 
-                Assert.AreEqual('a', c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal('a', c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\\\\""))
             {
                 var c = JSON.Deserialize<char>(str);
 
-                Assert.AreEqual('\\', c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal('\\', c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\/\""))
             {
                 var c = JSON.Deserialize<char>(str);
 
-                Assert.AreEqual('/', c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal('/', c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\b\""))
             {
                 var c = JSON.Deserialize<char>(str);
 
-                Assert.AreEqual('\b', c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal('\b', c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\f\""))
             {
                 var c = JSON.Deserialize<char>(str);
 
-                Assert.AreEqual('\f', c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal('\f', c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\r\""))
             {
                 var c = JSON.Deserialize<char>(str);
 
-                Assert.AreEqual('\r', c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal('\r', c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\n\""))
             {
                 var c = JSON.Deserialize<char>(str);
 
-                Assert.AreEqual('\n', c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal('\n', c);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("\"\\t\""))
             {
                 var c = JSON.Deserialize<char>(str);
 
-                Assert.AreEqual('\t', c);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal('\t', c);
+                Assert.Equal(-1, str.Peek());
             }
 
             for (var i = 0; i <= 2048; i++)
@@ -3198,8 +3199,8 @@ namespace JilTests
                 {
                     var c = JSON.Deserialize<char>(str);
 
-                    Assert.AreEqual(i, (int)c);
-                    Assert.AreEqual(-1, str.Peek());
+                    Assert.Equal(i, (int)c);
+                    Assert.Equal(-1, str.Peek());
                 }
             }
         }
@@ -3211,35 +3212,35 @@ namespace JilTests
             Foo
         }
 
-        [TestMethod]
+        [Fact]
         public void Enums()
         {
             using (var str = new StringReader("\"Hello\""))
             {
                 var val = JSON.Deserialize<_Enums>(str);
 
-                Assert.AreEqual(_Enums.Hello, val);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(_Enums.Hello, val);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Nullables()
         {
             using (var str = new StringReader("1"))
             {
                 var val = JSON.Deserialize<int?>(str);
 
-                Assert.AreEqual((int?)1, val);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal((int?)1, val);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("null"))
             {
                 var val = JSON.Deserialize<int?>(str);
 
-                Assert.AreEqual((int?)null, val);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal((int?)null, val);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
@@ -3282,122 +3283,122 @@ namespace JilTests
             public int Value;
         }
 
-        [TestMethod]
+        [Fact]
         public void PrimitiveWrappers()
         {
             using (var str = new StringReader("1"))
             {
                 var val = JSON.Deserialize<PrimitiveWrapperWithDefaultCtor>(str);
 
-                Assert.AreEqual(1, val.Value);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(1, val.Value);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("1"))
             {
                 var val = JSON.Deserialize<PrimitiveWrapperWithNonDefaultCtor>(str);
 
-                Assert.AreEqual(1, val.Value);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(1, val.Value);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("1"))
             {
                 var val = JSON.Deserialize<PrimitiveWrapperAsStructWithNonDefaultCtor>(str);
 
-                Assert.AreEqual(1, val.Value);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(1, val.Value);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("1"))
             {
                 var val = JSON.Deserialize<PrimitiveWrapperWithNonDefaultCtorWithField>(str);
 
-                Assert.AreEqual(1, val.Value);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(1, val.Value);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Bools()
         {
             using (var str = new StringReader("true"))
             {
                 var val = JSON.Deserialize<bool>(str);
 
-                Assert.IsTrue(val);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.True(val);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("false"))
             {
                 var val = JSON.Deserialize<bool>(str);
 
-                Assert.IsFalse(val);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.False(val);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Lists()
         {
             using (var str = new StringReader("null"))
             {
                 var val = JSON.Deserialize<List<int>>(str);
 
-                Assert.IsNull(val);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Null(val);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("[]"))
             {
                 var val = JSON.Deserialize<List<int>>(str);
-                Assert.AreEqual(0, val.Count);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Empty(val);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(" [     ] "))
             {
                 var val = JSON.Deserialize<List<int>>(str);
-                Assert.AreEqual(0, val.Count);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Empty(val);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("[1]"))
             {
                 var val = JSON.Deserialize<List<int>>(str);
-                Assert.AreEqual(1, val.Count);
-                Assert.AreEqual(1, val[0]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Single(val);
+                Assert.Equal(1, val[0]);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("[1,2]"))
             {
                 var val = JSON.Deserialize<List<int>>(str);
-                Assert.AreEqual(2, val.Count);
-                Assert.AreEqual(1, val[0]);
-                Assert.AreEqual(2, val[1]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(2, val.Count);
+                Assert.Equal(1, val[0]);
+                Assert.Equal(2, val[1]);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("[1,2,3]"))
             {
                 var val = JSON.Deserialize<List<int>>(str);
-                Assert.AreEqual(3, val.Count);
-                Assert.AreEqual(1, val[0]);
-                Assert.AreEqual(2, val[1]);
-                Assert.AreEqual(3, val[2]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(3, val.Count);
+                Assert.Equal(1, val[0]);
+                Assert.Equal(2, val[1]);
+                Assert.Equal(3, val[2]);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader(" [ 1,2 ,3   ]    "))
             {
                 var val = JSON.Deserialize<List<int>>(str);
-                Assert.AreEqual(3, val.Count);
-                Assert.AreEqual(1, val[0]);
-                Assert.AreEqual(2, val[1]);
-                Assert.AreEqual(3, val[2]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Equal(3, val.Count);
+                Assert.Equal(1, val[0]);
+                Assert.Equal(2, val[1]);
+                Assert.Equal(3, val[2]);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
@@ -3409,106 +3410,106 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void Objects()
         {
             using (var str = new StringReader("null"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNull(val);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.Null(val);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"A\": 123}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(123, val.A);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(123, val.A);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"B\": \"hello\"}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual("hello", val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal("hello", val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"A\": 456, \"B\": \"hello\"}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(456, val.A);
-                Assert.AreEqual("hello", val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(456, val.A);
+                Assert.Equal("hello", val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"B\": \"hello\", \"A\": 456}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(456, val.A);
-                Assert.AreEqual("hello", val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(456, val.A);
+                Assert.Equal("hello", val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"B\":\"hello\",\"A\":456}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(456, val.A);
-                Assert.AreEqual("hello", val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(456, val.A);
+                Assert.Equal("hello", val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("   {  \"B\"    :   \"hello\"    ,    \"A\"   :   456   }  "))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(456, val.A);
-                Assert.AreEqual("hello", val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(456, val.A);
+                Assert.Equal("hello", val.B);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ObjectsSkipMembers()
         {
             using (var str = new StringReader("{\"C\":123}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":-123}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":123.456}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
 
@@ -3516,190 +3517,190 @@ namespace JilTests
             using (var str = new StringReader("{\"C\":-123.456}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":1E12}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":-1E12}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":1E-12}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":-1E-12}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":1.1E2}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":-1.1E2}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":1.1E+2}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":-1.1E+2}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\":\"hello\"}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": []}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": [1]}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": [1,2]}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": [1,2,3]}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": {}}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": {\"A\": 123}}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": {\"A\": 123, \"B\": 456}}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": {\"A\": 123, \"B\": 456, \"C\": \"hello world\"}}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": null, \"CC\": null}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": [null], \"CC\": [null]}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"C\": {\"A\":null}, \"CC\": {\"B\":null}}"))
             {
                 var val = JSON.Deserialize<_Objects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(default(int), val.A);
-                Assert.IsNull(val.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(default(int), val.A);
+                Assert.Null(val.B);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
@@ -3711,126 +3712,126 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void RecursiveObjects()
         {
             using (var str = new StringReader("{\"A\": \"hello world\", \"B\": { \"A\": \"foo bar\", \"B\": {\"A\": \"fizz buzz\"}}}"))
             {
                 var val = JSON.Deserialize<_RecursiveObjects>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual("hello world", val.A);
-                Assert.AreEqual("foo bar", val.B.A);
-                Assert.AreEqual("fizz buzz", val.B.B.A);
-                Assert.IsNull(val.B.B.B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal("hello world", val.A);
+                Assert.Equal("foo bar", val.B.A);
+                Assert.Equal("fizz buzz", val.B.B.A);
+                Assert.Null(val.B.B.B);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Dictionaries()
         {
             using (var str = new StringReader("{\"A\": 123}"))
             {
                 var val = JSON.Deserialize<Dictionary<string, int>>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(1, val.Count);
-                Assert.AreEqual(123, val["A"]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Single(val);
+                Assert.Equal(123, val["A"]);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"A\": 123, \"B\": 456}"))
             {
                 var val = JSON.Deserialize<Dictionary<string, int>>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(2, val.Count);
-                Assert.AreEqual(123, val["A"]);
-                Assert.AreEqual(456, val["B"]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(2, val.Count);
+                Assert.Equal(123, val["A"]);
+                Assert.Equal(456, val["B"]);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"A\": 123, \"B\": 456, \"C\": 789}"))
             {
                 var val = JSON.Deserialize<Dictionary<string, int>>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(3, val.Count);
-                Assert.AreEqual(123, val["A"]);
-                Assert.AreEqual(456, val["B"]);
-                Assert.AreEqual(789, val["C"]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(3, val.Count);
+                Assert.Equal(123, val["A"]);
+                Assert.Equal(456, val["B"]);
+                Assert.Equal(789, val["C"]);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"A\": null}"))
             {
                 var val = JSON.Deserialize<Dictionary<string, string>>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(1, val.Count);
-                Assert.IsNull(val["A"]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Single(val);
+                Assert.Null(val["A"]);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"A\": \"hello\", \"B\": \"world\"}"))
             {
                 var val = JSON.Deserialize<Dictionary<string, string>>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(2, val.Count);
-                Assert.AreEqual("hello", val["A"]);
-                Assert.AreEqual("world", val["B"]);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(2, val.Count);
+                Assert.Equal("hello", val["A"]);
+                Assert.Equal("world", val["B"]);
+                Assert.Equal(-1, str.Peek());
             }
 
             using (var str = new StringReader("{\"A\": {\"A\":123}, \"B\": {\"B\": \"abc\"}, \"C\": {\"A\":456, \"B\":\"fizz\"} }"))
             {
                 var val = JSON.Deserialize<Dictionary<string, _Objects>>(str);
-                Assert.IsNotNull(val);
-                Assert.AreEqual(3, val.Count);
-                Assert.AreEqual(123, val["A"].A);
-                Assert.AreEqual("abc", val["B"].B);
-                Assert.AreEqual(456, val["C"].A);
-                Assert.AreEqual("fizz", val["C"].B);
-                Assert.AreEqual(-1, str.Peek());
+                Assert.NotNull(val);
+                Assert.Equal(3, val.Count);
+                Assert.Equal(123, val["A"].A);
+                Assert.Equal("abc", val["B"].B);
+                Assert.Equal(456, val["C"].A);
+                Assert.Equal("fizz", val["C"].B);
+                Assert.Equal(-1, str.Peek());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ISO8601WeekDates()
         {
             using (var str = new StringReader("\"2009-W01-1\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(2008, 12, 29, 0, 0, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(2008, 12, 29, 0, 0, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"2009W011\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(2008, 12, 29, 0, 0, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(2008, 12, 29, 0, 0, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"2009-W53-7\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(2010, 1, 3, 0, 0, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(2010, 1, 3, 0, 0, 0, DateTimeKind.Utc), dt);
             }
 
             using (var str = new StringReader("\"2009W537\""))
             {
                 var dt = JSON.Deserialize<DateTime>(str, Options.ISO8601);
-                Assert.AreEqual(new DateTime(2010, 1, 3, 0, 0, 0, DateTimeKind.Utc), dt);
+                Assert.Equal(new DateTime(2010, 1, 3, 0, 0, 0, DateTimeKind.Utc), dt);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Surrogates()
         {
             var data = "abc" + Char.ConvertFromUtf32(Int32.Parse("2A601", System.Globalization.NumberStyles.HexNumber)) + "def";
 
-            Assert.IsTrue(data.Any(c => char.IsHighSurrogate(c)));
-            Assert.IsTrue(data.Any(c => char.IsLowSurrogate(c)));
+            Assert.Contains(data, c => char.IsHighSurrogate(c));
+            Assert.Contains(data, c => char.IsLowSurrogate(c));
 
             using (var str = new StringReader("\"" + data + "\""))
             {
                 var res = JSON.Deserialize<string>(str);
-                Assert.AreEqual(data, res);
+                Assert.Equal(data, res);
             }
         }
 
@@ -3840,33 +3841,33 @@ namespace JilTests
             return JSON.Deserialize<List<T>>(str, opts);
         }
 
-        [TestMethod]
+        [Fact]
         public void AnonNulls()
         {
             {
                 var example = new { A = 1 };
 
                 var a = AnonObjectByExample(example, "[null, {\"A\":1234}, null]");
-                Assert.AreEqual(3, a.Count);
-                Assert.IsNull(a[0]);
-                Assert.IsNotNull(a[1]);
-                Assert.AreEqual(1234, a[1].A);
-                Assert.IsNull(a[2]);
+                Assert.Equal(3, a.Count);
+                Assert.Null(a[0]);
+                Assert.NotNull(a[1]);
+                Assert.Equal(1234, a[1].A);
+                Assert.Null(a[2]);
             }
 
             {
                 var example = new { A = 1 };
 
                 var a = AnonObjectByExample(example, "[null, {\"A\":1234}, null]");
-                Assert.AreEqual(3, a.Count);
-                Assert.IsNull(a[0]);
-                Assert.IsNotNull(a[1]);
-                Assert.AreEqual(1234, a[1].A);
-                Assert.IsNull(a[2]);
+                Assert.Equal(3, a.Count);
+                Assert.Null(a[0]);
+                Assert.NotNull(a[1]);
+                Assert.Equal(1234, a[1].A);
+                Assert.Null(a[2]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AnonObjects()
         {
             {
@@ -3887,23 +3888,23 @@ namespace JilTests
                 const string str = "[{\"A\":1234, \"B\": 123.45, \"C\": 678.90, \"E\": \"hello world\", \"F\": \"c\", \"G\": \"EB29803F-A68D-4647-8512-5F0EE906CC90\", \"H\": \"1999-12-31\", \"I\": [1,2,3,4,5,6,7,8,9,10]}, {\"A\":1234, \"B\": 123.45, \"C\": 678.90, \"E\": \"hello world\", \"F\": \"c\", \"G\": \"EB29803F-A68D-4647-8512-5F0EE906CC90\", \"H\": \"1999-12-31\", \"I\": [1,2,3,4,5,6,7,8,9,10]}, {\"A\":1234, \"B\": 123.45, \"C\": 678.90, \"E\": \"hello world\", \"F\": \"c\", \"G\": \"EB29803F-A68D-4647-8512-5F0EE906CC90\", \"H\": \"1999-12-31\", \"I\": [1,2,3,4,5,6,7,8,9,10]}]";
 
                 var res = AnonObjectByExample(example, str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(3, res.Count);
+                Assert.NotNull(res);
+                Assert.Equal(3, res.Count);
                 var first = res[0];
-                Assert.AreEqual(1234, first.A);
-                Assert.AreEqual(123.45, first.B);
-                Assert.AreEqual(678.90f, first.C);
-                Assert.AreEqual(0m, first.D);
-                Assert.AreEqual("hello world", first.E);
-                Assert.AreEqual('c', first.F);
-                Assert.AreEqual(Guid.Parse("EB29803F-A68D-4647-8512-5F0EE906CC90"), first.G);
-                Assert.AreEqual(new DateTime(1999, 12, 31, 0, 0, 0, DateTimeKind.Utc), first.H);
-                Assert.IsNotNull(first.I);
-                Assert.AreEqual(10, first.I.Length);
+                Assert.Equal(1234, first.A);
+                Assert.Equal(123.45, first.B);
+                Assert.Equal(678.90f, first.C);
+                Assert.Equal(0m, first.D);
+                Assert.Equal("hello world", first.E);
+                Assert.Equal('c', first.F);
+                Assert.Equal(Guid.Parse("EB29803F-A68D-4647-8512-5F0EE906CC90"), first.G);
+                Assert.Equal(new DateTime(1999, 12, 31, 0, 0, 0, DateTimeKind.Utc), first.H);
+                Assert.NotNull(first.I);
+                Assert.Equal(10, first.I.Length);
 
                 for (var i = 0; i < 10; i++)
                 {
-                    Assert.AreEqual(i + 1, first.I[i]);
+                    Assert.Equal(i + 1, first.I[i]);
                 }
             }
 
@@ -3925,18 +3926,18 @@ namespace JilTests
                 const string str = "[{\"A\":1, \"B\": 2, \"C\": 3, \"E\": 4, \"F\": 5, \"G\": 6, \"H\": 7, \"I\": 8}]";
 
                 var res = AnonObjectByExample(example, str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(1, res.Count);
+                Assert.NotNull(res);
+                Assert.Single(res);
                 var first = res[0];
-                Assert.AreEqual(1, first.A);
-                Assert.AreEqual(2, first.B);
-                Assert.AreEqual(3, first.C);
-                Assert.AreEqual(0, first.D);
-                Assert.AreEqual(4, first.E);
-                Assert.AreEqual(5, first.F);
-                Assert.AreEqual(6, first.G);
-                Assert.AreEqual(7, first.H);
-                Assert.AreEqual(8, first.I);
+                Assert.Equal(1, first.A);
+                Assert.Equal(2, first.B);
+                Assert.Equal(3, first.C);
+                Assert.Equal(0, first.D);
+                Assert.Equal(4, first.E);
+                Assert.Equal(5, first.F);
+                Assert.Equal(6, first.G);
+                Assert.Equal(7, first.H);
+                Assert.Equal(8, first.I);
             }
 
             {
@@ -3957,23 +3958,23 @@ namespace JilTests
                 const string str = "[{\"A\":1234, \"B\": 123.45, \"C\": 678.90, \"E\": \"hello world\", \"F\": \"c\", \"G\": \"EB29803F-A68D-4647-8512-5F0EE906CC90\", \"H\": \"1999-12-31\", \"I\": [1,2,3,4,5,6,7,8,9,10]}, {\"A\":1234, \"B\": 123.45, \"C\": 678.90, \"E\": \"hello world\", \"F\": \"c\", \"G\": \"EB29803F-A68D-4647-8512-5F0EE906CC90\", \"H\": \"1999-12-31\", \"I\": [1,2,3,4,5,6,7,8,9,10]}, {\"A\":1234, \"B\": 123.45, \"C\": 678.90, \"E\": \"hello world\", \"F\": \"c\", \"G\": \"EB29803F-A68D-4647-8512-5F0EE906CC90\", \"H\": \"1999-12-31\", \"I\": [1,2,3,4,5,6,7,8,9,10]}]";
 
                 var res = AnonObjectByExample(example, str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(3, res.Count);
+                Assert.NotNull(res);
+                Assert.Equal(3, res.Count);
                 var first = res[0];
-                Assert.AreEqual(1234, first.A);
-                Assert.AreEqual(123.45, first.B);
-                Assert.AreEqual(678.90f, first.C);
-                Assert.AreEqual(0m, first.D);
-                Assert.AreEqual("hello world", first.E);
-                Assert.AreEqual('c', first.F);
-                Assert.AreEqual(Guid.Parse("EB29803F-A68D-4647-8512-5F0EE906CC90"), first.G);
-                Assert.AreEqual(new DateTime(1999, 12, 31, 0, 0, 0, DateTimeKind.Utc), first.H);
-                Assert.IsNotNull(first.I);
-                Assert.AreEqual(10, first.I.Length);
+                Assert.Equal(1234, first.A);
+                Assert.Equal(123.45, first.B);
+                Assert.Equal(678.90f, first.C);
+                Assert.Equal(0m, first.D);
+                Assert.Equal("hello world", first.E);
+                Assert.Equal('c', first.F);
+                Assert.Equal(Guid.Parse("EB29803F-A68D-4647-8512-5F0EE906CC90"), first.G);
+                Assert.Equal(new DateTime(1999, 12, 31, 0, 0, 0, DateTimeKind.Utc), first.H);
+                Assert.NotNull(first.I);
+                Assert.Equal(10, first.I.Length);
 
                 for (var i = 0; i < 10; i++)
                 {
-                    Assert.AreEqual(i + 1, first.I[i]);
+                    Assert.Equal(i + 1, first.I[i]);
                 }
             }
 
@@ -3995,18 +3996,18 @@ namespace JilTests
                 const string str = "[{\"A\":1, \"B\": 2, \"C\": 3, \"E\": 4, \"F\": 5, \"G\": 6, \"H\": 7, \"I\": 8}]";
 
                 var res = AnonObjectByExample(example, str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(1, res.Count);
+                Assert.NotNull(res);
+                Assert.Single(res);
                 var first = res[0];
-                Assert.AreEqual(1, first.A);
-                Assert.AreEqual(2, first.B);
-                Assert.AreEqual(3, first.C);
-                Assert.AreEqual(0, first.D);
-                Assert.AreEqual(4, first.E);
-                Assert.AreEqual(5, first.F);
-                Assert.AreEqual(6, first.G);
-                Assert.AreEqual(7, first.H);
-                Assert.AreEqual(8, first.I);
+                Assert.Equal(1, first.A);
+                Assert.Equal(2, first.B);
+                Assert.Equal(3, first.C);
+                Assert.Equal(0, first.D);
+                Assert.Equal(4, first.E);
+                Assert.Equal(5, first.F);
+                Assert.Equal(6, first.G);
+                Assert.Equal(7, first.H);
+                Assert.Equal(8, first.I);
             }
         }
 
@@ -4023,17 +4024,17 @@ namespace JilTests
 #pragma warning restore 0649
         }
 
-        [TestMethod]
+        [Fact]
         public void DataMemberName()
         {
             using (var str = new StringReader("{\"NotSoSecretName\":314159,\"FakeName\":\"Really RealName\",\"Plain\":\"hello world\"}"))
             {
                 var obj = JSON.Deserialize<_DataMemberName>(str);
 
-                Assert.IsNotNull(obj);
-                Assert.AreEqual("hello world", obj.Plain);
-                Assert.AreEqual("Really RealName", obj.RealName);
-                Assert.AreEqual(314159, obj.SecretName);
+                Assert.NotNull(obj);
+                Assert.Equal("hello world", obj.Plain);
+                Assert.Equal("Really RealName", obj.RealName);
+                Assert.Equal(314159, obj.SecretName);
             }
         }
 
@@ -4042,7 +4043,7 @@ namespace JilTests
             return JSON.Deserialize<T>(str, opts);
         }
 
-        [TestMethod]
+        [Fact]
         public void EmptyAnonymousObject()
         {
             var ex = new { };
@@ -4050,49 +4051,49 @@ namespace JilTests
             {
                 {
                     var obj = _EmptyAnonymousObject(ex, "null", Options.Default);
-                    Assert.IsNull(obj);
+                    Assert.Null(obj);
                 }
 
                 {
                     var obj = _EmptyAnonymousObject(ex, "{}", Options.Default);
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
 
                 {
                     var obj = _EmptyAnonymousObject(ex, "{\"A\":1234}", Options.Default);
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
 
                 {
                     var obj = _EmptyAnonymousObject(ex, "{\"A\":1234,\"B\":5678}", Options.Default);
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
             }
 
             {
                 {
                     var obj = _EmptyAnonymousObject(ex, "null", new Options());
-                    Assert.IsNull(obj);
+                    Assert.Null(obj);
                 }
 
                 {
                     var obj = _EmptyAnonymousObject(ex, "{}", new Options());
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
 
                 {
                     var obj = _EmptyAnonymousObject(ex, "{\"A\":1234}", new Options());
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
 
                 {
                     var obj = _EmptyAnonymousObject(ex, "{\"A\":1234,\"B\":5678}", new Options());
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SystemObject()
         {
             {
@@ -4100,21 +4101,21 @@ namespace JilTests
                 {
                     var obj = JSON.Deserialize<object>(str);
 
-                    Assert.IsNull(obj);
+                    Assert.Null(obj);
                 }
 
                 using (var str = new StringReader("{}"))
                 {
                     var obj = JSON.Deserialize<object>(str);
 
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
 
                 using (var str = new StringReader("{\"A\":1234}"))
                 {
                     var obj = JSON.Deserialize<object>(str);
 
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
             }
 
@@ -4123,21 +4124,21 @@ namespace JilTests
                 {
                     var obj = JSON.Deserialize<object>(str, new Options());
 
-                    Assert.IsNull(obj);
+                    Assert.Null(obj);
                 }
 
                 using (var str = new StringReader("{}"))
                 {
                     var obj = JSON.Deserialize<object>(str, new Options());
 
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
 
                 using (var str = new StringReader("{\"A\":1234}"))
                 {
                     var obj = JSON.Deserialize<object>(str, new Options());
 
-                    Assert.IsNotNull(obj);
+                    Assert.NotNull(obj);
                 }
             }
         }
@@ -4154,29 +4155,29 @@ namespace JilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MissingConstructor()
         {
             try
             {
                 JSON.Deserialize<_MissingConstructor>("null");
-                Assert.Fail();
+                Assert.True(false);
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_MissingConstructor: Expected a parameterless constructor for JilTests.DeserializeTests+_MissingConstructor", e.Message);
-                Assert.IsInstanceOfType(e.InnerException, typeof(Jil.Common.ConstructionException));
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_MissingConstructor: Expected a parameterless constructor for JilTests.DeserializeTests+_MissingConstructor", e.Message);
+                Assert.IsType<Jil.Common.ConstructionException>(e.InnerException);
             }
 
             try
             {
                 JSON.Deserialize<_MissingConstructor>("null", new Options());
-                Assert.Fail();
+                Assert.True(false);
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_MissingConstructor: Expected a parameterless constructor for JilTests.DeserializeTests+_MissingConstructor", e.Message);
-                Assert.IsInstanceOfType(e.InnerException, typeof(Jil.Common.ConstructionException));
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_MissingConstructor: Expected a parameterless constructor for JilTests.DeserializeTests+_MissingConstructor", e.Message);
+                Assert.IsType<Jil.Common.ConstructionException>(e.InnerException);
             }
         }
 
@@ -4186,18 +4187,18 @@ namespace JilTests
             public int Id { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void NoNameDataMember()
         {
             using (var str = new StringReader("{\"Id\":1234}"))
             {
                 var res = JSON.Deserialize<_NoNameDataMember>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(1234, res.Id);
+                Assert.NotNull(res);
+                Assert.Equal(1234, res.Id);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadDouble()
         {
             using (var str = new StringReader("1.2E10E10"))
@@ -4205,12 +4206,12 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<double>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.AreEqual("E10", rest);
+                    Assert.Equal("E10", rest);
                 }
             }
 
@@ -4219,12 +4220,12 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<double>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.AreEqual(".3.4.5.6", rest);
+                    Assert.Equal(".3.4.5.6", rest);
                 }
             }
 
@@ -4233,17 +4234,17 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<double>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.AreEqual("+10", rest);
+                    Assert.Equal("+10", rest);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadFloat()
         {
             using (var str = new StringReader("1.2E10E10"))
@@ -4251,12 +4252,12 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<float>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.IsTrue(rest.Length > 0);
+                    Assert.True(rest.Length > 0);
                 }
             }
 
@@ -4265,12 +4266,12 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<float>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.IsTrue(rest.Length > 0);
+                    Assert.True(rest.Length > 0);
                 }
             }
 
@@ -4279,17 +4280,17 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<float>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.IsTrue(rest.Length > 0);
+                    Assert.True(rest.Length > 0);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadDecimal()
         {
             using (var str = new StringReader("1.2E10E10"))
@@ -4297,12 +4298,12 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<decimal>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.AreEqual("E10", rest);
+                    Assert.Equal("E10", rest);
                 }
             }
 
@@ -4311,12 +4312,12 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<decimal>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.AreEqual(".3.4.5.6", rest);
+                    Assert.Equal(".3.4.5.6", rest);
                 }
             }
 
@@ -4325,12 +4326,12 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<decimal>(str);
-                    Assert.Fail();
+                    Assert.True(false);
                 }
                 catch (DeserializationException e)
                 {
                     var rest = e.SnippetAfterError;
-                    Assert.AreEqual("+10", rest);
+                    Assert.Equal("+10", rest);
                 }
             }
         }
@@ -4340,16 +4341,16 @@ namespace JilTests
             public IEnumerable<string> A { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void IEnumerableMember()
         {
             using (var str = new StringReader("{\"A\":[\"abcd\", \"efgh\"]}"))
             {
                 var res = JSON.Deserialize<_IEnumerableMember>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(2, res.A.Count());
-                Assert.AreEqual("abcd", res.A.ElementAt(0));
-                Assert.AreEqual("efgh", res.A.ElementAt(1));
+                Assert.NotNull(res);
+                Assert.Equal(2, res.A.Count());
+                Assert.Equal("abcd", res.A.ElementAt(0));
+                Assert.Equal("efgh", res.A.ElementAt(1));
             }
         }
 
@@ -4358,45 +4359,45 @@ namespace JilTests
             public IReadOnlyList<string> A { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void IReadOnlyListMember()
         {
             using (var str = new StringReader("{\"A\":[\"abcd\", \"efgh\"]}"))
             {
                 var res = JSON.Deserialize<_IReadOnlyListMember>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(2, res.A.Count());
-                Assert.AreEqual("abcd", res.A.ElementAt(0));
-                Assert.AreEqual("efgh", res.A.ElementAt(1));
+                Assert.NotNull(res);
+                Assert.Equal(2, res.A.Count());
+                Assert.Equal("abcd", res.A.ElementAt(0));
+                Assert.Equal("efgh", res.A.ElementAt(1));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Interface()
         {
             using (var str = new StringReader("{\"A\":1234, \"B\": \"hello world\"}"))
             {
                 var res = JSON.Deserialize<_Interface1>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(1234, res.A);
-                Assert.AreEqual("hello world", res.B);
+                Assert.NotNull(res);
+                Assert.Equal(1234, res.A);
+                Assert.Equal("hello world", res.B);
             }
 
             using (var str = new StringReader("{\"A\":1234, \"B\": \"hello world\", \"C\": 3.14159}"))
             {
                 var res = JSON.Deserialize<_Interface2>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(1234, res.A);
-                Assert.AreEqual("hello world", res.B);
-                Assert.AreEqual(3.14159, res.C);
+                Assert.NotNull(res);
+                Assert.Equal(1234, res.A);
+                Assert.Equal("hello world", res.B);
+                Assert.Equal(3.14159, res.C);
             }
 
             using (var str = new StringReader("{\"A\":1234, \"B\":4567, \"C\":890}"))
             {
                 var res = JSON.Deserialize<_Interface3>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(1234, res.A);
-                Assert.AreEqual(890, res.C);
+                Assert.NotNull(res);
+                Assert.Equal(1234, res.A);
+                Assert.Equal(890, res.C);
             }
         }
 
@@ -4405,28 +4406,28 @@ namespace JilTests
             public bool B { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue19()
         {
             using (var str = new StringReader("{\"A\":true}"))
             {
                 var res = JSON.Deserialize<_Issue19>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(false, res.B);
+                Assert.NotNull(res);
+                Assert.False(res.B);
             }
 
             using (var str = new StringReader("{\"A\":true, \"B\":false}"))
             {
                 var res = JSON.Deserialize<_Issue19>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(false, res.B);
+                Assert.NotNull(res);
+                Assert.False(res.B);
             }
 
             using (var str = new StringReader("{\"A\":false, \"B\":true}"))
             {
                 var res = JSON.Deserialize<_Issue19>(str);
-                Assert.IsNotNull(res);
-                Assert.AreEqual(true, res.B);
+                Assert.NotNull(res);
+                Assert.True(res.B);
             }
         }
 
@@ -4438,57 +4439,57 @@ namespace JilTests
             C = 4
         }
 
-        [TestMethod]
+        [Fact]
         public void FlagsEnum()
         {
-            Assert.AreEqual(_FlagsEnum.A, JSON.Deserialize<_FlagsEnum>("\"A\""));
-            Assert.AreEqual(_FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"B\""));
-            Assert.AreEqual(_FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C\""));
+            Assert.Equal(_FlagsEnum.A, JSON.Deserialize<_FlagsEnum>("\"A\""));
+            Assert.Equal(_FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"B\""));
+            Assert.Equal(_FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C\""));
 
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"A, B\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"A,B\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"B, A\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"B,A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"A, B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"A,B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"B, A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B, JSON.Deserialize<_FlagsEnum>("\"B,A\""));
 
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, C\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,C\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, A\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,A\""));
 
-            Assert.AreEqual(_FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, C\""));
-            Assert.AreEqual(_FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,C\""));
-            Assert.AreEqual(_FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, B\""));
-            Assert.AreEqual(_FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,B\""));
+            Assert.Equal(_FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, C\""));
+            Assert.Equal(_FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,C\""));
+            Assert.Equal(_FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, B\""));
+            Assert.Equal(_FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,B\""));
 
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, B, C\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, B,C\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,B, C\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,B,C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, B, C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, B,C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,B, C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,B,C\""));
 
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, C, B\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, C,B\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,C, B\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,C,B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, C, B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A, C,B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,C, B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"A,C,B\""));
 
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, A, C\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, A,C\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,A, C\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,A,C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, A, C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, A,C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,A, C\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,A,C\""));
 
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, C, A\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, C,A\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,C, A\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,C,A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, C, A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B, C,A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,C, A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"B,C,A\""));
 
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, A, B\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, A,B\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,A, B\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,A,B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, A, B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, A,B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,A, B\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,A,B\""));
 
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, B, A\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, B,A\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,B, A\""));
-            Assert.AreEqual(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,B,A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, B, A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C, B,A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,B, A\""));
+            Assert.Equal(_FlagsEnum.A | _FlagsEnum.B | _FlagsEnum.C, JSON.Deserialize<_FlagsEnum>("\"C,B,A\""));
         }
 
         enum _EnumMemberAttributeDefault
@@ -4501,12 +4502,12 @@ namespace JilTests
             C = 4
         }
 
-        [TestMethod]
+        [Fact]
         public void EnumMemberAttributeDefault()
         {
-            Assert.AreEqual(_EnumMemberAttributeDefault.A, JSON.Deserialize<_EnumMemberAttributeDefault>("\"A\""));
-            Assert.AreEqual(_EnumMemberAttributeDefault.B, JSON.Deserialize<_EnumMemberAttributeDefault>("\"B\""));
-            Assert.AreEqual(_EnumMemberAttributeDefault.C, JSON.Deserialize<_EnumMemberAttributeDefault>("\"C\""));
+            Assert.Equal(_EnumMemberAttributeDefault.A, JSON.Deserialize<_EnumMemberAttributeDefault>("\"A\""));
+            Assert.Equal(_EnumMemberAttributeDefault.B, JSON.Deserialize<_EnumMemberAttributeDefault>("\"B\""));
+            Assert.Equal(_EnumMemberAttributeDefault.C, JSON.Deserialize<_EnumMemberAttributeDefault>("\"C\""));
         }
 
         enum _EnumMemberAttributeOverride
@@ -4519,12 +4520,12 @@ namespace JilTests
             C = 4
         }
 
-        [TestMethod]
+        [Fact]
         public void EnumMemberAttributeOverride()
         {
-            Assert.AreEqual(_EnumMemberAttributeOverride.A, JSON.Deserialize<_EnumMemberAttributeOverride>("\"1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverride.B, JSON.Deserialize<_EnumMemberAttributeOverride>("\"2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverride.C, JSON.Deserialize<_EnumMemberAttributeOverride>("\"4\""));
+            Assert.Equal(_EnumMemberAttributeOverride.A, JSON.Deserialize<_EnumMemberAttributeOverride>("\"1\""));
+            Assert.Equal(_EnumMemberAttributeOverride.B, JSON.Deserialize<_EnumMemberAttributeOverride>("\"2\""));
+            Assert.Equal(_EnumMemberAttributeOverride.C, JSON.Deserialize<_EnumMemberAttributeOverride>("\"4\""));
         }
 
         [Flags]
@@ -4538,51 +4539,51 @@ namespace JilTests
             C = 4
         }
 
-        [TestMethod]
+        [Fact]
         public void EnumMemberAttributeOverrideFlags()
         {
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3\""));
 
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,1\""));
 
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,1\""));
 
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,2\""));
 
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 2, 3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 2,3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,2, 3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,2,3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 3, 2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,3, 2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,3,2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 1, 3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 1,3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,1, 3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,1,3\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 3, 1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 3,1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,3, 1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,3,1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 1, 2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 1,2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,1, 2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,1,2\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 2, 1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 2,1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,2, 1\""));
-            Assert.AreEqual(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,2,1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 2, 3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 2,3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,2, 3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,2,3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1, 3, 2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,3, 2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"1,3,2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 1, 3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 1,3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,1, 3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,1,3\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 3, 1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2, 3,1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,3, 1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"2,3,1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 1, 2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 1,2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,1, 2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,1,2\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 2, 1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3, 2,1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,2, 1\""));
+            Assert.Equal(_EnumMemberAttributeOverrideFlags.A | _EnumMemberAttributeOverrideFlags.B | _EnumMemberAttributeOverrideFlags.C, JSON.Deserialize<_EnumMemberAttributeOverrideFlags>("\"3,2,1\""));
         }
 
         enum _CaseInsensitiveEnums
@@ -4592,45 +4593,45 @@ namespace JilTests
             Fizz
         }
 
-        [TestMethod]
+        [Fact]
         public void CaseInsensitiveEnums()
         {
-            Assert.AreEqual(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"foo\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"Foo\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"fOo\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"foO\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"FOo\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"FoO\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"fOO\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"FOO\""));
+            Assert.Equal(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"foo\""));
+            Assert.Equal(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"Foo\""));
+            Assert.Equal(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"fOo\""));
+            Assert.Equal(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"foO\""));
+            Assert.Equal(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"FOo\""));
+            Assert.Equal(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"FoO\""));
+            Assert.Equal(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"fOO\""));
+            Assert.Equal(_CaseInsensitiveEnums.Foo, JSON.Deserialize<_CaseInsensitiveEnums>("\"FOO\""));
 
-            Assert.AreEqual(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"bar\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"Bar\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"bAr\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"baR\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"BAr\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"BaR\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"bAR\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"BAR\""));
+            Assert.Equal(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"bar\""));
+            Assert.Equal(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"Bar\""));
+            Assert.Equal(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"bAr\""));
+            Assert.Equal(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"baR\""));
+            Assert.Equal(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"BAr\""));
+            Assert.Equal(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"BaR\""));
+            Assert.Equal(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"bAR\""));
+            Assert.Equal(_CaseInsensitiveEnums.Bar, JSON.Deserialize<_CaseInsensitiveEnums>("\"BAR\""));
 
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fizz\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"Fizz\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fIzz\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fiZz\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fizZ\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FIzz\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FiZz\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FizZ\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fIZz\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fIzZ\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fiZZ\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FIZz\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FIzZ\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fIZZ\""));
-            Assert.AreEqual(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FIZZ\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fizz\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"Fizz\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fIzz\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fiZz\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fizZ\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FIzz\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FiZz\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FizZ\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fIZz\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fIzZ\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fiZZ\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FIZz\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FIzZ\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"fIZZ\""));
+            Assert.Equal(_CaseInsensitiveEnums.Fizz, JSON.Deserialize<_CaseInsensitiveEnums>("\"FIZZ\""));
         }
 
-        [TestMethod]
+        [Fact]
         public void DynamicMembers()
         {
             var json = @"{
@@ -4642,13 +4643,13 @@ namespace JilTests
 	        }";
 
             var dyn = JSON.Deserialize<Dictionary<string, dynamic>>(json);
-            Assert.IsNotNull(dyn);
-            Assert.AreEqual(5, dyn.Count);
-            Assert.AreEqual("standard", (string)dyn["index.analysis.analyzer.stem.tokenizer"]);
-            Assert.AreEqual("lowercase", (string)dyn["index.analysis.analyzer.exact.filter.0"]);
-            Assert.AreEqual("1s", (string)dyn["index.refresh_interval"]);
-            Assert.AreEqual("custom", (string)dyn["index.analysis.analyzer.exact.type"]);
-            Assert.IsNotNull(dyn["test-dummy-obj"]);
+            Assert.NotNull(dyn);
+            Assert.Equal(5, dyn.Count);
+            Assert.Equal("standard", (string)dyn["index.analysis.analyzer.stem.tokenizer"]);
+            Assert.Equal("lowercase", (string)dyn["index.analysis.analyzer.exact.filter.0"]);
+            Assert.Equal("1s", (string)dyn["index.refresh_interval"]);
+            Assert.Equal("custom", (string)dyn["index.analysis.analyzer.exact.type"]);
+            Assert.NotNull(dyn["test-dummy-obj"]);
             var testDummyObj = dyn["test-dummy-obj"];
 
             var count = 0;
@@ -4658,11 +4659,11 @@ namespace JilTests
                 var val = kv.Value;
                 count++;
 
-                Assert.AreEqual("hello", (string)key);
-                Assert.AreEqual(123, (int)val);
+                Assert.Equal("hello", (string)key);
+                Assert.Equal(123, (int)val);
             }
 
-            Assert.AreEqual(1, count);
+            Assert.Equal(1, count);
         }
 
         class _Issue25
@@ -4678,7 +4679,7 @@ namespace JilTests
             return JSON.Deserialize<T>(json, opts);
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue25()
         {
             var json = "{ \"Id\" : 17, \"Foo\" : { \"Bar\" : 17} }";
@@ -4686,37 +4687,37 @@ namespace JilTests
             {
                 var res = JSON.Deserialize<_Issue25>(json);
 
-                Assert.AreEqual(17, res.Id);
-                Assert.IsNotNull(res.Foo);
+                Assert.Equal(17, res.Id);
+                Assert.NotNull(res.Foo);
             }
 
             {
                 var res = JSON.Deserialize<_Issue25>(json, new Options());
 
-                Assert.AreEqual(17, res.Id);
-                Assert.IsNotNull(res.Foo);
+                Assert.Equal(17, res.Id);
+                Assert.NotNull(res.Foo);
             }
 
             {
                 var example = new { Id = 17, Foo = new { } };
                 var res = ___Issue25DeserializeByExample(example, json, Options.Default);
 
-                Assert.AreEqual(17, res.Id);
-                Assert.IsNotNull(res.Foo);
+                Assert.Equal(17, res.Id);
+                Assert.NotNull(res.Foo);
             }
 
             {
                 var example = new { Id = 17, Foo = new { } };
                 var res = ___Issue25DeserializeByExample(example, json, new Options());
 
-                Assert.AreEqual(17, res.Id);
-                Assert.IsNotNull(res.Foo);
+                Assert.Equal(17, res.Id);
+                Assert.NotNull(res.Foo);
             }
         }
 
         class _EmptyMembers { }
 
-        [TestMethod]
+        [Fact]
         public void EmptyMembers()
         {
             {
@@ -4725,10 +4726,10 @@ namespace JilTests
                 var str3 = "{\"foo\":0, \"bar\":0}";
                 var str4 = "{\"foo\":0, \"bar\":0, \"fizz\":0}";
 
-                Assert.IsNotNull(JSON.Deserialize<_EmptyMembers>(str1));
-                Assert.IsNotNull(JSON.Deserialize<_EmptyMembers>(str2));
-                Assert.IsNotNull(JSON.Deserialize<_EmptyMembers>(str3));
-                Assert.IsNotNull(JSON.Deserialize<_EmptyMembers>(str4));
+                Assert.NotNull(JSON.Deserialize<_EmptyMembers>(str1));
+                Assert.NotNull(JSON.Deserialize<_EmptyMembers>(str2));
+                Assert.NotNull(JSON.Deserialize<_EmptyMembers>(str3));
+                Assert.NotNull(JSON.Deserialize<_EmptyMembers>(str4));
             }
 
             {
@@ -4737,10 +4738,10 @@ namespace JilTests
                 var str3 = "{\"foo\":0, \"bar\":0}";
                 var str4 = "{\"foo\":0, \"bar\":0, \"fizz\":0}";
 
-                Assert.IsNotNull(JSON.Deserialize<_EmptyMembers>(str1, new Options()));
-                Assert.IsNotNull(JSON.Deserialize<_EmptyMembers>(str2, new Options()));
-                Assert.IsNotNull(JSON.Deserialize<_EmptyMembers>(str3, new Options()));
-                Assert.IsNotNull(JSON.Deserialize<_EmptyMembers>(str4, new Options()));
+                Assert.NotNull(JSON.Deserialize<_EmptyMembers>(str1, new Options()));
+                Assert.NotNull(JSON.Deserialize<_EmptyMembers>(str2, new Options()));
+                Assert.NotNull(JSON.Deserialize<_EmptyMembers>(str3, new Options()));
+                Assert.NotNull(JSON.Deserialize<_EmptyMembers>(str4, new Options()));
             }
         }
 
@@ -4757,7 +4758,7 @@ namespace JilTests
             return JSON.Deserialize<T>(json, opts);
         }
 
-        [TestMethod]
+        [Fact]
         public void NullEmptyMembers()
         {
             var json = "{ \"Id\" : 17, \"Foo\" : null }";
@@ -4765,35 +4766,35 @@ namespace JilTests
             {
                 var res = JSON.Deserialize<_NullEmptyMembers>(json);
 
-                Assert.AreEqual(17, res.Id);
-                Assert.IsNull(res.Foo);
+                Assert.Equal(17, res.Id);
+                Assert.Null(res.Foo);
             }
 
             {
                 var res = JSON.Deserialize<_NullEmptyMembers>(json, new Options());
 
-                Assert.AreEqual(17, res.Id);
-                Assert.IsNull(res.Foo);
+                Assert.Equal(17, res.Id);
+                Assert.Null(res.Foo);
             }
 
             {
                 var example = new { Id = 17, Foo = new { } };
                 var res = NullEmptyMembersDeserializeByExample(example, json, Options.Default);
 
-                Assert.AreEqual(17, res.Id);
-                Assert.IsNull(res.Foo);
+                Assert.Equal(17, res.Id);
+                Assert.Null(res.Foo);
             }
 
             {
                 var example = new { Id = 17, Foo = new { } };
                 var res = NullEmptyMembersDeserializeByExample(example, json, new Options());
 
-                Assert.AreEqual(17, res.Id);
-                Assert.IsNull(res.Foo);
+                Assert.Equal(17, res.Id);
+                Assert.Null(res.Foo);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DateTimeOffsets()
         {
             // ISO8601
@@ -4801,7 +4802,7 @@ namespace JilTests
             {
                 var dto = new DateTimeOffset(1900, 1, 1, 12, 30, 0, TimeSpan.Zero);
                 var res = JSON.Deserialize<DateTimeOffset>(str, Options.ISO8601);
-                Assert.AreEqual(dto, res);
+                Assert.Equal(dto, res);
             }
 
             // Newtonsoft
@@ -4826,7 +4827,7 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<DateTimeOffset>(str, Options.Default).UtcDateTime;
                     var delta = (now - res).Duration();
-                    Assert.IsTrue(delta < TimeSpan.FromMilliseconds(1));
+                    Assert.True(delta < TimeSpan.FromMilliseconds(1));
                 }
             }
 
@@ -4839,7 +4840,7 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<DateTimeOffset>(str, Options.MillisecondsSinceUnixEpoch);
                     var delta = (now - res).Duration();
-                    Assert.IsTrue(delta < TimeSpan.FromMilliseconds(1));
+                    Assert.True(delta < TimeSpan.FromMilliseconds(1));
                 }
             }
 
@@ -4852,18 +4853,18 @@ namespace JilTests
                 {
                     var res = JSON.Deserialize<DateTimeOffset>(str, Options.SecondsSinceUnixEpoch);
                     var delta = (now - res).Duration();
-                    Assert.IsTrue(delta < TimeSpan.FromSeconds(1));
+                    Assert.True(delta < TimeSpan.FromSeconds(1));
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue43()
         {
             var shouldMatch = new DateTime(2014, 08, 08, 14, 04, 01, 426, DateTimeKind.Utc);
             shouldMatch = new DateTime(shouldMatch.Ticks + 5339, DateTimeKind.Utc);
             var dt = JSON.Deserialize<DateTime>("\"2014-08-08T14:04:01.4265339+00:00\"", Options.ISO8601);
-            Assert.AreEqual(shouldMatch, dt);
+            Assert.Equal(shouldMatch, dt);
         }
 
         public class _Issue48
@@ -4871,21 +4872,21 @@ namespace JilTests
             public string S { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue48()
         {
             var res2 = JSON.Deserialize<string>("\"\\uabcd\"");
-            Assert.AreEqual("\uabcd", res2);
+            Assert.Equal("\uabcd", res2);
 
             var text = "{\"T\":\"\\u003c\"}";
             var res = JSON.Deserialize<_Issue48>(text);
-            Assert.IsNotNull(res);
-            Assert.IsNull(res.S);
+            Assert.NotNull(res);
+            Assert.Null(res.S);
             var dyn = JSON.DeserializeDynamic(text);
-            Assert.AreEqual("\u003c", (string)dyn.T);
+            Assert.Equal("\u003c", (string)dyn.T);
         }
 
-        [TestMethod]
+        [Fact]
         public void IllegalUTF16Char()
         {
             // Ok, this is a pain
@@ -4895,7 +4896,7 @@ namespace JilTests
             //   should be...
 
             var raw = JSON.Deserialize<string>("\"\\uD83D\"");
-            Assert.AreEqual(0xD83D, (int)raw[0]);
+            Assert.Equal(0xD83D, (int)raw[0]);
         }
 
         public class _Issue53
@@ -4908,35 +4909,35 @@ namespace JilTests
         }
 
 
-        [TestMethod]
+        [Fact]
         public void Issue53()
         {
             var empty = JSON.Deserialize<_Issue53>("{}");
-            Assert.IsNotNull(empty);
-            Assert.IsNull(empty.SerializedProperty);
-            Assert.AreEqual(default(DateTime), empty.NotSerializedProperty);
+            Assert.NotNull(empty);
+            Assert.Null(empty.SerializedProperty);
+            Assert.Equal(default(DateTime), empty.NotSerializedProperty);
 
             var data = JSON.Deserialize<_Issue53>("{\"NotSerializedProperty\":\"a value!\"}");
-            Assert.IsNotNull(data);
-            Assert.AreEqual("a value!", data.SerializedProperty);
-            Assert.AreEqual(default(DateTime), data.NotSerializedProperty);
+            Assert.NotNull(data);
+            Assert.Equal("a value!", data.SerializedProperty);
+            Assert.Equal(default(DateTime), data.NotSerializedProperty);
         }
 
         enum _BadEnum1 { A, B };
         enum _BadEnum2 { A, B };
 
-        [TestMethod]
+        [Fact]
         public void BadEnum()
         {
             try
             {
                 Jil.Deserialize.InlineDeserializer<_BadEnum1>.UseNameAutomataForEnums = false;
                 var e = JSON.Deserialize<_BadEnum1>("\"C\"");
-                Assert.Fail("Should have failed, instead got: " + e);
+                Assert.True(false, "Should have failed, instead got: " + e);
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Unexpected value for _BadEnum1: C", e.Message);
+                Assert.Equal("Unexpected value for _BadEnum1: C", e.Message);
             }
             finally
             {
@@ -4947,11 +4948,11 @@ namespace JilTests
             {
                 Jil.Deserialize.InlineDeserializer<_BadEnum2>.UseNameAutomataForEnums = true;
                 var e = JSON.Deserialize<_BadEnum2>("\"C\"");
-                Assert.Fail("Should have failed, instead got: " + e);
+                Assert.True(false, "Should have failed, instead got: " + e);
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Unexpected value for _BadEnum2", e.Message);
+                Assert.Equal("Unexpected value for _BadEnum2", e.Message);
             }
             finally
             {
@@ -4966,12 +4967,12 @@ namespace JilTests
             Résumé
         }
 
-        [TestMethod]
+        [Fact]
         public void EnumEscapes()
         {
-            Assert.AreEqual(_EnumEscapes.Foo, JSON.Deserialize<_EnumEscapes>(@"""F\u006f\u006F"""));
-            Assert.AreEqual(_EnumEscapes.Bar, JSON.Deserialize<_EnumEscapes>(@"""\u0042\u0061\u0072"""));
-            Assert.AreEqual(_EnumEscapes.Résumé, JSON.Deserialize<_EnumEscapes>(@"""R\u00e9sum\u00E9"""));
+            Assert.Equal(_EnumEscapes.Foo, JSON.Deserialize<_EnumEscapes>(@"""F\u006f\u006F"""));
+            Assert.Equal(_EnumEscapes.Bar, JSON.Deserialize<_EnumEscapes>(@"""\u0042\u0061\u0072"""));
+            Assert.Equal(_EnumEscapes.Résumé, JSON.Deserialize<_EnumEscapes>(@"""R\u00e9sum\u00E9"""));
         }
 
         class _DeserializeNonGenericClass
@@ -4986,17 +4987,17 @@ namespace JilTests
             public int B { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void DeserializeNonGeneric()
         {
             var a = (_DeserializeNonGenericClass)JSON.Deserialize("{\"A\":\"hello world\", \"B\":123}", typeof(_DeserializeNonGenericClass));
-            Assert.IsNotNull(a);
-            Assert.AreEqual("hello world", a.A);
-            Assert.AreEqual(123, a.B);
+            Assert.NotNull(a);
+            Assert.Equal("hello world", a.A);
+            Assert.Equal(123, a.B);
 
             var b = (_DeserializeNonGenericStruct)JSON.Deserialize("{\"A\":\"hello world\", \"B\":123}", typeof(_DeserializeNonGenericStruct));
-            Assert.AreEqual("hello world", b.A);
-            Assert.AreEqual(123, b.B);
+            Assert.Equal("hello world", b.A);
+            Assert.Equal(123, b.B);
         }
 
         class _Issue73
@@ -5004,13 +5005,13 @@ namespace JilTests
             public string[] foo { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue73()
         {
             {
                 var obj = JSON.Deserialize<_Issue73>(@"{""foo"":null}");
-                Assert.IsNotNull(obj);
-                Assert.IsNull(obj.foo);
+                Assert.NotNull(obj);
+                Assert.Null(obj.foo);
             }
         }
 
@@ -5020,27 +5021,27 @@ namespace JilTests
             public string Foo { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpectedEndOfStream()
         {
             try
             {
                 JSON.Deserialize<string>("\"hello world\"       {");
-                Assert.Fail("should have failed");
+                Assert.True(false, "should have failed");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Expected end of stream", e.Message);
+                Assert.Equal("Expected end of stream", e.Message);
             }
 
             try
             {
                 JSON.Deserialize<_ExpectedEndOfStream>("{\"Other\":{\"Foo\":\"do a thing!\"}, \"Foo\":\"another thing!\"}   dfsfsd");
-                Assert.Fail("should have failed");
+                Assert.True(false, "should have failed");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Expected end of stream", e.Message);
+                Assert.Equal("Expected end of stream", e.Message);
             }
         }
 
@@ -5060,27 +5061,27 @@ namespace JilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue86()
         {
             try
             {
                 JSON.Deserialize<_Issue86List>("[\"hello\", \"world\"]");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch(DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_Issue86List: Expected a parameterless constructor for JilTests.DeserializeTests+_Issue86List", e.Message);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_Issue86List: Expected a parameterless constructor for JilTests.DeserializeTests+_Issue86List", e.Message);
             }
 
             try
             {
                 JSON.Deserialize<_Issue86Dict>("{\"hello\": \"world\"}");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_Issue86Dict: Expected a parameterless constructor for JilTests.DeserializeTests+_Issue86Dict", e.Message);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_Issue86Dict: Expected a parameterless constructor for JilTests.DeserializeTests+_Issue86Dict", e.Message);
             }
         }
 
@@ -5164,49 +5165,49 @@ namespace JilTests
             public H H2 { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertEnumsToPrimitives()
         {
             var res = JSON.Deserialize<_ConvertEnumsToPrimitives>("{\n \"G1\": \"X7\",\n \"G2\": 1,\n \"H1\": \"X8\",\n \"H2\": 1,\n \"E1\": \"X5\",\n \"E2\": 1,\n \"E3\": 2,\n \"F1\": \"X6\",\n \"F2\": 1,\n \"F3\": 2,\n \"F4\": 0,\n \"C1\": \"X3\",\n \"C2\": 1,\n \"C3\": 2,\n \"C4\": 0,\n \"D1\": \"X4\",\n \"D2\": 1,\n \"D3\": 2,\n \"D4\": 0,\n \"D5\": 1,\n \"D6\": 2,\n \"A1\": \"X1\",\n \"A2\": 1,\n \"A3\": 2,\n \"A4\": 0,\n \"A5\": 1,\n \"A6\": 2,\n \"A7\": 0,\n \"A8\": 1,\n \"B1\": \"X2\",\n \"B2\": 1,\n \"B3\": 2,\n \"B4\": 0,\n \"B5\": 1\n}");
 
-            Assert.IsNotNull(res);
-            Assert.IsTrue(res.A1 == _ConvertEnumsToPrimitives.A.X1);
-            Assert.IsTrue(res.A2 == _ConvertEnumsToPrimitives.A.Y1);
-            Assert.IsTrue(res.A3 == _ConvertEnumsToPrimitives.A.Z1);
-            Assert.IsTrue(res.A4 == _ConvertEnumsToPrimitives.A.X1);
-            Assert.IsTrue(res.A5 == _ConvertEnumsToPrimitives.A.Y1);
-            Assert.IsTrue(res.A6 == _ConvertEnumsToPrimitives.A.Z1);
-            Assert.IsTrue(res.A7 == _ConvertEnumsToPrimitives.A.X1);
-            Assert.IsTrue(res.A8 == _ConvertEnumsToPrimitives.A.Y1);
-            Assert.IsTrue(res.B1 == _ConvertEnumsToPrimitives.B.X2);
-            Assert.IsTrue(res.B2 == _ConvertEnumsToPrimitives.B.Y2);
-            Assert.IsTrue(res.B3 == _ConvertEnumsToPrimitives.B.Z2);
-            Assert.IsTrue(res.B4 == _ConvertEnumsToPrimitives.B.X2);
-            Assert.IsTrue(res.B5 == _ConvertEnumsToPrimitives.B.Y2);
-            Assert.IsTrue(res.C1 == _ConvertEnumsToPrimitives.C.X3);
-            Assert.IsTrue(res.C2 == _ConvertEnumsToPrimitives.C.Y3);
-            Assert.IsTrue(res.C3 == _ConvertEnumsToPrimitives.C.Z3);
-            Assert.IsTrue(res.C4 == _ConvertEnumsToPrimitives.C.X3);
-            Assert.IsTrue(res.D1 == _ConvertEnumsToPrimitives.D.X4);
-            Assert.IsTrue(res.D2 == _ConvertEnumsToPrimitives.D.Y4);
-            Assert.IsTrue(res.D3 == _ConvertEnumsToPrimitives.D.Z4);
-            Assert.IsTrue(res.D4 == _ConvertEnumsToPrimitives.D.X4);
-            Assert.IsTrue(res.D5 == _ConvertEnumsToPrimitives.D.Y4);
-            Assert.IsTrue(res.D6 == _ConvertEnumsToPrimitives.D.Z4);
-            Assert.IsTrue(res.E1 == _ConvertEnumsToPrimitives.E.X5);
-            Assert.IsTrue(res.E2 == _ConvertEnumsToPrimitives.E.Y5);
-            Assert.IsTrue(res.E3 == _ConvertEnumsToPrimitives.E.Z5);
-            Assert.IsTrue(res.F1 == _ConvertEnumsToPrimitives.F.X6);
-            Assert.IsTrue(res.F2 == _ConvertEnumsToPrimitives.F.Y6);
-            Assert.IsTrue(res.F3 == _ConvertEnumsToPrimitives.F.Z6);
-            Assert.IsTrue(res.F4 == _ConvertEnumsToPrimitives.F.X6);
-            Assert.IsTrue(res.G1 == _ConvertEnumsToPrimitives.G.X7);
-            Assert.IsTrue(res.G2 == _ConvertEnumsToPrimitives.G.Y7);
-            Assert.IsTrue(res.H1 == _ConvertEnumsToPrimitives.H.X8);
-            Assert.IsTrue(res.H2 == _ConvertEnumsToPrimitives.H.Y8);
+            Assert.NotNull(res);
+            Assert.True(res.A1 == _ConvertEnumsToPrimitives.A.X1);
+            Assert.True(res.A2 == _ConvertEnumsToPrimitives.A.Y1);
+            Assert.True(res.A3 == _ConvertEnumsToPrimitives.A.Z1);
+            Assert.True(res.A4 == _ConvertEnumsToPrimitives.A.X1);
+            Assert.True(res.A5 == _ConvertEnumsToPrimitives.A.Y1);
+            Assert.True(res.A6 == _ConvertEnumsToPrimitives.A.Z1);
+            Assert.True(res.A7 == _ConvertEnumsToPrimitives.A.X1);
+            Assert.True(res.A8 == _ConvertEnumsToPrimitives.A.Y1);
+            Assert.True(res.B1 == _ConvertEnumsToPrimitives.B.X2);
+            Assert.True(res.B2 == _ConvertEnumsToPrimitives.B.Y2);
+            Assert.True(res.B3 == _ConvertEnumsToPrimitives.B.Z2);
+            Assert.True(res.B4 == _ConvertEnumsToPrimitives.B.X2);
+            Assert.True(res.B5 == _ConvertEnumsToPrimitives.B.Y2);
+            Assert.True(res.C1 == _ConvertEnumsToPrimitives.C.X3);
+            Assert.True(res.C2 == _ConvertEnumsToPrimitives.C.Y3);
+            Assert.True(res.C3 == _ConvertEnumsToPrimitives.C.Z3);
+            Assert.True(res.C4 == _ConvertEnumsToPrimitives.C.X3);
+            Assert.True(res.D1 == _ConvertEnumsToPrimitives.D.X4);
+            Assert.True(res.D2 == _ConvertEnumsToPrimitives.D.Y4);
+            Assert.True(res.D3 == _ConvertEnumsToPrimitives.D.Z4);
+            Assert.True(res.D4 == _ConvertEnumsToPrimitives.D.X4);
+            Assert.True(res.D5 == _ConvertEnumsToPrimitives.D.Y4);
+            Assert.True(res.D6 == _ConvertEnumsToPrimitives.D.Z4);
+            Assert.True(res.E1 == _ConvertEnumsToPrimitives.E.X5);
+            Assert.True(res.E2 == _ConvertEnumsToPrimitives.E.Y5);
+            Assert.True(res.E3 == _ConvertEnumsToPrimitives.E.Z5);
+            Assert.True(res.F1 == _ConvertEnumsToPrimitives.F.X6);
+            Assert.True(res.F2 == _ConvertEnumsToPrimitives.F.Y6);
+            Assert.True(res.F3 == _ConvertEnumsToPrimitives.F.Z6);
+            Assert.True(res.F4 == _ConvertEnumsToPrimitives.F.X6);
+            Assert.True(res.G1 == _ConvertEnumsToPrimitives.G.X7);
+            Assert.True(res.G2 == _ConvertEnumsToPrimitives.G.Y7);
+            Assert.True(res.H1 == _ConvertEnumsToPrimitives.H.X8);
+            Assert.True(res.H2 == _ConvertEnumsToPrimitives.H.Y8);
         }
 
-        [TestMethod]
+        [Fact]
         public void SecondsTimeSpan()
         {
             var rand = new Random();
@@ -5240,11 +5241,11 @@ namespace JilTests
                 var json = JSON.Serialize(ts1, Options.SecondsSinceUnixEpoch);
                 var ts2 = JSON.Deserialize<TimeSpan>(json, Options.SecondsSinceUnixEpoch);
 
-                Assert.AreEqual(Math.Round(ts1.TotalSeconds), Math.Round(ts2.TotalSeconds));
+                Assert.Equal(Math.Round(ts1.TotalSeconds), Math.Round(ts2.TotalSeconds));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MillisecondsTimeSpan()
         {
             var rand = new Random();
@@ -5278,11 +5279,11 @@ namespace JilTests
                 var json = JSON.Serialize(ts1, Options.MillisecondsSinceUnixEpoch);
                 var ts2 = JSON.Deserialize<TimeSpan>(json, Options.MillisecondsSinceUnixEpoch);
 
-                Assert.AreEqual(Math.Round(ts1.TotalMilliseconds), Math.Round(ts2.TotalMilliseconds));
+                Assert.Equal(Math.Round(ts1.TotalMilliseconds), Math.Round(ts2.TotalMilliseconds));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MicrosoftTimeSpan()
         {
             var rand = new Random();
@@ -5316,11 +5317,11 @@ namespace JilTests
                 var json = JSON.Serialize(ts1, Options.Default);
                 var ts2 = JSON.Deserialize<TimeSpan>(json, Options.Default);
 
-                Assert.AreEqual(Math.Round(ts1.TotalMilliseconds), Math.Round(ts2.TotalMilliseconds));
+                Assert.Equal(Math.Round(ts1.TotalMilliseconds), Math.Round(ts2.TotalMilliseconds));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ISO8601TimeSpan()
         {
             var rand = new Random();
@@ -5358,13 +5359,13 @@ namespace JilTests
                 var txtJson = json.Replace("\"", "");
                 var ts3 = System.Xml.XmlConvert.ToTimeSpan(txtJson);
 
-                Assert.AreEqual(ts2, ts4);
-                Assert.AreEqual(Math.Round(ts1.TotalMilliseconds), Math.Round(ts2.TotalMilliseconds));
-                Assert.AreEqual(Math.Round(ts3.TotalMilliseconds), Math.Round(ts2.TotalMilliseconds));
+                Assert.Equal(ts2, ts4);
+                Assert.Equal(Math.Round(ts1.TotalMilliseconds), Math.Round(ts2.TotalMilliseconds));
+                Assert.Equal(Math.Round(ts3.TotalMilliseconds), Math.Round(ts2.TotalMilliseconds));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ISO8601TimeSpan_YearsMonth()
         {
             var rand = new Random();
@@ -5389,11 +5390,11 @@ namespace JilTests
                 var shouldMatch = System.Xml.XmlConvert.ToTimeSpan(str);
                 var ts = JSON.Deserialize<TimeSpan>("\"" + str + "\"", Options.ISO8601);
 
-                Assert.AreEqual(shouldMatch.Ticks, ts.Ticks);
+                Assert.Equal(shouldMatch.Ticks, ts.Ticks);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ISO8601TimeSpan_Weeks()
         {
             var rand = new Random();
@@ -5419,7 +5420,7 @@ namespace JilTests
                 var str = t.Item2;
                 var ts = JSON.Deserialize<TimeSpan>("\"" + str + "\"", Options.ISO8601);
 
-                Assert.AreEqual(w, ts.TotalDays / 7);
+                Assert.Equal(w, ts.TotalDays / 7);
             }
         }
 
@@ -5431,12 +5432,12 @@ namespace JilTests
             private _PrivateConstructor_Object() { }
         }
 
-        [TestMethod]
+        [Fact]
         public void PrivateConstructor_Object()
         {
             var res = JSON.Deserialize<_PrivateConstructor_Object>("{\"A\":\"hello world\", \"B\": 12345}");
-            Assert.AreEqual("hello world", res.A);
-            Assert.AreEqual(12345, res.B);
+            Assert.Equal("hello world", res.A);
+            Assert.Equal(12345, res.B);
         }
 
         class _PrivateConstructor_List : List<string>
@@ -5444,13 +5445,13 @@ namespace JilTests
             private _PrivateConstructor_List() : base() { }
         }
 
-        [TestMethod]
+        [Fact]
         public void PrivateConstructor_List()
         {
             var res = JSON.Deserialize<_PrivateConstructor_List>("[\"hello\", \"world\"]");
-            Assert.AreEqual(2, res.Count);
-            Assert.AreEqual("hello", res[0]);
-            Assert.AreEqual("world", res[1]);
+            Assert.Equal(2, res.Count);
+            Assert.Equal("hello", res[0]);
+            Assert.Equal("world", res[1]);
         }
 
         class _PrivateConstructor_Dictionary : Dictionary<string, int>
@@ -5458,14 +5459,14 @@ namespace JilTests
             private _PrivateConstructor_Dictionary() : base() { }
         }
 
-        [TestMethod]
+        [Fact]
         public void PrivateConstructor_Dictionary()
         {
             var res = JSON.Deserialize<_PrivateConstructor_Dictionary>("{\"hello\": 123, \"world\":456, \"foo\":789}");
-            Assert.AreEqual(3, res.Count);
-            Assert.AreEqual(123, res["hello"]);
-            Assert.AreEqual(456, res["world"]);
-            Assert.AreEqual(789, res["foo"]);
+            Assert.Equal(3, res.Count);
+            Assert.Equal(123, res["hello"]);
+            Assert.Equal(456, res["world"]);
+            Assert.Equal(789, res["foo"]);
         }
 
         class _SeekNotSupported : Stream
@@ -5542,48 +5543,48 @@ namespace JilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SeekNotSupported()
         {
             using(var str = new _SeekNotSupported("{\"hello\": 123, \"world\":456, \"foo\":789}"))
             using(var reader = new StreamReader(str))
             {
                 var res = JSON.Deserialize<Dictionary<string, int>>(reader);
-                Assert.AreEqual(3, res.Count);
-                Assert.AreEqual(123, res["hello"]);
-                Assert.AreEqual(456, res["world"]);
-                Assert.AreEqual(789, res["foo"]);
+                Assert.Equal(3, res.Count);
+                Assert.Equal(123, res["hello"]);
+                Assert.Equal(456, res["world"]);
+                Assert.Equal(789, res["foo"]);
             }
 
             using (var str = new _SeekNotSupported("{\"hello\": 123, \"world\":456, \"foo\":789}"))
             using (var reader = new StreamReader(str))
             {
                 var res = (Dictionary<string, int>)JSON.Deserialize(reader, typeof(Dictionary<string, int>));
-                Assert.AreEqual(3, res.Count);
-                Assert.AreEqual(123, res["hello"]);
-                Assert.AreEqual(456, res["world"]);
-                Assert.AreEqual(789, res["foo"]);
+                Assert.Equal(3, res.Count);
+                Assert.Equal(123, res["hello"]);
+                Assert.Equal(456, res["world"]);
+                Assert.Equal(789, res["foo"]);
             }
 
             using (var str = new _SeekNotSupported("{\"hello\": 123, \"world\":456, \"foo\":789}"))
             using (var reader = new StreamReader(str))
             {
                 var res = JSON.DeserializeDynamic(reader);
-                Assert.AreEqual(123, (int)res.hello);
-                Assert.AreEqual(456, (int)res.world);
-                Assert.AreEqual(789, (int)res.foo);
+                Assert.Equal(123, (int)res.hello);
+                Assert.Equal(456, (int)res.world);
+                Assert.Equal(789, (int)res.foo);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void EmptyArrayWithSpace()
         {
             var res = JSON.Deserialize<object[]>("[ ]");
-            Assert.IsNotNull(res);
-            Assert.AreEqual(0, res.Length);
+            Assert.NotNull(res);
+            Assert.Empty(res);
         }
 
-        [TestMethod]
+        [Fact]
         public void DateTimeOffsetPreservesOffset()
         {
             var toTest = new List<DateTimeOffset>();
@@ -5611,15 +5612,15 @@ namespace JilTests
                 var strStr = JSON.Serialize(testDto, Options.ISO8601);
                 var dto = JSON.Deserialize<DateTimeOffset>(strStr, Options.ISO8601);
 
-                Assert.AreEqual(testDto.Year, dto.Year);
-                Assert.AreEqual(testDto.Month, dto.Month);
-                Assert.AreEqual(testDto.Day, dto.Day);
-                Assert.AreEqual(testDto.Hour, dto.Hour);
-                Assert.AreEqual(testDto.Minute, dto.Minute);
-                Assert.AreEqual(testDto.Second, dto.Second);
-                Assert.AreEqual(testDto.Millisecond, dto.Millisecond);
-                Assert.AreEqual(testDto.Offset.Hours, dto.Offset.Hours);
-                Assert.AreEqual(testDto.Offset.Minutes, dto.Offset.Minutes);
+                Assert.Equal(testDto.Year, dto.Year);
+                Assert.Equal(testDto.Month, dto.Month);
+                Assert.Equal(testDto.Day, dto.Day);
+                Assert.Equal(testDto.Hour, dto.Hour);
+                Assert.Equal(testDto.Minute, dto.Minute);
+                Assert.Equal(testDto.Second, dto.Second);
+                Assert.Equal(testDto.Millisecond, dto.Millisecond);
+                Assert.Equal(testDto.Offset.Hours, dto.Offset.Hours);
+                Assert.Equal(testDto.Offset.Minutes, dto.Offset.Minutes);
             }
         }
 
@@ -5628,7 +5629,7 @@ namespace JilTests
             public int A { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void EarlyStreamEnds()
         {
             using (var str = new StringReader("{\"A\":"))
@@ -5636,11 +5637,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_EarlyStreamEnds_Int>(str);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsTrue(e.EndedUnexpectedly);
+                    Assert.True(e.EndedUnexpectedly);
                 }
             }
 
@@ -5649,11 +5650,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_EarlyStreamEnds_Int>(str);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsTrue(e.EndedUnexpectedly);
+                    Assert.True(e.EndedUnexpectedly);
                 }
             }
 
@@ -5662,11 +5663,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_EarlyStreamEnds_Int>(str);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsTrue(e.EndedUnexpectedly);
+                    Assert.True(e.EndedUnexpectedly);
                 }
             }
 
@@ -5675,11 +5676,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<Guid>(str);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsTrue(e.EndedUnexpectedly);
+                    Assert.True(e.EndedUnexpectedly);
                 }
             }
 
@@ -5688,11 +5689,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<int[]>(str);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.IsTrue(e.EndedUnexpectedly);
+                    Assert.True(e.EndedUnexpectedly);
                 }
             }
         }
@@ -5702,31 +5703,31 @@ namespace JilTests
             try
             {
                 var x = JSON.Deserialize<T>("1.");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot end with .", e.Message);
+                Assert.Equal("Number cannot end with .", e.Message);
             }
 
             try
             {
                 var x = JSON.Deserialize<T>("12.");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot end with .", e.Message);
+                Assert.Equal("Number cannot end with .", e.Message);
             }
 
             try
             {
                 var x = JSON.Deserialize<T>("123.");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot end with .", e.Message);
+                Assert.Equal("Number cannot end with .", e.Message);
             }
         }
 
@@ -5735,31 +5736,31 @@ namespace JilTests
             try
             {
                 var x = JSON.Deserialize<T>("-1.");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot end with .", e.Message);
+                Assert.Equal("Number cannot end with .", e.Message);
             }
 
             try
             {
                 var x = JSON.Deserialize<T>("-12.");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot end with .", e.Message);
+                Assert.Equal("Number cannot end with .", e.Message);
             }
 
             try
             {
                 var x = JSON.Deserialize<T>("-123.");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot end with .", e.Message);
+                Assert.Equal("Number cannot end with .", e.Message);
             }
         }
 
@@ -5768,21 +5769,21 @@ namespace JilTests
             try
             {
                 var x = JSON.Deserialize<T>("01");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot have leading zeros", e.Message);
+                Assert.Equal("Number cannot have leading zeros", e.Message);
             }
 
             try
             {
                 var x = JSON.Deserialize<T>("001");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot have leading zeros", e.Message);
+                Assert.Equal("Number cannot have leading zeros", e.Message);
             }
         }
 
@@ -5791,25 +5792,25 @@ namespace JilTests
             try
             {
                 var x = JSON.Deserialize<T>("-01");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot have leading zeros", e.Message);
+                Assert.Equal("Number cannot have leading zeros", e.Message);
             }
 
             try
             {
                 var x = JSON.Deserialize<T>("-001");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Number cannot have leading zeros", e.Message);
+                Assert.Equal("Number cannot have leading zeros", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_Decimal()
         {
             _Issue117_TrailingDot<decimal>();
@@ -5818,7 +5819,7 @@ namespace JilTests
             _Issue117_NegativeLeadingZero<decimal>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_Float()
         {
             _Issue117_TrailingDot<float>();
@@ -5827,7 +5828,7 @@ namespace JilTests
             _Issue117_NegativeLeadingZero<float>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_Double()
         {
             _Issue117_TrailingDot<double>();
@@ -5836,52 +5837,52 @@ namespace JilTests
             _Issue117_NegativeLeadingZero<double>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_SByte()
         {
             _Issue117_LeadingZero<sbyte>();
             _Issue117_NegativeLeadingZero<sbyte>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_Byte()
         {
             _Issue117_LeadingZero<byte>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_UShort()
         {
             _Issue117_LeadingZero<ushort>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_Short()
         {
             _Issue117_LeadingZero<short>();
             _Issue117_NegativeLeadingZero<short>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_UInt()
         {
             _Issue117_LeadingZero<uint>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_Int()
         {
             _Issue117_LeadingZero<int>();
             _Issue117_NegativeLeadingZero<int>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_ULong()
         {
             _Issue117_LeadingZero<ulong>();
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue117_Long()
         {
             _Issue117_LeadingZero<long>();
@@ -5889,7 +5890,7 @@ namespace JilTests
         }
 
 #if !DEBUG
-        [TestMethod]
+        [Fact]
         public void RFC1123DateTimes()
         {
             var toTest = new List<DateTime>();
@@ -5921,90 +5922,90 @@ namespace JilTests
                 var res = JSON.Deserialize<DateTime>(json, Options.RFC1123);
 
                 var diff = dt - res;
-                Assert.IsTrue(diff.TotalSeconds < 1);
+                Assert.True(diff.TotalSeconds < 1);
             }
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void NaNFails()
         {
             try
             {
                 JSON.Deserialize<float>("NaN");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.IsNotNull(e);
+                Assert.NotNull(e);
             }
 
             try
             {
                 JSON.Deserialize<double>("NaN");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.IsNotNull(e);
+                Assert.NotNull(e);
             }
 
             try
             {
                 JSON.Deserialize<decimal>("NaN");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.IsNotNull(e);
+                Assert.NotNull(e);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue126()
         {
             try
             {
                 var json = "\"20.00\"";
                 var res = Jil.JSON.Deserialize<decimal>(json);
-                Assert.Fail("Should be impossible");
+                Assert.True(false, "Should be impossible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Expected a decimal value", e.Message);
+                Assert.Equal("Expected a decimal value", e.Message);
             }
 
             try
             {
                 var json = "\"20.00\"";
                 var res = Jil.JSON.Deserialize<float>(json);
-                Assert.Fail("Should be impossible");
+                Assert.True(false, "Should be impossible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Expected a float value", e.Message);
+                Assert.Equal("Expected a float value", e.Message);
             }
 
             try
             {
                 var json = "\"20.00\"";
                 var res = Jil.JSON.Deserialize<double>(json);
-                Assert.Fail("Should be impossible");
+                Assert.True(false, "Should be impossible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Expected a double value", e.Message);
+                Assert.Equal("Expected a double value", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue128()
         {
             var str = "{\"Fields\":[{\"Field\":{\"Name\":{\"en\":\"Type\"}},\"Container\":{\"Name\":{\"en\":\"tt\"}}}]}";
             using (var s = new StringReader(str))
             {
                 var ret = JSON.Deserialize<DocumentType>(s);
-                Assert.IsNotNull(ret);
+                Assert.NotNull(ret);
             }
         }
 
@@ -6026,7 +6027,7 @@ namespace JilTests
             public System.Collections.Hashtable a { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void MicrosoftDateTimeOffsets()
         {
             // While *DateTimes* in Microsoft format don't do anything with the offset (they just write it, then ignore it),
@@ -6057,15 +6058,15 @@ namespace JilTests
                 using (var str = new StringReader(val))
                 {
                     var res = JSON.Deserialize<DateTimeOffset>(str);
-                    Assert.AreEqual(dto.UtcTicks, res.UtcTicks);
-                    Assert.AreEqual(dto.Offset, res.Offset);
+                    Assert.Equal(dto.UtcTicks, res.UtcTicks);
+                    Assert.Equal(dto.Offset, res.Offset);
                 }
 
                 // with strings
                 {
                     var res = JSON.Deserialize<DateTimeOffset>(val);
-                    Assert.AreEqual(dto.UtcTicks, res.UtcTicks);
-                    Assert.AreEqual(dto.Offset, res.Offset);
+                    Assert.Equal(dto.UtcTicks, res.UtcTicks);
+                    Assert.Equal(dto.Offset, res.Offset);
                 }
             }
         }
@@ -6078,21 +6079,21 @@ namespace JilTests
             public int AsInt { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void SimpleDiscriminateUnion()
         {
             const string StrJSON = "{\"Data\": \"hello world\"}";
             const string IntJSON = "{\"Data\": 314159}";
 
             var asStr = JSON.Deserialize<_SimpleDiscriminateUnion>(StrJSON);
-            Assert.IsNotNull(asStr);
-            Assert.AreEqual("hello world", asStr.AsStr);
-            Assert.AreEqual(0, asStr.AsInt);
+            Assert.NotNull(asStr);
+            Assert.Equal("hello world", asStr.AsStr);
+            Assert.Equal(0, asStr.AsInt);
 
             var asInt = JSON.Deserialize<_SimpleDiscriminateUnion>(IntJSON);
-            Assert.IsNotNull(asInt);
-            Assert.AreEqual(314159, asInt.AsInt);
-            Assert.IsNull(asInt.AsStr);
+            Assert.NotNull(asInt);
+            Assert.Equal(314159, asInt.AsInt);
+            Assert.Null(asInt.AsStr);
         }
 
         class _ComplicatedDiscriminateUnion_1
@@ -6144,7 +6145,7 @@ namespace JilTests
             public int NonUnion { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void ComplicatedDiscriminateUnion()
         {
             {
@@ -6153,22 +6154,22 @@ namespace JilTests
                 const string BoolJSON = "{\"Data\":true}";
 
                 var asDate = JSON.Deserialize<_ComplicatedDiscriminateUnion_1>(DateJSON, Options.ISO8601);
-                Assert.IsNotNull(asDate);
-                Assert.AreEqual(new DateTime(2015, 06, 20, 11, 11, 00, 00, DateTimeKind.Utc), asDate.ISODateTime);
-                Assert.AreEqual(0, asDate.Number);
-                Assert.AreEqual(false, asDate.Boolean);
+                Assert.NotNull(asDate);
+                Assert.Equal(new DateTime(2015, 06, 20, 11, 11, 00, 00, DateTimeKind.Utc), asDate.ISODateTime);
+                Assert.Equal(0, asDate.Number);
+                Assert.False(asDate.Boolean);
 
                 var asInt = JSON.Deserialize<_ComplicatedDiscriminateUnion_1>(IntJSON, Options.ISO8601);
-                Assert.IsNotNull(asInt);
-                Assert.AreEqual(default(DateTime), asInt.ISODateTime);
-                Assert.AreEqual(314159, asInt.Number);
-                Assert.AreEqual(false, asInt.Boolean);
+                Assert.NotNull(asInt);
+                Assert.Equal(default(DateTime), asInt.ISODateTime);
+                Assert.Equal(314159, asInt.Number);
+                Assert.False(asInt.Boolean);
 
                 var asBool = JSON.Deserialize<_ComplicatedDiscriminateUnion_1>(BoolJSON, Options.ISO8601);
-                Assert.IsNotNull(asBool);
-                Assert.AreEqual(default(DateTime), asBool.ISODateTime);
-                Assert.AreEqual(0, asBool.Number);
-                Assert.AreEqual(true, asBool.Boolean);
+                Assert.NotNull(asBool);
+                Assert.Equal(default(DateTime), asBool.ISODateTime);
+                Assert.Equal(0, asBool.Number);
+                Assert.True(asBool.Boolean);
             }
 
             {
@@ -6177,15 +6178,15 @@ namespace JilTests
                 var IntDateJSON = "{\"Data\":" + JSON.Serialize(now, Options.SecondsSinceUnixEpoch) + "}";
 
                 var asGuid = JSON.Deserialize<_ComplicatedDiscriminateUnion_2>(GuidJSON, Options.SecondsSinceUnixEpoch);
-                Assert.IsNotNull(asGuid);
-                Assert.AreEqual(Guid.Parse("E4A278B7-DA54-459A-9D1F-2FE1C82EE4CB"), asGuid.AsGuid);
-                Assert.AreEqual(default(DateTime), asGuid.UnixDateTime);
+                Assert.NotNull(asGuid);
+                Assert.Equal(Guid.Parse("E4A278B7-DA54-459A-9D1F-2FE1C82EE4CB"), asGuid.AsGuid);
+                Assert.Equal(default(DateTime), asGuid.UnixDateTime);
 
                 var asDate = JSON.Deserialize<_ComplicatedDiscriminateUnion_2>(IntDateJSON, Options.SecondsSinceUnixEpoch);
-                Assert.IsNotNull(asDate);
-                Assert.AreEqual(default(Guid), asDate.AsGuid);
+                Assert.NotNull(asDate);
+                Assert.Equal(default(Guid), asDate.AsGuid);
                 var dateDiff = (now - asDate.UnixDateTime).Duration();
-                Assert.IsTrue(dateDiff.TotalSeconds <= 1);
+                Assert.True(dateDiff.TotalSeconds <= 1);
             }
 
             {
@@ -6194,14 +6195,14 @@ namespace JilTests
                 var TimeSpanJSON = "{\"Data\": " + JSON.Serialize(ts) + "}";
 
                 var asUInt = JSON.Deserialize<_ComplicatedDiscriminateUnion_3>(UIntJSON);
-                Assert.IsNotNull(asUInt);
-                Assert.AreEqual(default(TimeSpan), asUInt.AsTimeSpan);
-                Assert.AreEqual(1234567U, asUInt.AsUInt);
+                Assert.NotNull(asUInt);
+                Assert.Equal(default(TimeSpan), asUInt.AsTimeSpan);
+                Assert.Equal(1234567U, asUInt.AsUInt);
 
                 var asTimeSpan = JSON.Deserialize<_ComplicatedDiscriminateUnion_3>(TimeSpanJSON);
-                Assert.IsNotNull(asTimeSpan);
-                Assert.AreEqual(default(uint), asTimeSpan.AsUInt);
-                Assert.AreEqual(ts, asTimeSpan.AsTimeSpan);
+                Assert.NotNull(asTimeSpan);
+                Assert.Equal(default(uint), asTimeSpan.AsUInt);
+                Assert.Equal(ts, asTimeSpan.AsTimeSpan);
             }
 
             {
@@ -6223,136 +6224,136 @@ namespace JilTests
                 const string A_Double_B_ListJSON = "{\"A\": 3.1415, \"B\": [\"foo\", \"bar\"]}";
                 
                 var empty = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(EmptyJson);
-                Assert.IsNotNull(empty);
-                Assert.AreEqual(default(double), empty.A_AsDouble);
-                Assert.IsNull(empty.A_AsString);
-                Assert.IsNull(empty.A_Type);
-                Assert.AreEqual(default(DateTime), empty.B_AsDateTime);
-                Assert.AreEqual(default(int), empty.B_AsInt);
-                Assert.IsNull(empty.B_AsList);
-                Assert.IsNull(empty.B_Type);
+                Assert.NotNull(empty);
+                Assert.Equal(default(double), empty.A_AsDouble);
+                Assert.Null(empty.A_AsString);
+                Assert.Null(empty.A_Type);
+                Assert.Equal(default(DateTime), empty.B_AsDateTime);
+                Assert.Equal(default(int), empty.B_AsInt);
+                Assert.Null(empty.B_AsList);
+                Assert.Null(empty.B_Type);
 
                 var aStr = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(A_StrJSON);
-                Assert.IsNotNull(aStr);
-                Assert.AreEqual(default(double), aStr.A_AsDouble);
-                Assert.AreEqual("hello world", aStr.A_AsString);
-                Assert.AreEqual(typeof(string), aStr.A_Type);
-                Assert.AreEqual(default(DateTime), aStr.B_AsDateTime);
-                Assert.AreEqual(default(int), aStr.B_AsInt);
-                Assert.IsNull(aStr.B_AsList);
-                Assert.IsNull(aStr.B_Type);
+                Assert.NotNull(aStr);
+                Assert.Equal(default(double), aStr.A_AsDouble);
+                Assert.Equal("hello world", aStr.A_AsString);
+                Assert.Equal(typeof(string), aStr.A_Type);
+                Assert.Equal(default(DateTime), aStr.B_AsDateTime);
+                Assert.Equal(default(int), aStr.B_AsInt);
+                Assert.Null(aStr.B_AsList);
+                Assert.Null(aStr.B_Type);
 
                 var aDouble = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(A_DoubleJSON);
-                Assert.IsNotNull(aDouble);
-                Assert.AreEqual(3.1415, aDouble.A_AsDouble);
-                Assert.IsNull(aDouble.A_AsString);
-                Assert.AreEqual(typeof(double), aDouble.A_Type);
-                Assert.AreEqual(default(DateTime), aDouble.B_AsDateTime);
-                Assert.AreEqual(default(int), aDouble.B_AsInt);
-                Assert.IsNull(aDouble.B_AsList);
-                Assert.IsNull(aDouble.B_Type);
+                Assert.NotNull(aDouble);
+                Assert.Equal(3.1415, aDouble.A_AsDouble);
+                Assert.Null(aDouble.A_AsString);
+                Assert.Equal(typeof(double), aDouble.A_Type);
+                Assert.Equal(default(DateTime), aDouble.B_AsDateTime);
+                Assert.Equal(default(int), aDouble.B_AsInt);
+                Assert.Null(aDouble.B_AsList);
+                Assert.Null(aDouble.B_Type);
 
                 var bDateTime = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(B_DateTimeJSON);
-                Assert.IsNotNull(bDateTime);
-                Assert.AreEqual(default(double), bDateTime.A_AsDouble);
-                Assert.IsNull(bDateTime.A_AsString);
-                Assert.IsNull(bDateTime.A_Type);
+                Assert.NotNull(bDateTime);
+                Assert.Equal(default(double), bDateTime.A_AsDouble);
+                Assert.Null(bDateTime.A_AsString);
+                Assert.Null(bDateTime.A_Type);
                 var bdtOffset = (now - bDateTime.B_AsDateTime).Duration();
-                Assert.IsTrue(bdtOffset.TotalMilliseconds <= 1);
-                Assert.AreEqual(default(int), bDateTime.B_AsInt);
-                Assert.IsNull(bDateTime.B_AsList);
-                Assert.AreEqual(typeof(DateTime), bDateTime.B_Type);
+                Assert.True(bdtOffset.TotalMilliseconds <= 1);
+                Assert.Equal(default(int), bDateTime.B_AsInt);
+                Assert.Null(bDateTime.B_AsList);
+                Assert.Equal(typeof(DateTime), bDateTime.B_Type);
 
                 var bInt = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(B_IntJSON);
-                Assert.IsNotNull(bInt);
-                Assert.AreEqual(default(double), bInt.A_AsDouble);
-                Assert.IsNull(bInt.A_AsString);
-                Assert.IsNull(bInt.A_Type);
-                Assert.AreEqual(default(DateTime), bInt.B_AsDateTime);
-                Assert.AreEqual(8675, bInt.B_AsInt);
-                Assert.IsNull(bInt.B_AsList);
-                Assert.AreEqual(typeof(int), bInt.B_Type);
+                Assert.NotNull(bInt);
+                Assert.Equal(default(double), bInt.A_AsDouble);
+                Assert.Null(bInt.A_AsString);
+                Assert.Null(bInt.A_Type);
+                Assert.Equal(default(DateTime), bInt.B_AsDateTime);
+                Assert.Equal(8675, bInt.B_AsInt);
+                Assert.Null(bInt.B_AsList);
+                Assert.Equal(typeof(int), bInt.B_Type);
 
                 var bList = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(B_ListJSON);
-                Assert.IsNotNull(bList);
-                Assert.AreEqual(default(double), bList.A_AsDouble);
-                Assert.IsNull(bList.A_AsString);
-                Assert.IsNull(bList.A_Type);
-                Assert.AreEqual(default(DateTime), bList.B_AsDateTime);
-                Assert.AreEqual(default(int), bList.B_AsInt);
-                Assert.IsNotNull(bList.B_AsList);
-                Assert.AreEqual(2, bList.B_AsList.Count);
-                Assert.AreEqual("foo", bList.B_AsList[0]);
-                Assert.AreEqual("bar", bList.B_AsList[1]);
-                Assert.AreEqual(typeof(List<string>), bList.B_Type);
+                Assert.NotNull(bList);
+                Assert.Equal(default(double), bList.A_AsDouble);
+                Assert.Null(bList.A_AsString);
+                Assert.Null(bList.A_Type);
+                Assert.Equal(default(DateTime), bList.B_AsDateTime);
+                Assert.Equal(default(int), bList.B_AsInt);
+                Assert.NotNull(bList.B_AsList);
+                Assert.Equal(2, bList.B_AsList.Count);
+                Assert.Equal("foo", bList.B_AsList[0]);
+                Assert.Equal("bar", bList.B_AsList[1]);
+                Assert.Equal(typeof(List<string>), bList.B_Type);
 
                 var aStrBDateTime = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(A_Str_B_DateTimeJSON);
-                Assert.IsNotNull(aStrBDateTime);
-                Assert.AreEqual(default(double), aStrBDateTime.A_AsDouble);
-                Assert.AreEqual("hello world", aStrBDateTime.A_AsString);
-                Assert.AreEqual(typeof(string), aStrBDateTime.A_Type);
+                Assert.NotNull(aStrBDateTime);
+                Assert.Equal(default(double), aStrBDateTime.A_AsDouble);
+                Assert.Equal("hello world", aStrBDateTime.A_AsString);
+                Assert.Equal(typeof(string), aStrBDateTime.A_Type);
                 var asbdtOffset = (now - aStrBDateTime.B_AsDateTime).Duration();
-                Assert.IsTrue(asbdtOffset.TotalMilliseconds <= 1);
-                Assert.AreEqual(default(int), aStrBDateTime.B_AsInt);
-                Assert.IsNull(aStrBDateTime.B_AsList);
-                Assert.AreEqual(typeof(DateTime), aStrBDateTime.B_Type);
+                Assert.True(asbdtOffset.TotalMilliseconds <= 1);
+                Assert.Equal(default(int), aStrBDateTime.B_AsInt);
+                Assert.Null(aStrBDateTime.B_AsList);
+                Assert.Equal(typeof(DateTime), aStrBDateTime.B_Type);
 
                 var aStrBInt = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(A_Str_B_IntJSON);
-                Assert.IsNotNull(aStrBInt);
-                Assert.AreEqual(default(double), aStrBInt.A_AsDouble);
-                Assert.AreEqual("hello world", aStrBInt.A_AsString);
-                Assert.AreEqual(typeof(string), aStrBInt.A_Type);
-                Assert.AreEqual(default(DateTime), aStrBInt.B_AsDateTime);
-                Assert.AreEqual(8675, aStrBInt.B_AsInt);
-                Assert.IsNull(aStrBInt.B_AsList);
-                Assert.AreEqual(typeof(int), aStrBInt.B_Type);
+                Assert.NotNull(aStrBInt);
+                Assert.Equal(default(double), aStrBInt.A_AsDouble);
+                Assert.Equal("hello world", aStrBInt.A_AsString);
+                Assert.Equal(typeof(string), aStrBInt.A_Type);
+                Assert.Equal(default(DateTime), aStrBInt.B_AsDateTime);
+                Assert.Equal(8675, aStrBInt.B_AsInt);
+                Assert.Null(aStrBInt.B_AsList);
+                Assert.Equal(typeof(int), aStrBInt.B_Type);
 
                 var aStrBList = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(A_Str_B_ListJSON);
-                Assert.IsNotNull(aStrBList);
-                Assert.AreEqual(default(double), aStrBList.A_AsDouble);
-                Assert.AreEqual("hello world", aStrBList.A_AsString);
-                Assert.AreEqual(typeof(string), aStrBList.A_Type);
-                Assert.AreEqual(default(DateTime), aStrBList.B_AsDateTime);
-                Assert.AreEqual(default(int), aStrBList.B_AsInt);
-                Assert.IsNotNull(aStrBList.B_AsList);
-                Assert.AreEqual(2, aStrBList.B_AsList.Count);
-                Assert.AreEqual("foo", aStrBList.B_AsList[0]);
-                Assert.AreEqual("bar", aStrBList.B_AsList[1]);
-                Assert.AreEqual(typeof(List<string>), aStrBList.B_Type);
+                Assert.NotNull(aStrBList);
+                Assert.Equal(default(double), aStrBList.A_AsDouble);
+                Assert.Equal("hello world", aStrBList.A_AsString);
+                Assert.Equal(typeof(string), aStrBList.A_Type);
+                Assert.Equal(default(DateTime), aStrBList.B_AsDateTime);
+                Assert.Equal(default(int), aStrBList.B_AsInt);
+                Assert.NotNull(aStrBList.B_AsList);
+                Assert.Equal(2, aStrBList.B_AsList.Count);
+                Assert.Equal("foo", aStrBList.B_AsList[0]);
+                Assert.Equal("bar", aStrBList.B_AsList[1]);
+                Assert.Equal(typeof(List<string>), aStrBList.B_Type);
 
                 var aDoubleBDateTime = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(A_Double_B_DateTimeJSON);
-                Assert.IsNotNull(aDoubleBDateTime);
-                Assert.AreEqual(3.1415, aDoubleBDateTime.A_AsDouble);
-                Assert.IsNull(aDoubleBDateTime.A_AsString);
-                Assert.AreEqual(typeof(double), aDoubleBDateTime.A_Type);
+                Assert.NotNull(aDoubleBDateTime);
+                Assert.Equal(3.1415, aDoubleBDateTime.A_AsDouble);
+                Assert.Null(aDoubleBDateTime.A_AsString);
+                Assert.Equal(typeof(double), aDoubleBDateTime.A_Type);
                 var adbdtOffset = (now - aDoubleBDateTime.B_AsDateTime).Duration();
-                Assert.IsTrue(adbdtOffset.TotalMilliseconds <= 1);
-                Assert.AreEqual(default(int), aDoubleBDateTime.B_AsInt);
-                Assert.IsNull(aDoubleBDateTime.B_AsList);
-                Assert.AreEqual(typeof(DateTime), aDoubleBDateTime.B_Type);
+                Assert.True(adbdtOffset.TotalMilliseconds <= 1);
+                Assert.Equal(default(int), aDoubleBDateTime.B_AsInt);
+                Assert.Null(aDoubleBDateTime.B_AsList);
+                Assert.Equal(typeof(DateTime), aDoubleBDateTime.B_Type);
 
                 var aDoubleBInt = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(A_Double_B_IntJSON);
-                Assert.IsNotNull(aDoubleBInt);
-                Assert.AreEqual(3.1415, aDoubleBInt.A_AsDouble);
-                Assert.IsNull(aDoubleBInt.A_AsString);
-                Assert.AreEqual(typeof(double), aDoubleBInt.A_Type);
-                Assert.AreEqual(default(DateTime), aDoubleBInt.B_AsDateTime);
-                Assert.AreEqual(8675, aDoubleBInt.B_AsInt);
-                Assert.IsNull(aDoubleBInt.B_AsList);
-                Assert.AreEqual(typeof(int), aDoubleBInt.B_Type);
+                Assert.NotNull(aDoubleBInt);
+                Assert.Equal(3.1415, aDoubleBInt.A_AsDouble);
+                Assert.Null(aDoubleBInt.A_AsString);
+                Assert.Equal(typeof(double), aDoubleBInt.A_Type);
+                Assert.Equal(default(DateTime), aDoubleBInt.B_AsDateTime);
+                Assert.Equal(8675, aDoubleBInt.B_AsInt);
+                Assert.Null(aDoubleBInt.B_AsList);
+                Assert.Equal(typeof(int), aDoubleBInt.B_Type);
 
                 var aDoubleBList = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(A_Double_B_ListJSON);
-                Assert.IsNotNull(aDoubleBList);
-                Assert.AreEqual(3.1415, aDoubleBList.A_AsDouble);
-                Assert.IsNull(aDoubleBList.A_AsString);
-                Assert.AreEqual(typeof(double), aDoubleBList.A_Type);
-                Assert.AreEqual(default(DateTime), aDoubleBList.B_AsDateTime);
-                Assert.AreEqual(default(int), aDoubleBList.B_AsInt);
-                Assert.IsNotNull(aDoubleBList.B_AsList);
-                Assert.AreEqual(2, aDoubleBList.B_AsList.Count);
-                Assert.AreEqual("foo", aDoubleBList.B_AsList[0]);
-                Assert.AreEqual("bar", aDoubleBList.B_AsList[1]);
-                Assert.AreEqual(typeof(List<string>), aDoubleBList.B_Type);
+                Assert.NotNull(aDoubleBList);
+                Assert.Equal(3.1415, aDoubleBList.A_AsDouble);
+                Assert.Null(aDoubleBList.A_AsString);
+                Assert.Equal(typeof(double), aDoubleBList.A_Type);
+                Assert.Equal(default(DateTime), aDoubleBList.B_AsDateTime);
+                Assert.Equal(default(int), aDoubleBList.B_AsInt);
+                Assert.NotNull(aDoubleBList.B_AsList);
+                Assert.Equal(2, aDoubleBList.B_AsList.Count);
+                Assert.Equal("foo", aDoubleBList.B_AsList[0]);
+                Assert.Equal("bar", aDoubleBList.B_AsList[1]);
+                Assert.Equal(typeof(List<string>), aDoubleBList.B_Type);
             }
 
             {
@@ -6362,54 +6363,54 @@ namespace JilTests
                 const string NonUnion_A_B = "{\"NonUnion\": 123, \"A\": \"hello world\", \"B\": [\"hello\", \"world\"]}";
 
                 var nu = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(NonUnion);
-                Assert.IsNotNull(nu);
-                Assert.AreEqual(123, nu.NonUnion);
-                Assert.AreEqual(default(double), nu.A_AsDouble);
-                Assert.IsNull(nu.A_AsString);
-                Assert.IsNull(nu.A_Type);
-                Assert.AreEqual(default(DateTime), nu.B_AsDateTime);
-                Assert.AreEqual(default(int), nu.B_AsInt);
-                Assert.IsNull(nu.B_AsList);
-                Assert.IsNull(nu.B_Type);
+                Assert.NotNull(nu);
+                Assert.Equal(123, nu.NonUnion);
+                Assert.Equal(default(double), nu.A_AsDouble);
+                Assert.Null(nu.A_AsString);
+                Assert.Null(nu.A_Type);
+                Assert.Equal(default(DateTime), nu.B_AsDateTime);
+                Assert.Equal(default(int), nu.B_AsInt);
+                Assert.Null(nu.B_AsList);
+                Assert.Null(nu.B_Type);
 
                 var nua = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(NonUnion_A);
-                Assert.IsNotNull(nua);
-                Assert.AreEqual(123, nua.NonUnion);
-                Assert.AreEqual(default(double), nua.A_AsDouble);
-                Assert.AreEqual("hello world", nua.A_AsString);
-                Assert.AreEqual(typeof(string), nua.A_Type);
-                Assert.AreEqual(default(DateTime), nua.B_AsDateTime);
-                Assert.AreEqual(default(int), nua.B_AsInt);
-                Assert.IsNull(nua.B_AsList);
-                Assert.IsNull(nua.B_Type);
+                Assert.NotNull(nua);
+                Assert.Equal(123, nua.NonUnion);
+                Assert.Equal(default(double), nua.A_AsDouble);
+                Assert.Equal("hello world", nua.A_AsString);
+                Assert.Equal(typeof(string), nua.A_Type);
+                Assert.Equal(default(DateTime), nua.B_AsDateTime);
+                Assert.Equal(default(int), nua.B_AsInt);
+                Assert.Null(nua.B_AsList);
+                Assert.Null(nua.B_Type);
 
                 var nub = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(NonUnion_B);
-                Assert.IsNotNull(nub);
-                Assert.AreEqual(123, nub.NonUnion);
-                Assert.AreEqual(default(double), nub.A_AsDouble);
-                Assert.IsNull(nub.A_AsString);
-                Assert.IsNull(nub.A_Type);
-                Assert.AreEqual(default(DateTime), nub.B_AsDateTime);
-                Assert.AreEqual(default(int), nub.B_AsInt);
-                Assert.IsNotNull(nub.B_AsList);
-                Assert.AreEqual(2, nub.B_AsList.Count);
-                Assert.AreEqual("hello", nub.B_AsList[0]);
-                Assert.AreEqual("world", nub.B_AsList[1]);
-                Assert.AreEqual(typeof(List<string>), nub.B_Type);
+                Assert.NotNull(nub);
+                Assert.Equal(123, nub.NonUnion);
+                Assert.Equal(default(double), nub.A_AsDouble);
+                Assert.Null(nub.A_AsString);
+                Assert.Null(nub.A_Type);
+                Assert.Equal(default(DateTime), nub.B_AsDateTime);
+                Assert.Equal(default(int), nub.B_AsInt);
+                Assert.NotNull(nub.B_AsList);
+                Assert.Equal(2, nub.B_AsList.Count);
+                Assert.Equal("hello", nub.B_AsList[0]);
+                Assert.Equal("world", nub.B_AsList[1]);
+                Assert.Equal(typeof(List<string>), nub.B_Type);
 
                 var nuab = JSON.Deserialize<_ComplicatedDiscriminateUnion_4>(NonUnion_A_B);
-                Assert.IsNotNull(nuab);
-                Assert.AreEqual(123, nuab.NonUnion);
-                Assert.AreEqual(default(double), nuab.A_AsDouble);
-                Assert.AreEqual("hello world", nuab.A_AsString);
-                Assert.AreEqual(typeof(string), nuab.A_Type);
-                Assert.AreEqual(default(DateTime), nuab.B_AsDateTime);
-                Assert.AreEqual(default(int), nuab.B_AsInt);
-                Assert.IsNotNull(nuab.B_AsList);
-                Assert.AreEqual(2, nuab.B_AsList.Count);
-                Assert.AreEqual("hello", nuab.B_AsList[0]);
-                Assert.AreEqual("world", nuab.B_AsList[1]);
-                Assert.AreEqual(typeof(List<string>), nuab.B_Type);
+                Assert.NotNull(nuab);
+                Assert.Equal(123, nuab.NonUnion);
+                Assert.Equal(default(double), nuab.A_AsDouble);
+                Assert.Equal("hello world", nuab.A_AsString);
+                Assert.Equal(typeof(string), nuab.A_Type);
+                Assert.Equal(default(DateTime), nuab.B_AsDateTime);
+                Assert.Equal(default(int), nuab.B_AsInt);
+                Assert.NotNull(nuab.B_AsList);
+                Assert.Equal(2, nuab.B_AsList.Count);
+                Assert.Equal("hello", nuab.B_AsList[0]);
+                Assert.Equal("world", nuab.B_AsList[1]);
+                Assert.Equal(typeof(List<string>), nuab.B_Type);
             }
         }
 
@@ -6461,7 +6462,7 @@ namespace JilTests
             public DateTime A_DateTime { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnionMisconfigured()
         {
             {
@@ -6471,31 +6472,31 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_1>("{}", Options.Default);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch(DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_1: The members  [A_DateTime, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_1: The members  [A_DateTime, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
 
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_1>("{}", Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_1: The members  [A_DateTime, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_1: The members  [A_DateTime, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
 
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_1>("{}", Options.RFC1123);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_1: The members  [A_DateTime, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_1: The members  [A_DateTime, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
             }
 
@@ -6503,11 +6504,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_2>("{}", Options.Default);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_2: The members  [A_Int, A_Double] cannot be distiguished in a union because they can each start with these characters [-, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_2: The members  [A_Int, A_Double] cannot be distiguished in a union because they can each start with these characters [-, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]", e.Message);
                 }
             }
 
@@ -6515,11 +6516,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_3>("{}", Options.Default);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_3: The members  [A_Object, A_Dictionary] cannot be distiguished in a union because they can each start with these characters [{]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_3: The members  [A_Object, A_Dictionary] cannot be distiguished in a union because they can each start with these characters [{]", e.Message);
                 }
             }
 
@@ -6530,31 +6531,31 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_4>("{}", Options.Default);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_4: The members  [A_TimeSpan, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_4: The members  [A_TimeSpan, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
 
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_4>("{}", Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_4: The members  [A_TimeSpan, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_4: The members  [A_TimeSpan, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
 
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_4>("{}", Options.RFC1123);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_4: The members  [A_TimeSpan, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_4: The members  [A_TimeSpan, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
             }
 
@@ -6562,11 +6563,11 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_5>("{}", Options.Default);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_5: The members  [A_Guid, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_5: The members  [A_Guid, A_String] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
             }
 
@@ -6577,31 +6578,31 @@ namespace JilTests
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_6>("{}", Options.Default);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_6: The members  [A_Guid, A_DateTime] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_6: The members  [A_Guid, A_DateTime] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
 
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_6>("{}", Options.ISO8601);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_6: The members  [A_Guid, A_DateTime] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_6: The members  [A_Guid, A_DateTime] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
 
                 try
                 {
                     JSON.Deserialize<_UnionMisconfigured_6>("{}", Options.RFC1123);
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_6: The members  [A_Guid, A_DateTime] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionMisconfigured_6: The members  [A_Guid, A_DateTime] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
                 }
             }
         }
@@ -6620,7 +6621,7 @@ namespace JilTests
             public Type UnionType { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleNullableDiscriminantUnion()
         {
             {
@@ -6631,36 +6632,36 @@ namespace JilTests
                 const string NullJson = "{\"Data\": null}";
 
                 var asStr = JSON.Deserialize<_MultipleNullableDiscriminantUnion>(StrJson);
-                Assert.IsNotNull(asStr);
-                Assert.AreEqual("hello world", asStr.AsStr);
-                Assert.AreEqual(typeof(string), asStr.UnionType);
+                Assert.NotNull(asStr);
+                Assert.Equal("hello world", asStr.AsStr);
+                Assert.Equal(typeof(string), asStr.UnionType);
 
                 var asInt = JSON.Deserialize<_MultipleNullableDiscriminantUnion>(IntJson);
-                Assert.IsNotNull(asInt);
-                Assert.AreEqual(1234, asInt.AsInt);
-                Assert.AreEqual(typeof(int), asInt.UnionType);
+                Assert.NotNull(asInt);
+                Assert.Equal(1234, asInt.AsInt);
+                Assert.Equal(typeof(int), asInt.UnionType);
 
                 var asNullableBool = JSON.Deserialize<_MultipleNullableDiscriminantUnion>(NullableBoolJson);
-                Assert.IsNotNull(asNullableBool);
-                Assert.AreEqual(true, asNullableBool.AsNullableBool);
-                Assert.AreEqual(typeof(bool?), asNullableBool.UnionType);
+                Assert.NotNull(asNullableBool);
+                Assert.True(asNullableBool.AsNullableBool);
+                Assert.Equal(typeof(bool?), asNullableBool.UnionType);
 
                 var asList = JSON.Deserialize<_MultipleNullableDiscriminantUnion>(ListJson);
-                Assert.IsNotNull(asList);
-                Assert.IsNotNull(asList.AsList);
-                Assert.AreEqual(3, asList.AsList.Count);
-                Assert.AreEqual(1, asList.AsList[0]);
-                Assert.AreEqual(2, asList.AsList[1]);
-                Assert.AreEqual(3, asList.AsList[2]);
-                Assert.AreEqual(typeof(List<int>), asList.UnionType);
+                Assert.NotNull(asList);
+                Assert.NotNull(asList.AsList);
+                Assert.Equal(3, asList.AsList.Count);
+                Assert.Equal(1, asList.AsList[0]);
+                Assert.Equal(2, asList.AsList[1]);
+                Assert.Equal(3, asList.AsList[2]);
+                Assert.Equal(typeof(List<int>), asList.UnionType);
 
                 var asNull = JSON.Deserialize<_MultipleNullableDiscriminantUnion>(NullJson);
-                Assert.IsNotNull(asNull);
-                Assert.IsNull(asNull.AsStr);
-                Assert.IsNull(asNull.AsList);
-                Assert.AreEqual(default(int), asNull.AsInt);
-                Assert.AreEqual(default(bool?), asNull.AsNullableBool);
-                Assert.IsNull(asNull.UnionType);
+                Assert.NotNull(asNull);
+                Assert.Null(asNull.AsStr);
+                Assert.Null(asNull.AsList);
+                Assert.Equal(default(int), asNull.AsInt);
+                Assert.Equal(default(bool?), asNull.AsNullableBool);
+                Assert.Null(asNull.UnionType);
             }
         }
 
@@ -6672,7 +6673,7 @@ namespace JilTests
             public int AsInt { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnionAttributeError()
         {
             const string json = "{\"Data\": 31415 }";
@@ -6680,12 +6681,12 @@ namespace JilTests
             try
             {
                 JSON.Deserialize<_UnionAttributeError>(json);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.IsNotNull(e);
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionAttributeError: Member [Data] isn't marked as part of a union, but other members share the same Name [Data]", e.Message);
+                Assert.NotNull(e);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionAttributeError: Member [Data] isn't marked as part of a union, but other members share the same Name [Data]", e.Message);
             }
         }
 
@@ -6698,7 +6699,7 @@ namespace JilTests
             public DateTime AsDateTime { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void NonDiscriminantUnion()
         {
             const string json = "{\"Data\": \"hello world\" }";
@@ -6706,12 +6707,12 @@ namespace JilTests
             try
             {
                 JSON.Deserialize<_NonDiscriminantUnion>(json);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.IsNotNull(e);
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_NonDiscriminantUnion: The members  [Data, AsDateTime] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
+                Assert.NotNull(e);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_NonDiscriminantUnion: The members  [Data, AsDateTime] cannot be distiguished in a union because they can each start with these characters [\"]", e.Message);
             }
         }
 
@@ -6725,7 +6726,7 @@ namespace JilTests
             public Type WhatType { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnionTypeIndication()
         {
             const string StrJSON = "{\"Data\": \"hello world\"}";
@@ -6733,22 +6734,22 @@ namespace JilTests
             const string EmptyJSON = "{}";
 
             var asStr = JSON.Deserialize<_UnionTypeIndication>(StrJSON);
-            Assert.IsNotNull(asStr);
-            Assert.AreEqual("hello world", asStr.AsStr);
-            Assert.AreEqual(0, asStr.AsInt);
-            Assert.AreEqual(typeof(string), asStr.WhatType);
+            Assert.NotNull(asStr);
+            Assert.Equal("hello world", asStr.AsStr);
+            Assert.Equal(0, asStr.AsInt);
+            Assert.Equal(typeof(string), asStr.WhatType);
 
             var asInt = JSON.Deserialize<_UnionTypeIndication>(IntJSON);
-            Assert.IsNotNull(asInt);
-            Assert.AreEqual(314159, asInt.AsInt);
-            Assert.IsNull(asInt.AsStr);
-            Assert.AreEqual(typeof(int), asInt.WhatType);
+            Assert.NotNull(asInt);
+            Assert.Equal(314159, asInt.AsInt);
+            Assert.Null(asInt.AsStr);
+            Assert.Equal(typeof(int), asInt.WhatType);
 
             var empty = JSON.Deserialize<_UnionTypeIndication>(EmptyJSON);
-            Assert.IsNotNull(empty);
-            Assert.IsNull(empty.AsStr);
-            Assert.AreEqual(0, empty.AsInt);
-            Assert.IsNull(empty.WhatType);
+            Assert.NotNull(empty);
+            Assert.Null(empty.AsStr);
+            Assert.Equal(0, empty.AsInt);
+            Assert.Null(empty.WhatType);
         }
 
         class _UnionTypeMisconfiguration_1
@@ -6793,48 +6794,48 @@ namespace JilTests
             public string NekkidProperty { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationNameFormatsDeserialization()
         {
             var verbtaimStr = "{\"FIVESIX\":\"3\",\"ThreeFour\":\"2\",\"oneTwo\":\"1\"}";
             var verbatimDynamic = JSON.DeserializeDynamic(verbtaimStr, new Options(serializationNameFormat: SerializationNameFormat.Verbatim));
                 
-            Assert.AreEqual((string)verbatimDynamic.oneTwo, "1");
-            Assert.AreEqual((string)verbatimDynamic.ThreeFour, "2");
-            Assert.AreEqual((string)verbatimDynamic.FIVESIX, "3");
+            Assert.Equal("1", (string)verbatimDynamic.oneTwo);
+            Assert.Equal("2", (string)verbatimDynamic.ThreeFour);
+            Assert.Equal("3", (string)verbatimDynamic.FIVESIX);
 
             var verbatimStatic = JSON.Deserialize<SerializationNameFormatsDeserialization_CamelCase>(verbtaimStr, new Options(serializationNameFormat: SerializationNameFormat.Verbatim));
 
-            Assert.AreEqual(verbatimStatic.oneTwo, "1");
-            Assert.AreEqual(verbatimStatic.ThreeFour, "2");
-            Assert.AreEqual(verbatimStatic.FIVESIX, "3");
+            Assert.Equal("1", verbatimStatic.oneTwo);
+            Assert.Equal("2", verbatimStatic.ThreeFour);
+            Assert.Equal("3", verbatimStatic.FIVESIX);
 
             var camelStr = "{\"fivesix\":\"3\",\"threeFour\":\"2\",\"oneTwo\":\"1\"}";
             var camelDynamic = JSON.DeserializeDynamic(camelStr, new Options(serializationNameFormat: SerializationNameFormat.CamelCase));
 
-            Assert.AreEqual((string)camelDynamic.oneTwo, "1");
-            Assert.AreEqual((string)camelDynamic.threeFour, "2");
-            Assert.AreEqual((string)camelDynamic.fivesix, "3");
+            Assert.Equal("1", (string)camelDynamic.oneTwo);
+            Assert.Equal("2", (string)camelDynamic.threeFour);
+            Assert.Equal("3", (string)camelDynamic.fivesix);
 
             var camelStatic = JSON.Deserialize<SerializationNameFormatsDeserialization_CamelCase>(camelStr, new Options(serializationNameFormat: SerializationNameFormat.CamelCase));
 
-            Assert.AreEqual(camelStatic.oneTwo, "1");
-            Assert.AreEqual(camelStatic.ThreeFour, "2");
-            Assert.AreEqual(camelStatic.FIVESIX, "3");
+            Assert.Equal("1", camelStatic.oneTwo);
+            Assert.Equal("2", camelStatic.ThreeFour);
+            Assert.Equal("3", camelStatic.FIVESIX);
 
             var verbatimStr2 = "{\"NekkidProperty\":\"NekkidValie\",\"Directive\":\"DirectiveValue\",\"ExplicitMember\":\"MemberValue\"}";
             var verbatimStatic2 = JSON.Deserialize<SerializationNameFormatsDeserialization_AttributeNames>(verbatimStr2, new Options(serializationNameFormat: SerializationNameFormat.Verbatim));
 
-            Assert.AreEqual(verbatimStatic2.NekkidProperty, "NekkidValie");
-            Assert.AreEqual(verbatimStatic2.DirectiveProperty, "DirectiveValue");
-            Assert.AreEqual(verbatimStatic2.MemberProperty, "MemberValue");
+            Assert.Equal("NekkidValie", verbatimStatic2.NekkidProperty);
+            Assert.Equal("DirectiveValue", verbatimStatic2.DirectiveProperty);
+            Assert.Equal("MemberValue", verbatimStatic2.MemberProperty);
 
             var camelStr2 = "{\"nekkidProperty\":\"NekkidValie\",\"Directive\":\"DirectiveValue\",\"ExplicitMember\":\"MemberValue\"}";
             var camelStatic2 = JSON.Deserialize<SerializationNameFormatsDeserialization_AttributeNames>(camelStr2, new Options(serializationNameFormat: SerializationNameFormat.CamelCase));
 
-            Assert.AreEqual(camelStatic2.NekkidProperty, "NekkidValie");
-            Assert.AreEqual(camelStatic2.DirectiveProperty, "DirectiveValue");
-            Assert.AreEqual(camelStatic2.MemberProperty, "MemberValue");
+            Assert.Equal("NekkidValie", camelStatic2.NekkidProperty);
+            Assert.Equal("DirectiveValue", camelStatic2.DirectiveProperty);
+            Assert.Equal("MemberValue", camelStatic2.MemberProperty);
         }
 
         // Also see DeserializeTests._Issue150
@@ -6879,42 +6880,42 @@ namespace JilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue150()
         {
             {
                 var obj = JSON.Deserialize<_Issue150._InArray<_Issue150.A>>("{\"ArrayOfEnum\":[0,1]}");
-                CollectionAssert.AreEqual(new[] { _Issue150.A.A, _Issue150.A.B }, obj.ArrayOfEnum);
+                Assert.Equal(new[] { _Issue150.A.A, _Issue150.A.B }, obj.ArrayOfEnum);
             }
 
             {
                 var obj = JSON.Deserialize<_Issue150._InArray<_Issue150.A?>>("{\"ArrayOfEnum\":[0,null]}");
-                CollectionAssert.AreEqual(new _Issue150.A?[] { _Issue150.A.A, null }, obj.ArrayOfEnum);
+                Assert.Equal(new _Issue150.A?[] { _Issue150.A.A, null }, obj.ArrayOfEnum);
             }
 
             {
                 var obj = JSON.Deserialize<_Issue150._InList<_Issue150.A>>("{\"ListOfEnum\":[0,1]}");
-                CollectionAssert.AreEqual(new[] { _Issue150.A.A, _Issue150.A.B }, obj.ListOfEnum);
+                Assert.Equal(new[] { _Issue150.A.A, _Issue150.A.B }, obj.ListOfEnum);
             }
 
             {
                 var obj = JSON.Deserialize<_Issue150._InList<_Issue150.A?>>("{\"ListOfEnum\":[0,null]}");
-                CollectionAssert.AreEqual(new _Issue150.A?[] { _Issue150.A.A, null }, obj.ListOfEnum);
+                Assert.Equal(new _Issue150.A?[] { _Issue150.A.A, null }, obj.ListOfEnum);
             }
 
             {
                 var obj = JSON.Deserialize<_Issue150._InListProp<_Issue150.A>>("{\"ListOfEnum\":[0,1]}");
-                CollectionAssert.AreEqual(new[] { _Issue150.A.A, _Issue150.A.B }, obj.ListOfEnum);
+                Assert.Equal(new[] { _Issue150.A.A, _Issue150.A.B }, obj.ListOfEnum);
             }
 
             {
                 var obj = JSON.Deserialize<_Issue150._InListProp<_Issue150.A?>>("{\"ListOfEnum\":[0,null]}");
-                CollectionAssert.AreEqual(new _Issue150.A?[] { _Issue150.A.A, null }, obj.ListOfEnum);
+                Assert.Equal(new _Issue150.A?[] { _Issue150.A.A, null }, obj.ListOfEnum);
             }
 
             {
                 var obj = JSON.Deserialize<_Issue150._AsDictionaryKey<_Issue150.A>>("{\"DictionaryWithEnumKey\":{\"0\":10,\"1\":20}}");
-                CollectionAssert.AreEqual(new Dictionary<_Issue150.A, int>
+                Assert.Equal(new Dictionary<_Issue150.A, int>
                 {
                     { _Issue150.A.A, 10 },
                     { _Issue150.A.B, 20 }
@@ -6923,7 +6924,7 @@ namespace JilTests
 
             {
                 var obj = JSON.Deserialize<_Issue150._AsDictionaryValue<_Issue150.A>>("{\"DictionaryWithEnumValue\":{\"10\":0,\"20\":1}}");
-                CollectionAssert.AreEqual(new Dictionary<int, _Issue150.A>
+                Assert.Equal(new Dictionary<int, _Issue150.A>
                 {
                     { 10, _Issue150.A.A },
                     { 20, _Issue150.A.B }
@@ -6932,7 +6933,7 @@ namespace JilTests
 
             {
                 var obj = JSON.Deserialize<_Issue150._AsDictionaryValue<_Issue150.A?>>("{\"DictionaryWithEnumValue\":{\"10\":0,\"20\":null}}");
-                CollectionAssert.AreEqual(new Dictionary<int, _Issue150.A?>
+                Assert.Equal(new Dictionary<int, _Issue150.A?>
                 {
                     { 10, _Issue150.A.A },
                     { 20, null }
@@ -6949,30 +6950,30 @@ namespace JilTests
             public A? NullableEnum = null;
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue151()
         {
             {
                 var obj = JSON.Deserialize<_Issue151>("{\"NullableEnum\":1}");
-                Assert.IsTrue(obj.NullableEnum.HasValue);
-                Assert.AreEqual(_Issue151.A.B, obj.NullableEnum.Value);
+                Assert.True(obj.NullableEnum.HasValue);
+                Assert.Equal(_Issue151.A.B, obj.NullableEnum.Value);
             }
 
             {
                 var obj = JSON.Deserialize<_Issue151>("{\"NullableEnum\":null}");
-                Assert.IsFalse(obj.NullableEnum.HasValue);
+                Assert.False(obj.NullableEnum.HasValue);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue162()
         {
             var res = JSON.Deserialize<ICollection<int>>("[1, 2, 3]");
-            Assert.IsNotNull(res);
-            Assert.AreEqual(3, res.Count);
-            Assert.AreEqual(1, res.ElementAt(0));
-            Assert.AreEqual(2, res.ElementAt(1));
-            Assert.AreEqual(3, res.ElementAt(2));
+            Assert.NotNull(res);
+            Assert.Equal(3, res.Count);
+            Assert.Equal(1, res.ElementAt(0));
+            Assert.Equal(2, res.ElementAt(1));
+            Assert.Equal(3, res.ElementAt(2));
         }
         
         [JilPrimitiveWrapper]
@@ -7008,71 +7009,71 @@ namespace JilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadPrimitiveWrapper()
         {
             try
             {
                 var foo = JSON.Deserialize<_BadPrimitiveWrapper1>("1");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_BadPrimitiveWrapper1: Primitive wrappers can only have 1 declared primitive member, found 2 for _BadPrimitiveWrapper1", e.Message);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_BadPrimitiveWrapper1: Primitive wrappers can only have 1 declared primitive member, found 2 for _BadPrimitiveWrapper1", e.Message);
             }
 
             try
             {
                 var foo = JSON.Deserialize<_BadPrimitiveWrapper2>("1");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_BadPrimitiveWrapper2: Primitive wrappers can only have 1 declared primitive member, found 0 for _BadPrimitiveWrapper2", e.Message);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_BadPrimitiveWrapper2: Primitive wrappers can only have 1 declared primitive member, found 0 for _BadPrimitiveWrapper2", e.Message);
             }
 
             try
             {
                 var foo = JSON.Deserialize<_BadPrimitiveWrapper3>("1");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_BadPrimitiveWrapper3: Primitive wrappers can only have 1 declared primitive member, found 2 for _BadPrimitiveWrapper3", e.Message);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_BadPrimitiveWrapper3: Primitive wrappers can only have 1 declared primitive member, found 2 for _BadPrimitiveWrapper3", e.Message);
             }
 
             try
             {
                 var foo = JSON.Deserialize<_BadPrimitiveWrapper4>("1");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_BadPrimitiveWrapper4: Primitive wrapper JilTests.DeserializeTests+_BadPrimitiveWrapper4 needs a default constructor, or a constructor taking a single System.Int32 parameter", e.Message);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_BadPrimitiveWrapper4: Primitive wrapper JilTests.DeserializeTests+_BadPrimitiveWrapper4 needs a default constructor, or a constructor taking a single System.Int32 parameter", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnionTypeMisconfiguration()
         {
             try
             {
                 JSON.Deserialize<_UnionTypeMisconfiguration_1>("{}");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionTypeMisconfiguration_1: Member [Data_Type] has IsUnionType set, but is not of type System.Type", e.Message);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionTypeMisconfiguration_1: Member [Data_Type] has IsUnionType set, but is not of type System.Type", e.Message);
             }
 
             try
             {
                 JSON.Deserialize<_UnionTypeMisconfiguration_2>("{}");
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (DeserializationException e)
             {
-                Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionTypeMisconfiguration_2: Member [Data_Type2] has IsUnionType set, but IsUnionType is also set for [Data_Type1]", e.Message);
+                Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_UnionTypeMisconfiguration_2: Member [Data_Type2] has IsUnionType set, but IsUnionType is also set for [Data_Type1]", e.Message);
             }
         }
 
@@ -7141,16 +7142,16 @@ namespace JilTests
             public _Issue193Enum[] AnEnumArray { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue193()
         {
             var data = JSON.Deserialize<_Issue193>("{\"AnEnumArray\":[\"T052\",\"T050\",\"T001\"]}");
-            Assert.IsNotNull(data);
-            Assert.IsNotNull(data.AnEnumArray);
-            Assert.AreEqual(3, data.AnEnumArray.Length);
-            Assert.AreEqual(_Issue193Enum.T052, data.AnEnumArray[0]);
-            Assert.AreEqual(_Issue193Enum.T050, data.AnEnumArray[1]);
-            Assert.AreEqual(_Issue193Enum.T001, data.AnEnumArray[2]);
+            Assert.NotNull(data);
+            Assert.NotNull(data.AnEnumArray);
+            Assert.Equal(3, data.AnEnumArray.Length);
+            Assert.Equal(_Issue193Enum.T052, data.AnEnumArray[0]);
+            Assert.Equal(_Issue193Enum.T050, data.AnEnumArray[1]);
+            Assert.Equal(_Issue193Enum.T001, data.AnEnumArray[2]);
         }
 
         [Flags]
@@ -7166,14 +7167,14 @@ namespace JilTests
             B = 2
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue210()
         {
             var res1 = Jil.JSON.Deserialize<_Issue210_1>(Jil.JSON.Serialize<_Issue210_1>(_Issue210_1.A));
-            Assert.AreEqual(_Issue210_1.A, res1);
+            Assert.Equal(_Issue210_1.A, res1);
 
             var res2 = Jil.JSON.Deserialize<_Issue210_2>(Jil.JSON.Serialize<_Issue210_2>(_Issue210_2.A));
-            Assert.AreEqual(_Issue210_2.A, res2);
+            Assert.Equal(_Issue210_2.A, res2);
         }
 
         [Flags]
@@ -7185,13 +7186,13 @@ namespace JilTests
             Type4 = 1 << 3
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue203()
         {
             var json = JSON.Serialize((_Issue203)0);
 
             var res = JSON.Deserialize<_Issue203>(json);
-            Assert.AreEqual((_Issue203)0, res);
+            Assert.Equal((_Issue203)0, res);
         }
 
         enum _EmptyEnum
@@ -7223,69 +7224,69 @@ namespace JilTests
         }
 #pragma warning restore 0649
 
-        [TestMethod]
+        [Fact]
         public void EmptyEnum()
         {
             {
                 try
                 {
                     JSON.Deserialize<_EmptyEnum>("0");
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_EmptyEnum: JilTests.DeserializeTests+_EmptyEnum has no values, and cannot be deserialized; add a value, make nullable, or configure to treat as integer", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_EmptyEnum: JilTests.DeserializeTests+_EmptyEnum has no values, and cannot be deserialized; add a value, make nullable, or configure to treat as integer", e.Message);
                 }
 
                 try
                 {
                     JSON.Deserialize<_EmptyEnumWrapper4>("null");
-                    Assert.Fail("Shouldn't be possible");
+                    Assert.True(false, "Shouldn't be possible");
                 }
                 catch (DeserializationException e)
                 {
-                    Assert.AreEqual("Error occurred building a deserializer for JilTests.DeserializeTests+_EmptyEnumWrapper4: JilTests.DeserializeTests+_EmptyEnum has no values, and cannot be deserialized; add a value, make nullable, or configure to treat as integer", e.Message);
+                    Assert.Equal("Error occurred building a deserializer for JilTests.DeserializeTests+_EmptyEnumWrapper4: JilTests.DeserializeTests+_EmptyEnum has no values, and cannot be deserialized; add a value, make nullable, or configure to treat as integer", e.Message);
                 }
             }
 
             {
                 var res = JSON.Deserialize<_EmptyEnumWrapper1>("{}");
-                Assert.IsNotNull(res);
+                Assert.NotNull(res);
             }
             
             {
                 var res = JSON.Deserialize<_EmptyEnumWrapper2>("{\"A\":null}");
-                Assert.IsTrue(res.A == null);
+                Assert.True(res.A == null);
             }
             
             {
                 var res = JSON.Deserialize<_EmptyEnum?>("null");
-                Assert.IsTrue(res == null);
+                Assert.True(res == null);
             }
 
             {
                 var res = JSON.Deserialize<_EmptyEnumWrapper3>("{\"A\":0}");
-                Assert.IsNotNull(res);
-                Assert.IsTrue(res.A == default(_EmptyEnum));
+                Assert.NotNull(res);
+                Assert.True(res.A == default(_EmptyEnum));
             }
 
             {
                 var res = JSON.Deserialize<_EmptyEnumWrapper3>("{\"A\":1}");
-                Assert.IsNotNull(res);
-                Assert.IsTrue(res.A == (_EmptyEnum)1);
+                Assert.NotNull(res);
+                Assert.True(res.A == (_EmptyEnum)1);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue235()
         {
             // strings
             {
                 var res1 = JSON.Deserialize<decimal>("-100000000000001");
-                Assert.AreEqual(-100000000000001m, res1);
+                Assert.Equal(-100000000000001m, res1);
 
                 var res2 = JSON.Deserialize<decimal>("-100000000000002");
-                Assert.AreEqual(-100000000000002m, res2);
+                Assert.Equal(-100000000000002m, res2);
             }
 
             // streams
@@ -7293,13 +7294,13 @@ namespace JilTests
                 using (var stream = new StringReader("-100000000000001"))
                 {
                     var res = JSON.Deserialize<decimal>(stream);
-                    Assert.AreEqual(-100000000000001m, res);
+                    Assert.Equal(-100000000000001m, res);
                 }
 
                 using (var stream = new StringReader("-100000000000002"))
                 {
                     var res = JSON.Deserialize<decimal>(stream);
-                    Assert.AreEqual(-100000000000002m, res);
+                    Assert.Equal(-100000000000002m, res);
                 }
             }
         }
@@ -7317,13 +7318,13 @@ namespace JilTests
             UpdatePayments
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue227()
         {
             var ser = JSON.Serialize(_Issue227_1.AddInSettingsDetail);
 
             var val = JSON.Deserialize<_Issue227_1>(ser);
-            Assert.AreEqual(_Issue227_1.AddInSettingsDetail, val);
+            Assert.Equal(_Issue227_1.AddInSettingsDetail, val);
         }
 
         [DataContract]
@@ -7342,7 +7343,7 @@ namespace JilTests
             public _Issue225_1 PackagedType;
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue225()
         {
             var json = JSON.Serialize(new _Issue225
@@ -7351,8 +7352,8 @@ namespace JilTests
             });
 
             var bean = JSON.Deserialize<_Issue225>(json);
-            Assert.IsNotNull(bean);
-            Assert.AreEqual(_Issue225_1.Value0, bean.PackagedType);
+            Assert.NotNull(bean);
+            Assert.Equal(_Issue225_1.Value0, bean.PackagedType);
         }
 
         class _Issue176_1
@@ -7385,43 +7386,43 @@ namespace JilTests
             public new string Foo { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue176()
         {
             {
                 JSON.Deserialize<_Issue176_1_Derived>("{}");
                 var res = JSON.Deserialize<_Issue176_1_Derived>("{\"Foo\":123}");
-                Assert.IsNotNull(res);
-                Assert.AreEqual(123, res.Foo);
+                Assert.NotNull(res);
+                Assert.Equal(123, res.Foo);
             }
 
             {
                 JSON.Deserialize<_Issue176_2_Derived>("{}");
                 var res = JSON.Deserialize<_Issue176_2_Derived>("{\"Foo\":[1,2,3]}");
-                Assert.IsNotNull(res);
-                Assert.IsNotNull(res.Foo);
-                Assert.AreEqual(3, res.Foo.Length);
-                Assert.AreEqual(1, res.Foo[0]);
-                Assert.AreEqual(2, res.Foo[1]);
-                Assert.AreEqual(3, res.Foo[2]);
+                Assert.NotNull(res);
+                Assert.NotNull(res.Foo);
+                Assert.Equal(3, res.Foo.Length);
+                Assert.Equal(1, res.Foo[0]);
+                Assert.Equal(2, res.Foo[1]);
+                Assert.Equal(3, res.Foo[2]);
             }
 
             {
                 JSON.Deserialize<_Issue176_3_Derived>("{}");
                 var res = JSON.Deserialize< _Issue176_3_Derived>("{\"Foo\":\"Bar\"}");
-                Assert.IsNotNull(res);
-                Assert.AreEqual("Bar", res.Foo);
+                Assert.NotNull(res);
+                Assert.Equal("Bar", res.Foo);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue229()
         {
             var expected = new DateTime(2016, 05, 06, 15, 57, 34, DateTimeKind.Utc);
 
             var result = JSON.Deserialize<_Issue229>("{\"createdate\":\"2016-05-06T15:57:34.000+0000\"}", new Options(dateFormat: Jil.DateTimeFormat.ISO8601));
 
-            Assert.AreEqual(expected, result.createdate);
+            Assert.Equal(expected, result.createdate);
         }
 
         class _Issue229
@@ -7441,18 +7442,18 @@ namespace JilTests
 #pragma warning restore 649
         }
 
-        [TestMethod]
+        [Fact]
         public void Issue270()
         {
             {
                 var res = JSON.Deserialize<_Issue270?>("123");
-                Assert.IsTrue(res != null);
-                Assert.AreEqual(123, res.Value.Val);
+                Assert.True(res != null);
+                Assert.Equal(123, res.Value.Val);
             }
 
             {
                 var res = JSON.Deserialize<_Issue270?>("null");
-                Assert.IsTrue(res == null);
+                Assert.True(res == null);
             }
         }
 
@@ -7658,7 +7659,7 @@ namespace JilTests
 
         #endregion
 
-        [TestMethod]
+        [Fact]
         public void SlowSpinUp()
         {
             var json = @"{""cluster_name"":""ml-elastic-cluster"",""nodes"":{""CHtYMjlNRJWGzVGGhxxN-w"":{""name"":""Jimmy Woo"",""transport_address"":""inet[/10.7.3.182:9300]"",""host"":""ny-mlelastic03.ds.stackexchange.com"",""ip"":""10.7.3.182"",""version"":""1.2.1"",""build"":""6c95b75"",""http_address"":""inet[/10.7.3.182:9200]"",""settings"":{""path"":{""data"":""/cassandra/elasticsearch/data"",""work"":""/tmp/elasticsearch"",""home"":""/usr/share/elasticsearch"",""conf"":""/etc/elasticsearch"",""logs"":""/cassandra/elasticsearch/log""},""pidfile"":""/var/run/elasticsearch/elasticsearch.pid"",""cluster"":{""name"":""ml-elastic-cluster""},""script"":{""disable_dynamic"":""false""},""discovery"":{""zen"":{""ping"":{""unicast"":{""hosts"":[""ny-mlelastic01"",""ny-mlelastic02"",""ny-mlelastic03""]},""multicast"":{""enabled"":""false""}}}},""name"":""Jimmy Woo""},""os"":{""refresh_interval_in_millis"":1000,""available_processors"":32,""cpu"":{""vendor"":""Intel"",""model"":""Xeon"",""mhz"":2600,""total_cores"":32,""total_sockets"":1,""cores_per_socket"":32,""cache_size_in_bytes"":20480},""mem"":{""total_in_bytes"":101392883712},""swap"":{""total_in_bytes"":137438945280}},""process"":{""refresh_interval_in_millis"":1000,""id"":36752,""max_file_descriptors"":65535,""mlockall"":false},""jvm"":{""pid"":36752,""version"":""1.7.0_51"",""vm_name"":""Java HotSpot(TM) 64-Bit Server VM"",""vm_version"":""24.51-b03"",""vm_vendor"":""Oracle Corporation"",""start_time_in_millis"":1403026987431,""mem"":{""heap_init_in_bytes"":268435456,""heap_max_in_bytes"":1037959168,""non_heap_init_in_bytes"":24313856,""non_heap_max_in_bytes"":136314880,""direct_max_in_bytes"":1037959168},""gc_collectors"":[""ParNew"",""ConcurrentMarkSweep""],""memory_pools"":[""Code Cache"",""Par Eden Space"",""Par Survivor Space"",""CMS Old Gen"",""CMS Perm Gen""]},""thread_pool"":{""generic"":{""type"":""cached"",""keep_alive"":""30s""},""index"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""200""},""snapshot_data"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""bench"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""get"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""snapshot"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""merge"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""suggest"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""bulk"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""50""},""optimize"":{""type"":""fixed"",""min"":1,""max"":1},""warmer"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""flush"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""search"":{""type"":""fixed"",""min"":96,""max"":96,""queue_size"":""1k""},""percolate"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""management"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""refresh"":{""type"":""scaling"",""min"":1,""max"":10,""keep_alive"":""5m""}},""network"":{""refresh_interval_in_millis"":5000,""primary_interface"":{""address"":""10.7.3.182"",""name"":""em4"",""mac_address"":""B8:CA:3A:70:A8:3D""}},""transport"":{""bound_address"":""inet[/0:0:0:0:0:0:0:0%0:9300]"",""publish_address"":""inet[/10.7.3.182:9300]""},""http"":{""bound_address"":""inet[/0:0:0:0:0:0:0:0%0:9200]"",""publish_address"":""inet[/10.7.3.182:9200]"",""max_content_length_in_bytes"":104857600},""plugins"":[]},""y2D2HmdTTIGSD8zc74Oz7g"":{""name"":""Tony Stark"",""transport_address"":""inet[/10.7.3.181:9300]"",""host"":""ny-mlelastic02.ds.stackexchange.com"",""ip"":""10.7.3.181"",""version"":""1.2.1"",""build"":""6c95b75"",""http_address"":""inet[/10.7.3.181:9200]"",""settings"":{""path"":{""data"":""/cassandra/elasticsearch/data"",""work"":""/tmp/elasticsearch"",""home"":""/usr/share/elasticsearch"",""conf"":""/etc/elasticsearch"",""logs"":""/cassandra/elasticsearch/log""},""pidfile"":""/var/run/elasticsearch/elasticsearch.pid"",""cluster"":{""name"":""ml-elastic-cluster""},""script"":{""disable_dynamic"":""false""},""discovery"":{""zen"":{""ping"":{""unicast"":{""hosts"":[""ny-mlelastic01"",""ny-mlelastic02"",""ny-mlelastic03""]},""multicast"":{""enabled"":""false""}}}},""name"":""Tony Stark""},""os"":{""refresh_interval_in_millis"":1000,""available_processors"":32,""cpu"":{""vendor"":""Intel"",""model"":""Xeon"",""mhz"":2600,""total_cores"":32,""total_sockets"":1,""cores_per_socket"":32,""cache_size_in_bytes"":20480},""mem"":{""total_in_bytes"":101392883712},""swap"":{""total_in_bytes"":137438945280}},""process"":{""refresh_interval_in_millis"":1000,""id"":13069,""max_file_descriptors"":65535,""mlockall"":false},""jvm"":{""pid"":13069,""version"":""1.7.0_51"",""vm_name"":""Java HotSpot(TM) 64-Bit Server VM"",""vm_version"":""24.51-b03"",""vm_vendor"":""Oracle Corporation"",""start_time_in_millis"":1403026959588,""mem"":{""heap_init_in_bytes"":268435456,""heap_max_in_bytes"":1037959168,""non_heap_init_in_bytes"":24313856,""non_heap_max_in_bytes"":136314880,""direct_max_in_bytes"":1037959168},""gc_collectors"":[""ParNew"",""ConcurrentMarkSweep""],""memory_pools"":[""Code Cache"",""Par Eden Space"",""Par Survivor Space"",""CMS Old Gen"",""CMS Perm Gen""]},""thread_pool"":{""generic"":{""type"":""cached"",""keep_alive"":""30s""},""index"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""200""},""snapshot_data"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""bench"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""get"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""snapshot"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""merge"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""suggest"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""bulk"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""50""},""optimize"":{""type"":""fixed"",""min"":1,""max"":1},""warmer"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""flush"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""search"":{""type"":""fixed"",""min"":96,""max"":96,""queue_size"":""1k""},""percolate"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""management"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""refresh"":{""type"":""scaling"",""min"":1,""max"":10,""keep_alive"":""5m""}},""network"":{""refresh_interval_in_millis"":5000,""primary_interface"":{""address"":""10.7.3.181"",""name"":""em4"",""mac_address"":""B8:CA:3A:70:AB:6D""}},""transport"":{""bound_address"":""inet[/0:0:0:0:0:0:0:0%0:9300]"",""publish_address"":""inet[/10.7.3.181:9300]""},""http"":{""bound_address"":""inet[/0:0:0:0:0:0:0:0%0:9200]"",""publish_address"":""inet[/10.7.3.181:9200]"",""max_content_length_in_bytes"":104857600},""plugins"":[]},""b3UvPCMmS-67jl6OWxFShw"":{""name"":""Invisible Girl"",""transport_address"":""inet[/10.7.3.180:9300]"",""host"":""ny-mlelastic01"",""ip"":""10.7.3.180"",""version"":""1.2.1"",""build"":""6c95b75"",""http_address"":""inet[/10.7.3.180:9200]"",""settings"":{""path"":{""data"":""/cassandra/elasticsearch/data"",""work"":""/tmp/elasticsearch"",""home"":""/usr/share/elasticsearch"",""conf"":""/etc/elasticsearch"",""logs"":""/cassandra/elasticsearch/log""},""pidfile"":""/var/run/elasticsearch/elasticsearch.pid"",""cluster"":{""name"":""ml-elastic-cluster""},""script"":{""disable_dynamic"":""false""},""discovery"":{""zen"":{""ping"":{""unicast"":{""hosts"":[""ny-mlelastic01"",""ny-mlelastic02"",""ny-mlelastic03""]},""multicast"":{""enabled"":""false""}}}},""name"":""Invisible Girl""},""os"":{""refresh_interval_in_millis"":1000,""available_processors"":32,""cpu"":{""vendor"":""Intel"",""model"":""Xeon"",""mhz"":2599,""total_cores"":32,""total_sockets"":1,""cores_per_socket"":32,""cache_size_in_bytes"":20480},""mem"":{""total_in_bytes"":101392883712},""swap"":{""total_in_bytes"":137438945280}},""process"":{""refresh_interval_in_millis"":1000,""id"":4764,""max_file_descriptors"":65535,""mlockall"":false},""jvm"":{""pid"":4764,""version"":""1.7.0_51"",""vm_name"":""Java HotSpot(TM) 64-Bit Server VM"",""vm_version"":""24.51-b03"",""vm_vendor"":""Oracle Corporation"",""start_time_in_millis"":1403026924332,""mem"":{""heap_init_in_bytes"":268435456,""heap_max_in_bytes"":1037959168,""non_heap_init_in_bytes"":24313856,""non_heap_max_in_bytes"":136314880,""direct_max_in_bytes"":1037959168},""gc_collectors"":[""ParNew"",""ConcurrentMarkSweep""],""memory_pools"":[""Code Cache"",""Par Eden Space"",""Par Survivor Space"",""CMS Old Gen"",""CMS Perm Gen""]},""thread_pool"":{""generic"":{""type"":""cached"",""keep_alive"":""30s""},""index"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""200""},""snapshot_data"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""bench"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""get"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""snapshot"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""merge"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""suggest"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""bulk"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""50""},""optimize"":{""type"":""fixed"",""min"":1,""max"":1},""warmer"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""flush"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""search"":{""type"":""fixed"",""min"":96,""max"":96,""queue_size"":""1k""},""percolate"":{""type"":""fixed"",""min"":32,""max"":32,""queue_size"":""1k""},""management"":{""type"":""scaling"",""min"":1,""max"":5,""keep_alive"":""5m""},""refresh"":{""type"":""scaling"",""min"":1,""max"":10,""keep_alive"":""5m""}},""network"":{""refresh_interval_in_millis"":5000,""primary_interface"":{""address"":""10.7.3.180"",""name"":""em4"",""mac_address"":""B8:CA:3A:70:D8:A5""}},""transport"":{""bound_address"":""inet[/0:0:0:0:0:0:0:0:9300]"",""publish_address"":""inet[/10.7.3.180:9300]""},""http"":{""bound_address"":""inet[/0:0:0:0:0:0:0:0:9200]"",""publish_address"":""inet[/10.7.3.180:9200]"",""max_content_length_in_bytes"":104857600},""plugins"":[]}}}";
@@ -7668,7 +7669,7 @@ namespace JilTests
             var result = JSON.Deserialize<ClusterNodeInfo>(json, Options.SecondsSinceUnixEpochExcludeNulls);
             timer.Stop();
 
-            Assert.IsTrue(timer.ElapsedMilliseconds < 1500, "Took: " + timer.ElapsedMilliseconds + "ms");
+            Assert.True(timer.ElapsedMilliseconds < 1500, "Took: " + timer.ElapsedMilliseconds + "ms");
         }
 #endif
 
@@ -7808,7 +7809,7 @@ namespace JilTests
         //    }
         //}
 
-        //[TestMethod]
+        //[Fact]
         //public void AllFloats()
         //{
         //    var e = _AllFloats();
@@ -7834,7 +7835,7 @@ namespace JilTests
 
         //                var closeEnough = asStr == reStr || delta <= float.Epsilon;
 
-        //                Assert.IsTrue(closeEnough, "For i=" + i + " format=" + format + " delta=" + delta + " epsilon=" + float.Epsilon);
+        //                Assert.True(closeEnough, "For i=" + i + " format=" + format + " delta=" + delta + " epsilon=" + float.Epsilon);
         //            }
         //            catch (Exception x)
         //            {
