@@ -4,14 +4,14 @@ using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    internal enum SearchExcerptItemType : byte
+    public enum SearchExcerptItemType : byte
     {
         question = 1,
         answer = 2
     }
 
     [ProtoContract]
-    internal class SearchExcerpt : IGenericEquality<SearchExcerpt>
+    public class SearchExcerpt : IGenericEquality<SearchExcerpt>
     {
         [ProtoMember(1)]
         public string title { get; set; }

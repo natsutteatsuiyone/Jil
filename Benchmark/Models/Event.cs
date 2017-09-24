@@ -3,7 +3,7 @@ using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    internal enum EventType : byte
+    public enum EventType : byte
     {
         question_posted = 1,
         answer_posted = 2,
@@ -13,7 +13,7 @@ namespace Benchmark.Models
     }
 
     [ProtoContract]
-    internal class Event : IGenericEquality<Event>
+    public class Event : IGenericEquality<Event>
     {
         [ProtoMember(1)]
         public EventType? event_type { get; set; }

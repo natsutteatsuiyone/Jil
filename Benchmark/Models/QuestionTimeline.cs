@@ -3,7 +3,7 @@ using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    internal enum QuestionTimelineAction : byte
+    public enum QuestionTimelineAction : byte
     {
         question = 1,
         answer = 2,
@@ -16,7 +16,7 @@ namespace Benchmark.Models
     }
 
     [ProtoContract]
-    internal class QuestionTimeline : IGenericEquality<QuestionTimeline>
+    public class QuestionTimeline : IGenericEquality<QuestionTimeline>
     {
         [ProtoMember(1)]
         public QuestionTimelineAction? timeline_type { get; set; }

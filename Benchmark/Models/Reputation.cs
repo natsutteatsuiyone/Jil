@@ -3,7 +3,7 @@ using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    internal enum VoteType : byte
+    public enum VoteType : byte
     {
         up_votes = 2,
         down_votes = 3,
@@ -15,7 +15,7 @@ namespace Benchmark.Models
     }
 
     [ProtoContract]
-    internal class Reputation : IGenericEquality<Reputation>
+    public class Reputation : IGenericEquality<Reputation>
     {
         [ProtoMember(1)]
         public int? user_id { get; set; }

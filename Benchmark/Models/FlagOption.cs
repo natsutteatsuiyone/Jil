@@ -4,7 +4,7 @@ using ProtoBuf;
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class FlagOption : IGenericEquality<FlagOption>
+    public class FlagOption : IGenericEquality<FlagOption>
     {
         [ProtoMember(1)]
         public int? option_id { get; set; }

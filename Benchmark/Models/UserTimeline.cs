@@ -3,7 +3,7 @@ using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    internal enum UserTimelineType : byte
+    public enum UserTimelineType : byte
     {
         commented = 1,
         asked = 2,
@@ -16,7 +16,7 @@ namespace Benchmark.Models
     }
 
     [ProtoContract]
-    internal class UserTimeline : IGenericEquality<UserTimeline>
+    public class UserTimeline : IGenericEquality<UserTimeline>
     {
         [ProtoMember(1)]
         public DateTime? creation_date { get; set; }

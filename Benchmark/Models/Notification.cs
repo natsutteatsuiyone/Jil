@@ -3,7 +3,7 @@ using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    internal enum NotificationType : byte
+    public enum NotificationType : byte
     {
         generic = 1,
         accounts_associated = 8,
@@ -23,7 +23,7 @@ namespace Benchmark.Models
     }
 
     [ProtoContract]
-    internal class Notification : IGenericEquality<Notification>
+    public class Notification : IGenericEquality<Notification>
     {
         [ProtoMember(1)]
         public NotificationType? notification_type { get; set; }

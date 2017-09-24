@@ -8,7 +8,7 @@ namespace Benchmark.Fixture
 
         public object Generate()
         {
-            return CombGuid.NewGuid();
+            return Guid.NewGuid();
         }
     }
 }

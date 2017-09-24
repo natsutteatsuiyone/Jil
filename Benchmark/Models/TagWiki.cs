@@ -4,7 +4,7 @@ using ProtoBuf;
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class TagWiki : IGenericEquality<TagWiki>
+    public class TagWiki : IGenericEquality<TagWiki>
     {
         [ProtoMember(1)]
         public string tag_name { get; set; }

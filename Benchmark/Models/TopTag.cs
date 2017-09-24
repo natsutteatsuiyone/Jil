@@ -3,7 +3,7 @@
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class TopTag : IGenericEquality<TopTag>
+    public class TopTag : IGenericEquality<TopTag>
     {
         [ProtoMember(1)]
         public string tag_name { get; set; }

@@ -4,7 +4,7 @@ using ProtoBuf;
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class NetworkUser : IGenericEquality<NetworkUser>
+    public class NetworkUser : IGenericEquality<NetworkUser>
     {
         [ProtoMember(1)]
         public string site_name { get; set; }

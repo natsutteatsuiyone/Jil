@@ -5,7 +5,7 @@ using ProtoBuf;
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class AccessToken : IGenericEquality<AccessToken>
+    public class AccessToken : IGenericEquality<AccessToken>
     {
         [ProtoMember(1)]
         public string access_token { get; set; }

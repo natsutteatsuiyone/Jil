@@ -4,7 +4,7 @@ using ProtoBuf;
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class ReputationHistory : IGenericEquality<ReputationHistory>
+    public class ReputationHistory : IGenericEquality<ReputationHistory>
     {
         public enum ReputationHistoryType : byte
         {

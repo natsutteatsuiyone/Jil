@@ -3,7 +3,7 @@ using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    internal enum InboxItemType
+    public enum InboxItemType
     {
         comment = 1,
         chat_message = 2,
@@ -16,7 +16,7 @@ namespace Benchmark.Models
     }
 
     [ProtoContract]
-    internal class InboxItem : IGenericEquality<InboxItem>
+    public class InboxItem : IGenericEquality<InboxItem>
     {
         [ProtoMember(1)]
         public InboxItemType? item_type { get; set; }

@@ -99,7 +99,7 @@ namespace Benchmark.Models
         }
     }
 
-    internal interface IMobileFeedBase<T> : IGenericEquality<T>
+    public interface IMobileFeedBase<T> : IGenericEquality<T>
     {
         int? group_id { get; set; }
         long? added_date { get; set; }

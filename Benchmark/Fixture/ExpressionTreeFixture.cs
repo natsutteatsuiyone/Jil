@@ -3,13 +3,15 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Benchmark.Fixture
 {
     public class ExpressionTreeFixture
     {
-        private readonly ConcurrentDictionary<Type, Func<int, int, object>> _functorCache = new ConcurrentDictionary<Type, Func<int, int, object>>();
-        private readonly HashSet<string> _ignore = new HashSet<string>();
+        private readonly ConcurrentDictionary<Type, Func<int, int, object>> _functorCache =
+            new ConcurrentDictionary<Type, Func<int, int, object>>();
+
         private readonly Dictionary<Type, IValueFixture> _valueFixtures = new Dictionary<Type, IValueFixture>();
 
         public ExpressionTreeFixture()
@@ -38,12 +40,6 @@ namespace Benchmark.Fixture
             _valueFixtures.Add(shortFixture.Type, shortFixture);
         }
 
-        public void Ignore([NotNull] string propertyName)
-        {
-            Check.NotNull(propertyName, nameof(propertyName));
-            _ignore.Add(propertyName);
-        }
-
         public object Create(Type type, int repeatCount = 1, int recursiveCount = 1)
         {
             var functor = _functorCache.GetOrAdd(type, AddFunctor);
@@ -56,7 +52,8 @@ namespace Benchmark.Fixture
             var recursiveCount = Expression.Parameter(typeof(int), "recursiveCount");
             var subExpressions = new List<Expression>();
             var typedOutput = Expression.Variable(type, "typedOutput");
-            if (_valueFixtures.ContainsKey(type) || type.IsArray || type.IsTypedList()) // they can be generated directly
+            if (_valueFixtures.ContainsKey(type) || type.IsArray || type.IsTypedList()
+            ) // they can be generated directly
             {
                 var expression = GenerateValue(typedOutput, repeatCount, recursiveCount, type);
                 subExpressions.Add(expression);
@@ -64,17 +61,18 @@ namespace Benchmark.Fixture
             else
             {
                 subExpressions.Add(Expression.Assign(typedOutput, Expression.New(type)));
-                var typeProps = type.GetCachedProperties();
+                var typeProps = type.GetProperties();
                 foreach (var propertyInfo in typeProps)
                 {
-                    if (!propertyInfo.CanWrite || _ignore.Contains(propertyInfo.Name))
+                    if (!propertyInfo.CanWrite)
                     {
                         continue;
                     }
                     var propertyType = propertyInfo.PropertyType;
                     var isRecursion = IsRecursion(type, propertyType) || IsRecursion(propertyType, type);
                     var memberAccess = Expression.MakeMemberAccess(typedOutput, propertyInfo);
-                    var expression = GenerateValue(memberAccess, repeatCount, isRecursion ? Expression.Decrement(recursiveCount) : (Expression) recursiveCount, propertyType);
+                    var expression = GenerateValue(memberAccess, repeatCount,
+                        isRecursion ? Expression.Decrement(recursiveCount) : (Expression) recursiveCount, propertyType);
                     subExpressions.Add(expression);
                 }
             }
@@ -110,13 +108,16 @@ namespace Benchmark.Fixture
             return false;
         }
 
-        private Expression GenerateValue(Expression generatedValue, Expression repeatCount, Expression recursiveCount, Type type)
+        private Expression GenerateValue(Expression generatedValue, Expression repeatCount, Expression recursiveCount,
+            Type type)
         {
             var result = new List<Expression>();
-            if (_valueFixtures.TryGetValue(type, out IValueFixture valueFixture))
+            if (_valueFixtures.TryGetValue(type, out var valueFixture))
             {
                 var generateMethodInfo = valueFixture.GetType().GetMethod(nameof(IValueFixture.Generate));
-                result.Add(Expression.Assign(generatedValue, Expression.Convert(Expression.Call(Expression.Constant(valueFixture), generateMethodInfo), generatedValue.Type)));
+                result.Add(Expression.Assign(generatedValue,
+                    Expression.Convert(Expression.Call(Expression.Constant(valueFixture), generateMethodInfo),
+                        generatedValue.Type)));
             }
             else if (type.IsTypedList())
             {
@@ -134,7 +135,7 @@ namespace Benchmark.Fixture
                 if (loopBlock.Count > 0)
                 {
                     var loopContent = Expression.Block(new[] {childValue, index}, loopBlock);
-                    expressionList.Add(ExpressionTreeHelper.ForLoop(index, repeatCount, loopContent));
+                    expressionList.Add(ForLoop(index, repeatCount, loopContent));
                 }
                 result.Add(MakeIfExpression(recursiveCount, expressionList));
             }
@@ -145,7 +146,9 @@ namespace Benchmark.Fixture
                 var arrayList = new List<Expression>
                 {
                     Expression.Assign(generatedValue, Expression.NewArrayBounds(elementType, repeatCount)),
-                    ExpressionTreeHelper.ForLoop(index, repeatCount, GenerateValue(Expression.ArrayAccess(generatedValue, index), repeatCount, recursiveCount, elementType))
+                    ForLoop(index, repeatCount,
+                        GenerateValue(Expression.ArrayAccess(generatedValue, index), repeatCount, recursiveCount,
+                            elementType))
                 };
                 result.Add(MakeIfExpression(recursiveCount, arrayList));
             }
@@ -154,39 +157,46 @@ namespace Benchmark.Fixture
                 var elementType = Nullable.GetUnderlyingType(type);
                 result.Add(GenerateValue(generatedValue, repeatCount, recursiveCount, elementType));
             }
-            else if (type.IsEnum)
+            else if (type.GetTypeInfo().IsEnum)
             {
                 if (!_valueFixtures.TryGetValue(type, out valueFixture))
                 {
                     valueFixture = new EnumValueFixture(type);
                     _valueFixtures.Add(valueFixture.Type, valueFixture);
                 }
-                result.Add(GenerateValue(generatedValue, repeatCount, recursiveCount, type)); // call again for main method
+                result.Add(GenerateValue(generatedValue, repeatCount, recursiveCount,
+                    type)); // call again for main method
             }
             else
             {
-                result.Add(MakeIfExpression(recursiveCount, InvokeCreate(type, generatedValue, repeatCount, recursiveCount)));
+                result.Add(MakeIfExpression(recursiveCount,
+                    InvokeCreate(type, generatedValue, repeatCount, recursiveCount)));
             }
             return result.Count > 1 ? Expression.Block(result) : result.Single();
         }
 
-        private Expression InvokeCreate(Type type, Expression generatedValue, Expression repeatCount, Expression recursiveCount)
+        private Expression InvokeCreate(Type type, Expression generatedValue, Expression repeatCount,
+            Expression recursiveCount)
         {
-            var mi = typeof(ExpressionTreeFixture).GetMethod(nameof(ExpressionTreeFixture.Create), new[] {typeof(Type), typeof(int), typeof(int)});
+            var mi = typeof(ExpressionTreeFixture).GetMethod(nameof(Create),
+                new[] {typeof(Type), typeof(int), typeof(int)});
             return Expression.Assign(generatedValue,
                 Expression.Convert(
-                    Expression.Call(Expression.Constant(this), mi, new[] {Expression.Constant(type), repeatCount, recursiveCount}),
+                    Expression.Call(Expression.Constant(this), mi,
+                        new[] {Expression.Constant(type), repeatCount, recursiveCount}),
                     generatedValue.Type));
         }
 
         private Expression MakeIfExpression(Expression recursiveCount, params Expression[] input)
         {
-            return Expression.IfThen(Expression.GreaterThanOrEqual(recursiveCount, Expression.Constant(0)), input.Length > 1 ? Expression.Block(input) : input.Single());
+            return Expression.IfThen(Expression.GreaterThanOrEqual(recursiveCount, Expression.Constant(0)),
+                input.Length > 1 ? Expression.Block(input) : input.Single());
         }
 
         private Expression MakeIfExpression(Expression recursiveCount, IList<Expression> input)
         {
-            return Expression.IfThen(Expression.GreaterThanOrEqual(recursiveCount, Expression.Constant(0)), input.Count > 1 ? Expression.Block(input) : input.Single());
+            return Expression.IfThen(Expression.GreaterThanOrEqual(recursiveCount, Expression.Constant(0)),
+                input.Count > 1 ? Expression.Block(input) : input.Single());
         }
 
         public T Create<T>(int repeatCount = 1, int recursiveCount = 1)
@@ -206,6 +216,24 @@ namespace Benchmark.Fixture
             {
                 yield return functor(repeatCount, recursiveCount);
             }
+        }
+
+        public static Expression ForLoop(ParameterExpression index, Expression lengthExpression, Expression loopContent)
+        {
+            var breakLabel = Expression.Label("LoopBreak");
+            var length = Expression.Variable(typeof(int), "length");
+            var block = Expression.Block(new[] {index, length},
+                Expression.Assign(index, Expression.Constant(0)),
+                Expression.Assign(length, lengthExpression),
+                Expression.Loop(
+                    Expression.IfThenElse(
+                        Expression.LessThan(index, length),
+                        Expression.Block(loopContent, Expression.PostIncrementAssign(index)),
+                        Expression.Break(breakLabel)
+                    ),
+                    breakLabel)
+            );
+            return block;
         }
     }
 }

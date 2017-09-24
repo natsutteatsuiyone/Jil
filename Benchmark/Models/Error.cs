@@ -3,7 +3,7 @@
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class Error : IGenericEquality<Error>
+    public class Error : IGenericEquality<Error>
     {
         [ProtoMember(1)]
         public int? error_id { get; set; }

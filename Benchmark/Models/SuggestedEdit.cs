@@ -5,7 +5,7 @@ using ProtoBuf;
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class SuggestedEdit : IGenericEquality<SuggestedEdit>
+    public class SuggestedEdit : IGenericEquality<SuggestedEdit>
     {
         [ProtoMember(1)]
         public int? suggested_edit_id { get; set; }

@@ -4,14 +4,14 @@ using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    internal enum RevisionType : byte
+    public enum RevisionType : byte
     {
         single_user = 1,
         vote_based = 2
     }
 
     [ProtoContract]
-    internal class Revision : IGenericEquality<Revision>
+    public class Revision : IGenericEquality<Revision>
     {
         [ProtoMember(1)]
         public string revision_guid { get; set; }

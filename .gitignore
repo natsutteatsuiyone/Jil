@@ -7,3 +7,4 @@ obj/
 *.lock.json
 Backup/
 UpgradeLog.htm
+/Benchmark/BenchmarkDotNet.Artifacts

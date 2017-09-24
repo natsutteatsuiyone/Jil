@@ -9,7 +9,7 @@ namespace Benchmark.Fixture
 
         public object Generate()
         {
-            return (long) _prng.Next() << 32 | (uint) _prng.Next();
+            return ((long) _prng.Next() << 32) | (uint) _prng.Next();
         }
     }
 }

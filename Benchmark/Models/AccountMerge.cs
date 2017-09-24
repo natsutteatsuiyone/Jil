@@ -4,7 +4,7 @@ using ProtoBuf;
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class AccountMerge : IGenericEquality<AccountMerge>
+    public class AccountMerge : IGenericEquality<AccountMerge>
     {
         [ProtoMember(1)]
         public int? old_account_id { get; set; }

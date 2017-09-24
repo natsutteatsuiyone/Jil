@@ -3,7 +3,7 @@
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class Privilege : IGenericEquality<Privilege>
+    public class Privilege : IGenericEquality<Privilege>
     {
         [ProtoMember(1)]
         public string short_description { get; set; }

@@ -2,21 +2,21 @@
 
 namespace Benchmark.Models
 {
-    internal enum BadgeRank : byte
+    public enum BadgeRank : byte
     {
         bronze = 3,
         silver = 2,
         gold = 1
     }
 
-    internal enum BadgeType
+    public enum BadgeType
     {
         named = 1,
         tag_based = 2
     }
 
     [ProtoContract]
-    internal class Badge : IGenericEquality<Badge>
+    public class Badge : IGenericEquality<Badge>
     {
         [ProtoMember(1)]
         public int? badge_id { get; set; }

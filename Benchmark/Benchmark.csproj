@@ -5,16 +5,33 @@
     <Description>A fast JSON serializer and deserializer</Description>
     <VersionPrefix>2.15.4</VersionPrefix>
     <Authors>Kevin Montrose</Authors>
-    <TargetFrameworks>netcoreapp1.1;netcoreapp2.0;net46</TargetFrameworks>
+    <TargetFrameworks>net46</TargetFrameworks>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Benchmark</AssemblyName>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
 
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.10.9" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="protobuf-net" Version="2.3.2" />
+    <PackageReference Include="ServiceStack.Text.Core" Version="1.0.44" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Jil\Jil.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BenchmarkTypes">
+      <HintPath>BenchmarkTypes.dll</HintPath>
+    </Reference>
   </ItemGroup>  
 </Project>

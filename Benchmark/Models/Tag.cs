@@ -5,7 +5,7 @@ using ProtoBuf;
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class Tag : IGenericEquality<Tag>
+    public class Tag : IGenericEquality<Tag>
     {
         [ProtoMember(1)]
         public string name { get; set; }

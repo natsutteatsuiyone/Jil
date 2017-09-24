@@ -3,7 +3,7 @@
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class TagScore : IGenericEquality<TagScore>
+    public class TagScore : IGenericEquality<TagScore>
     {
         [ProtoMember(1)]
         public ShallowUser user { get; set; }

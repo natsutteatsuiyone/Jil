@@ -3,7 +3,7 @@
 namespace Benchmark.Models
 {
     [ProtoContract]
-    internal class WritePermission : IGenericEquality<WritePermission>
+    public class WritePermission : IGenericEquality<WritePermission>
     {
         [ProtoMember(1)]
         public int? user_id { get; set; }

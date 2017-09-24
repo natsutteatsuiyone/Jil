@@ -1,8 +1,7 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 
 namespace Benchmark
 {
@@ -23,7 +22,6 @@ namespace Benchmark
 
     public static class ExtensionMethods
     {
-
         public static bool TrueEqualsString(this IEnumerable<string> a, IEnumerable<string> b)
         {
             return a.SequenceEqual(b);
@@ -131,6 +129,14 @@ namespace Benchmark
             }
 
             return true;
+        }
+
+        public static bool IsTypedList(this Type type)
+        {
+            return
+                type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(IList<>) ||
+                type.GetTypeInfo().GetInterfaces().Any(i =>
+                    i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>));
         }
     }
 }
