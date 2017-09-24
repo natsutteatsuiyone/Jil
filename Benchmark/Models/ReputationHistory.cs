@@ -1,14 +1,10 @@
-﻿using ProtoBuf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using ProtoBuf;
 
 namespace Benchmark.Models
 {
     [ProtoContract]
-    class ReputationHistory : IGenericEquality<ReputationHistory>
+    internal class ReputationHistory : IGenericEquality<ReputationHistory>
     {
         public enum ReputationHistoryType : byte
         {
@@ -49,33 +45,37 @@ namespace Benchmark.Models
 
         [ProtoMember(1)]
         public int? user_id { get; set; }
+
         [ProtoMember(2)]
         public DateTime? creation_date { get; set; }
+
         [ProtoMember(3)]
         public int? post_id { get; set; }
+
         [ProtoMember(4)]
         public int? reputation_change { get; set; }
+
         [ProtoMember(5)]
         public ReputationHistoryType? reputation_history_type { get; set; }
 
         public bool Equals(ReputationHistory obj)
         {
             return
-                this.creation_date.TrueEquals(obj.creation_date) &&
-                this.post_id.TrueEquals(obj.post_id) &&
-                this.reputation_change.TrueEquals(obj.reputation_change) &&
-                this.reputation_history_type.TrueEquals(obj.reputation_history_type) &&
-                this.user_id.TrueEquals(obj.user_id);
+                creation_date.TrueEquals(obj.creation_date) &&
+                post_id.TrueEquals(obj.post_id) &&
+                reputation_change.TrueEquals(obj.reputation_change) &&
+                reputation_history_type.TrueEquals(obj.reputation_history_type) &&
+                user_id.TrueEquals(obj.user_id);
         }
 
         public bool EqualsDynamic(dynamic obj)
         {
             return
-                this.creation_date.TrueEquals((DateTime?)obj.creation_date) &&
-                this.post_id.TrueEquals((int?)obj.post_id) &&
-                this.reputation_change.TrueEquals((int?)obj.reputation_change) &&
-                this.reputation_history_type.TrueEquals((ReputationHistoryType?)obj.reputation_history_type) &&
-                this.user_id.TrueEquals((int?)obj.user_id);
+                creation_date.TrueEquals((DateTime?) obj.creation_date) &&
+                post_id.TrueEquals((int?) obj.post_id) &&
+                reputation_change.TrueEquals((int?) obj.reputation_change) &&
+                reputation_history_type.TrueEquals((ReputationHistoryType?) obj.reputation_history_type) &&
+                user_id.TrueEquals((int?) obj.user_id);
         }
     }
 }

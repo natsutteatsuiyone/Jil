@@ -1,13 +1,9 @@
-﻿using ProtoBuf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using ProtoBuf;
 
 namespace Benchmark.Models
 {
-    enum NotificationType : byte
+    internal enum NotificationType : byte
     {
         generic = 1,
         accounts_associated = 8,
@@ -27,39 +23,44 @@ namespace Benchmark.Models
     }
 
     [ProtoContract]
-    class Notification : IGenericEquality<Notification>
+    internal class Notification : IGenericEquality<Notification>
     {
         [ProtoMember(1)]
         public NotificationType? notification_type { get; set; }
+
         [ProtoMember(2)]
         public Info.Site site { get; set; }
+
         [ProtoMember(3)]
         public DateTime? creation_date { get; set; }
+
         [ProtoMember(4)]
         public string body { get; set; }
+
         [ProtoMember(5)]
         public int? post_id { get; set; }
+
         [ProtoMember(6)]
         public bool? is_unread { get; set; }
 
         public bool Equals(Notification obj)
         {
             return
-                this.body.TrueEqualsString(obj.body) &&
-                this.site.TrueEquals(obj.site) &&
-                this.creation_date.TrueEquals(obj.creation_date) &&
-                this.post_id.TrueEquals(obj.post_id) &&
-                this.is_unread.TrueEquals(obj.is_unread);
+                body.TrueEqualsString(obj.body) &&
+                site.TrueEquals(obj.site) &&
+                creation_date.TrueEquals(obj.creation_date) &&
+                post_id.TrueEquals(obj.post_id) &&
+                is_unread.TrueEquals(obj.is_unread);
         }
 
         public bool EqualsDynamic(dynamic obj)
         {
             return
-                this.body.TrueEqualsString((string)obj.body) &&
-                (this.site == null && obj.site == null || this.site.EqualsDynamic(obj.site)) &&
-                this.creation_date.TrueEquals((DateTime?)obj.creation_date) &&
-                this.post_id.TrueEquals((int?)obj.post_id) &&
-                this.is_unread.TrueEquals((bool?)obj.is_unread);
+                body.TrueEqualsString((string) obj.body) &&
+                (site == null && obj.site == null || site.EqualsDynamic(obj.site)) &&
+                creation_date.TrueEquals((DateTime?) obj.creation_date) &&
+                post_id.TrueEquals((int?) obj.post_id) &&
+                is_unread.TrueEquals((bool?) obj.is_unread);
         }
     }
 }

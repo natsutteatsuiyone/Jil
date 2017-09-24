@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -96,16 +97,21 @@ namespace Benchmark
                 return false;
             }
 
-            if (a.Count() != b.Count())
-            {
-                return false;
-            }
-
             using (var e1 = a.GetEnumerator())
             using (var e2 = b.GetEnumerator())
             {
-                while (e1.MoveNext() && e2.MoveNext())
+                while (true)
                 {
+                    var e1Next = e1.MoveNext();
+                    var e2Next = e2.MoveNext();
+                    if (e1Next != e2Next)
+                    {
+                        return false;
+                    }
+                    if (!e1Next && !e2Next)
+                    {
+                        break;
+                    }
                     var c1 = e1.Current;
                     var c2 = e2.Current;
 
