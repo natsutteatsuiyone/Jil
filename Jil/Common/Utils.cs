@@ -480,7 +480,11 @@ namespace Jil.Common
                 object obj;
                 if (cons != null)
                 {
+#if NETSTANDARD1_6
                     obj = cons.Invoke(consParameters);
+#else
+                    obj = FormatterServices.GetUninitializedObject(t);
+#endif
                 }
                 else
                 {

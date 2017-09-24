@@ -1,5 +1,8 @@
 ### Jil
 
+Note: Added a NETSTANDARD2_0 Target, removed the jil.core.dll and jil.strongname and merged pull requests https://github.com/kevin-montrose/Jil/pull/239 and
+https://github.com/kevin-montrose/Jil/pull/267
+
 A fast JSON (de)serializer, built on [Sigil](https://github.com/kevin-montrose/Sigil) with a number of somewhat crazy optimization tricks.
 
 [Releases are available on Nuget](https://www.nuget.org/packages/Jil/) in addition to this repository.

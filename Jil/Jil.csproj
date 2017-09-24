@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Summary>A fast JSON serializer and deserializer</Summary>
     <Description>A fast JSON serializer and deserializer</Description>
-    <VersionPrefix>2.15.4</VersionPrefix>
+    <VersionPrefix>2.15.4.1</VersionPrefix>
     <Authors>Kevin Montrose</Authors>
     <TargetFrameworks>netstandard1.6;netstandard2.0;net45</TargetFrameworks>
     <NoWarn>$(NoWarn);1591</NoWarn>
@@ -14,6 +14,11 @@
     <PackageId>Jil</PackageId>
     <PackageProjectUrl>https://github.com/kevin-montrose/Jil</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/kevin-montrose/Jil/blob/master/LICENSE</PackageLicenseUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/kevin-montrose/Jil</RepositoryUrl>
+    <RepositoryType>GITHUB</RepositoryType>
+    <AssemblyVersion>2.15.4.1</AssemblyVersion>
+    <FileVersion>2.15.4.1</FileVersion>
   </PropertyGroup>
  
   <ItemGroup>
