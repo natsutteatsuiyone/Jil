@@ -21,7 +21,7 @@
    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
-   <PackageReference Include="Microsoft.CSharp" Version="4.3.0" />
+   <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
   </ItemGroup>
   
 </Project>

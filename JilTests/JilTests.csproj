@@ -25,20 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Benchmark\Benchmark.csproj" />
     <ProjectReference Include="..\Jil\Jil.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
-    <PackageReference Include="xunit.runner.msbuild">
-      <Version>2.3.0-beta5-build3769</Version>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-    <PackageReference Include="xunit.runner.msbuild">
-      <Version>2.3.0-beta5-build3769</Version>
-    </PackageReference>
   </ItemGroup>
   
 </Project>
