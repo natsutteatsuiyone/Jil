@@ -941,7 +941,7 @@ namespace JilTests
                 double fastTime, normalTime;
                 CompareTimes(toSerialize, Jil.Options.Default, fast, normal, out fastTime, out normalTime);
 
-                Assert.True(fastTime < normalTime, "fastTime = " + fastTime + ", normalTime = " + normalTime);
+                Assert.IsTrue(fastTime < normalTime, "fastTime = " + fastTime + ", normalTime = " + normalTime);
             }
             finally
             {
@@ -959,7 +959,7 @@ namespace JilTests
             Bar
         }
 
-        [Fact]
+        [TestMethod]
         public void UseNameAutomataWhenMatchingEnums()
         {
             Func<TextReader, int, _UseNameAutomataWhenMatchingEnums> automata;
@@ -1002,7 +1002,7 @@ namespace JilTests
             double automataTime, methodTime;
             CompareTimes(toSerialize, Jil.Options.Default, automata, method, out automataTime, out methodTime);
 
-            Assert.True(automataTime < methodTime, "automataTime = " + automataTime + ", methodTime = " + methodTime);
+            Assert.IsTrue(automataTime < methodTime, "automataTime = " + automataTime + ", methodTime = " + methodTime);
         }
 
         class _UseCustomWriteIntUnrolledSigned
@@ -1010,7 +1010,7 @@ namespace JilTests
             public List<int> A { get; set; }
         }
 
-        [Fact]
+        [TestMethod]
         public void UseCustomWriteIntUnrolledSigned()
         {
             Action<TextWriter, _UseCustomWriteIntUnrolledSigned, int> signed;
