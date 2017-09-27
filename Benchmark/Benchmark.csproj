@@ -23,14 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="ModelBenchmark.Methods.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ModelBenchmark.Methods.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.10.9" />
     <PackageReference Include="Jil" Version="2.15.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
@@ -39,9 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ModelBenchmark.Methods.tt">
+    <None Update="ModelBenchmark.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ModelBenchmark.Methods.cs</LastGenOutput>
+      <LastGenOutput>ModelBenchmark.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -50,10 +42,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ModelBenchmark.Methods.cs">
+    <Compile Update="ModelBenchmark.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ModelBenchmark.Methods.tt</DependentUpon>
+      <DependentUpon>ModelBenchmark.tt</DependentUpon>
     </Compile>
   </ItemGroup>  
 </Project>

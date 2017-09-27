@@ -23,7 +23,8 @@ using Benchmark.Serializers;
 using Benchmark.Models;
 using Benchmark.Fixture;
 using BenchmarkDotNet.Attributes;
-  public partial class ModelBenchmark<TSerializer> where TSerializer : SerializerBase, new()
+  [Config(typeof(MyConfig))]
+  public partial class ModelBenchmark
   {
 	private readonly static ExpressionTreeFixture ExpressionTreeFixture = new ExpressionTreeFixture();
 <#  
