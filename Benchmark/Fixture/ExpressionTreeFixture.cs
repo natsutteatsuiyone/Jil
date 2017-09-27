@@ -24,6 +24,8 @@ namespace Benchmark.Fixture
             _valueFixtures.Add(guidFixture.Type, guidFixture);
             var dtoFixture = new DateTimeOffsetValueFixture();
             _valueFixtures.Add(dtoFixture.Type, dtoFixture);
+            var dtFixture = new DateTimeValueFixture();
+            _valueFixtures.Add(dtFixture.Type, dtFixture);
             var boolFixture = new BooleanValueFixture();
             _valueFixtures.Add(boolFixture.Type, boolFixture);
             var decimalFixture = new DecimalValueFixture();
