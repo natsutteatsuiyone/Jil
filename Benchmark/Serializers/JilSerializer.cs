@@ -5,14 +5,14 @@ namespace Benchmark.Serializers
 {
     public class JilSerializer : SerializerBase
     {
-        public override object Serialize(object input)
+        public override T Deserialize<T>(string input)
         {
-            return JSON.Serialize(input, Options.ISO8601ExcludeNullsIncludeInherited);
+            return Jil.JSON.Deserialize<T>(input);
         }
 
-        public override object Deserialize(object input, Type type)
+        public override string Serialize<T>(T input)
         {
-            return JSON.Deserialize((string) input, type, Options.ISO8601ExcludeNullsIncludeInherited);
+            return Jil.JSON.Serialize(input);
         }
     }
 }

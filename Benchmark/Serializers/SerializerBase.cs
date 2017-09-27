@@ -4,8 +4,8 @@ namespace Benchmark.Serializers
 {
     public abstract class SerializerBase
     {
-        public abstract object Serialize(object input);
+        public abstract string Serialize<T>(T input);
 
-        public abstract object Deserialize(object input, Type type);
+        public abstract T Deserialize<T>(string input);
     }
 }
