@@ -2,14 +2,14 @@
 {
     public class Utf8JsonSerializer : SerializerBase
     {
-        public override string Serialize<T>(T input)
+        public override object Serialize<T>(T input)
         {
-            return Utf8Json.JsonSerializer.ToJsonString(input);
+            return Utf8Json.JsonSerializer.Serialize(input);
         }
 
-        public override T Deserialize<T>(string input)
+        public override T Deserialize<T>(object input)
         {
-            return Utf8Json.JsonSerializer.Deserialize<T>(input);
+            return Utf8Json.JsonSerializer.Deserialize<T>((byte[]) input);
         }
     }
 }

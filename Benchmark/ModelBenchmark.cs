@@ -15,118 +15,118 @@ using BenchmarkDotNet.Attributes;
   [Config(typeof(MyConfig))]
   public partial class ModelBenchmark
   {
-	private readonly static ExpressionTreeFixture ExpressionTreeFixture = new ExpressionTreeFixture();
+	private static readonly ExpressionTreeFixture ExpressionTreeFixture = new ExpressionTreeFixture();
   
-	private readonly static Benchmark.Serializers.JilSerializer JilSerializer = new Benchmark.Serializers.JilSerializer();
+	private static readonly Benchmark.Serializers.JilSerializer JilSerializer = new Benchmark.Serializers.JilSerializer();
   
-	private readonly static Benchmark.Serializers.Utf8JsonSerializer Utf8JsonSerializer = new Benchmark.Serializers.Utf8JsonSerializer();
-  
-  
-	private readonly static Benchmark.Models.AccessToken AccessTokenInput = ExpressionTreeFixture.Create<Benchmark.Models.AccessToken>();
-  
-	private readonly static Benchmark.Models.AccountMerge AccountMergeInput = ExpressionTreeFixture.Create<Benchmark.Models.AccountMerge>();
-  
-	private readonly static Benchmark.Models.Answer AnswerInput = ExpressionTreeFixture.Create<Benchmark.Models.Answer>();
-  
-	private readonly static Benchmark.Models.Badge BadgeInput = ExpressionTreeFixture.Create<Benchmark.Models.Badge>();
-  
-	private readonly static Benchmark.Models.Comment CommentInput = ExpressionTreeFixture.Create<Benchmark.Models.Comment>();
-  
-	private readonly static Benchmark.Models.Error ErrorInput = ExpressionTreeFixture.Create<Benchmark.Models.Error>();
-  
-	private readonly static Benchmark.Models.Event EventInput = ExpressionTreeFixture.Create<Benchmark.Models.Event>();
-  
-	private readonly static Benchmark.Models.MobileFeed MobileFeedInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileFeed>();
-  
-	private readonly static Benchmark.Models.MobileQuestion MobileQuestionInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileQuestion>();
-  
-	private readonly static Benchmark.Models.MobileRepChange MobileRepChangeInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileRepChange>();
-  
-	private readonly static Benchmark.Models.MobileInboxItem MobileInboxItemInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileInboxItem>();
-  
-	private readonly static Benchmark.Models.MobileBadgeAward MobileBadgeAwardInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileBadgeAward>();
-  
-	private readonly static Benchmark.Models.MobilePrivilege MobilePrivilegeInput = ExpressionTreeFixture.Create<Benchmark.Models.MobilePrivilege>();
-  
-	private readonly static Benchmark.Models.MobileCommunityBulletin MobileCommunityBulletinInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileCommunityBulletin>();
-  
-	private readonly static Benchmark.Models.MobileAssociationBonus MobileAssociationBonusInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileAssociationBonus>();
-  
-	private readonly static Benchmark.Models.MobileCareersJobAd MobileCareersJobAdInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileCareersJobAd>();
-  
-	private readonly static Benchmark.Models.MobileBannerAd MobileBannerAdInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileBannerAd>();
-  
-	private readonly static Benchmark.Models.MobileUpdateNotice MobileUpdateNoticeInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileUpdateNotice>();
-  
-	private readonly static Benchmark.Models.FlagOption FlagOptionInput = ExpressionTreeFixture.Create<Benchmark.Models.FlagOption>();
-  
-	private readonly static Benchmark.Models.InboxItem InboxItemInput = ExpressionTreeFixture.Create<Benchmark.Models.InboxItem>();
-  
-	private readonly static Benchmark.Models.Info InfoInput = ExpressionTreeFixture.Create<Benchmark.Models.Info>();
-  
-	private readonly static Benchmark.Models.NetworkUser NetworkUserInput = ExpressionTreeFixture.Create<Benchmark.Models.NetworkUser>();
-  
-	private readonly static Benchmark.Models.Notification NotificationInput = ExpressionTreeFixture.Create<Benchmark.Models.Notification>();
-  
-	private readonly static Benchmark.Models.Post PostInput = ExpressionTreeFixture.Create<Benchmark.Models.Post>();
-  
-	private readonly static Benchmark.Models.Privilege PrivilegeInput = ExpressionTreeFixture.Create<Benchmark.Models.Privilege>();
-  
-	private readonly static Benchmark.Models.Question QuestionInput = ExpressionTreeFixture.Create<Benchmark.Models.Question>();
-  
-	private readonly static Benchmark.Models.QuestionTimeline QuestionTimelineInput = ExpressionTreeFixture.Create<Benchmark.Models.QuestionTimeline>();
-  
-	private readonly static Benchmark.Models.Reputation ReputationInput = ExpressionTreeFixture.Create<Benchmark.Models.Reputation>();
-  
-	private readonly static Benchmark.Models.ReputationHistory ReputationHistoryInput = ExpressionTreeFixture.Create<Benchmark.Models.ReputationHistory>();
-  
-	private readonly static Benchmark.Models.Revision RevisionInput = ExpressionTreeFixture.Create<Benchmark.Models.Revision>();
-  
-	private readonly static Benchmark.Models.SearchExcerpt SearchExcerptInput = ExpressionTreeFixture.Create<Benchmark.Models.SearchExcerpt>();
-  
-	private readonly static Benchmark.Models.ShallowUser ShallowUserInput = ExpressionTreeFixture.Create<Benchmark.Models.ShallowUser>();
-  
-	private readonly static Benchmark.Models.SuggestedEdit SuggestedEditInput = ExpressionTreeFixture.Create<Benchmark.Models.SuggestedEdit>();
-  
-	private readonly static Benchmark.Models.Tag TagInput = ExpressionTreeFixture.Create<Benchmark.Models.Tag>();
-  
-	private readonly static Benchmark.Models.TagScore TagScoreInput = ExpressionTreeFixture.Create<Benchmark.Models.TagScore>();
-  
-	private readonly static Benchmark.Models.TagSynonym TagSynonymInput = ExpressionTreeFixture.Create<Benchmark.Models.TagSynonym>();
-  
-	private readonly static Benchmark.Models.TagWiki TagWikiInput = ExpressionTreeFixture.Create<Benchmark.Models.TagWiki>();
-  
-	private readonly static Benchmark.Models.TopTag TopTagInput = ExpressionTreeFixture.Create<Benchmark.Models.TopTag>();
-  
-	private readonly static Benchmark.Models.User UserInput = ExpressionTreeFixture.Create<Benchmark.Models.User>();
-  
-	private readonly static Benchmark.Models.UserTimeline UserTimelineInput = ExpressionTreeFixture.Create<Benchmark.Models.UserTimeline>();
-  
-	private readonly static Benchmark.Models.WritePermission WritePermissionInput = ExpressionTreeFixture.Create<Benchmark.Models.WritePermission>();
-  
-	private readonly static Benchmark.Models.MobileBannerAd.MobileBannerAdImage MobileBannerAdImageInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileBannerAd.MobileBannerAdImage>();
-  
-	private readonly static Benchmark.Models.Info.Site SiteInput = ExpressionTreeFixture.Create<Benchmark.Models.Info.Site>();
-  
-	private readonly static Benchmark.Models.Info.RelatedSite RelatedSiteInput = ExpressionTreeFixture.Create<Benchmark.Models.Info.RelatedSite>();
-  
-	private readonly static Benchmark.Models.Question.ClosedDetails ClosedDetailsInput = ExpressionTreeFixture.Create<Benchmark.Models.Question.ClosedDetails>();
-  
-	private readonly static Benchmark.Models.Question.Notice NoticeInput = ExpressionTreeFixture.Create<Benchmark.Models.Question.Notice>();
-  
-	private readonly static Benchmark.Models.Question.MigrationInfo MigrationInfoInput = ExpressionTreeFixture.Create<Benchmark.Models.Question.MigrationInfo>();
-  
-	private readonly static Benchmark.Models.User.BadgeCount BadgeCountInput = ExpressionTreeFixture.Create<Benchmark.Models.User.BadgeCount>();
-  
-	private readonly static Benchmark.Models.Info.Site.Styling StylingInput = ExpressionTreeFixture.Create<Benchmark.Models.Info.Site.Styling>();
-  
-	private readonly static Benchmark.Models.Question.ClosedDetails.OriginalQuestion OriginalQuestionInput = ExpressionTreeFixture.Create<Benchmark.Models.Question.ClosedDetails.OriginalQuestion>();
+	private static readonly Benchmark.Serializers.Utf8JsonSerializer Utf8JsonSerializer = new Benchmark.Serializers.Utf8JsonSerializer();
   
   
-	private readonly static string AccessTokenOutputOfJilSerializer = JilSerializer.Serialize(AccessTokenInput);
+	private static readonly Benchmark.Models.AccessToken AccessTokenInput = ExpressionTreeFixture.Create<Benchmark.Models.AccessToken>();
+  
+	private static readonly Benchmark.Models.AccountMerge AccountMergeInput = ExpressionTreeFixture.Create<Benchmark.Models.AccountMerge>();
+  
+	private static readonly Benchmark.Models.Answer AnswerInput = ExpressionTreeFixture.Create<Benchmark.Models.Answer>();
+  
+	private static readonly Benchmark.Models.Badge BadgeInput = ExpressionTreeFixture.Create<Benchmark.Models.Badge>();
+  
+	private static readonly Benchmark.Models.Comment CommentInput = ExpressionTreeFixture.Create<Benchmark.Models.Comment>();
+  
+	private static readonly Benchmark.Models.Error ErrorInput = ExpressionTreeFixture.Create<Benchmark.Models.Error>();
+  
+	private static readonly Benchmark.Models.Event EventInput = ExpressionTreeFixture.Create<Benchmark.Models.Event>();
+  
+	private static readonly Benchmark.Models.MobileFeed MobileFeedInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileFeed>();
+  
+	private static readonly Benchmark.Models.MobileQuestion MobileQuestionInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileQuestion>();
+  
+	private static readonly Benchmark.Models.MobileRepChange MobileRepChangeInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileRepChange>();
+  
+	private static readonly Benchmark.Models.MobileInboxItem MobileInboxItemInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileInboxItem>();
+  
+	private static readonly Benchmark.Models.MobileBadgeAward MobileBadgeAwardInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileBadgeAward>();
+  
+	private static readonly Benchmark.Models.MobilePrivilege MobilePrivilegeInput = ExpressionTreeFixture.Create<Benchmark.Models.MobilePrivilege>();
+  
+	private static readonly Benchmark.Models.MobileCommunityBulletin MobileCommunityBulletinInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileCommunityBulletin>();
+  
+	private static readonly Benchmark.Models.MobileAssociationBonus MobileAssociationBonusInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileAssociationBonus>();
+  
+	private static readonly Benchmark.Models.MobileCareersJobAd MobileCareersJobAdInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileCareersJobAd>();
+  
+	private static readonly Benchmark.Models.MobileBannerAd MobileBannerAdInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileBannerAd>();
+  
+	private static readonly Benchmark.Models.MobileUpdateNotice MobileUpdateNoticeInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileUpdateNotice>();
+  
+	private static readonly Benchmark.Models.FlagOption FlagOptionInput = ExpressionTreeFixture.Create<Benchmark.Models.FlagOption>();
+  
+	private static readonly Benchmark.Models.InboxItem InboxItemInput = ExpressionTreeFixture.Create<Benchmark.Models.InboxItem>();
+  
+	private static readonly Benchmark.Models.Info InfoInput = ExpressionTreeFixture.Create<Benchmark.Models.Info>();
+  
+	private static readonly Benchmark.Models.NetworkUser NetworkUserInput = ExpressionTreeFixture.Create<Benchmark.Models.NetworkUser>();
+  
+	private static readonly Benchmark.Models.Notification NotificationInput = ExpressionTreeFixture.Create<Benchmark.Models.Notification>();
+  
+	private static readonly Benchmark.Models.Post PostInput = ExpressionTreeFixture.Create<Benchmark.Models.Post>();
+  
+	private static readonly Benchmark.Models.Privilege PrivilegeInput = ExpressionTreeFixture.Create<Benchmark.Models.Privilege>();
+  
+	private static readonly Benchmark.Models.Question QuestionInput = ExpressionTreeFixture.Create<Benchmark.Models.Question>();
+  
+	private static readonly Benchmark.Models.QuestionTimeline QuestionTimelineInput = ExpressionTreeFixture.Create<Benchmark.Models.QuestionTimeline>();
+  
+	private static readonly Benchmark.Models.Reputation ReputationInput = ExpressionTreeFixture.Create<Benchmark.Models.Reputation>();
+  
+	private static readonly Benchmark.Models.ReputationHistory ReputationHistoryInput = ExpressionTreeFixture.Create<Benchmark.Models.ReputationHistory>();
+  
+	private static readonly Benchmark.Models.Revision RevisionInput = ExpressionTreeFixture.Create<Benchmark.Models.Revision>();
+  
+	private static readonly Benchmark.Models.SearchExcerpt SearchExcerptInput = ExpressionTreeFixture.Create<Benchmark.Models.SearchExcerpt>();
+  
+	private static readonly Benchmark.Models.ShallowUser ShallowUserInput = ExpressionTreeFixture.Create<Benchmark.Models.ShallowUser>();
+  
+	private static readonly Benchmark.Models.SuggestedEdit SuggestedEditInput = ExpressionTreeFixture.Create<Benchmark.Models.SuggestedEdit>();
+  
+	private static readonly Benchmark.Models.Tag TagInput = ExpressionTreeFixture.Create<Benchmark.Models.Tag>();
+  
+	private static readonly Benchmark.Models.TagScore TagScoreInput = ExpressionTreeFixture.Create<Benchmark.Models.TagScore>();
+  
+	private static readonly Benchmark.Models.TagSynonym TagSynonymInput = ExpressionTreeFixture.Create<Benchmark.Models.TagSynonym>();
+  
+	private static readonly Benchmark.Models.TagWiki TagWikiInput = ExpressionTreeFixture.Create<Benchmark.Models.TagWiki>();
+  
+	private static readonly Benchmark.Models.TopTag TopTagInput = ExpressionTreeFixture.Create<Benchmark.Models.TopTag>();
+  
+	private static readonly Benchmark.Models.User UserInput = ExpressionTreeFixture.Create<Benchmark.Models.User>();
+  
+	private static readonly Benchmark.Models.UserTimeline UserTimelineInput = ExpressionTreeFixture.Create<Benchmark.Models.UserTimeline>();
+  
+	private static readonly Benchmark.Models.WritePermission WritePermissionInput = ExpressionTreeFixture.Create<Benchmark.Models.WritePermission>();
+  
+	private static readonly Benchmark.Models.MobileBannerAd.MobileBannerAdImage MobileBannerAdImageInput = ExpressionTreeFixture.Create<Benchmark.Models.MobileBannerAd.MobileBannerAdImage>();
+  
+	private static readonly Benchmark.Models.Info.Site SiteInput = ExpressionTreeFixture.Create<Benchmark.Models.Info.Site>();
+  
+	private static readonly Benchmark.Models.Info.RelatedSite RelatedSiteInput = ExpressionTreeFixture.Create<Benchmark.Models.Info.RelatedSite>();
+  
+	private static readonly Benchmark.Models.Question.ClosedDetails ClosedDetailsInput = ExpressionTreeFixture.Create<Benchmark.Models.Question.ClosedDetails>();
+  
+	private static readonly Benchmark.Models.Question.Notice NoticeInput = ExpressionTreeFixture.Create<Benchmark.Models.Question.Notice>();
+  
+	private static readonly Benchmark.Models.Question.MigrationInfo MigrationInfoInput = ExpressionTreeFixture.Create<Benchmark.Models.Question.MigrationInfo>();
+  
+	private static readonly Benchmark.Models.User.BadgeCount BadgeCountInput = ExpressionTreeFixture.Create<Benchmark.Models.User.BadgeCount>();
+  
+	private static readonly Benchmark.Models.Info.Site.Styling StylingInput = ExpressionTreeFixture.Create<Benchmark.Models.Info.Site.Styling>();
+  
+	private static readonly Benchmark.Models.Question.ClosedDetails.OriginalQuestion OriginalQuestionInput = ExpressionTreeFixture.Create<Benchmark.Models.Question.ClosedDetails.OriginalQuestion>();
+  
+  
+	private static readonly object AccessTokenOutputOfJilSerializer = JilSerializer.Serialize(AccessTokenInput);
 
 	[Benchmark]
-	public string SerializeAccessTokenWithJilSerializer()
+	public object SerializeAccessTokenWithJilSerializer()
 	{
 		return JilSerializer.Serialize(AccessTokenInput);
 	}
@@ -136,10 +136,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.AccessToken>(AccessTokenOutputOfJilSerializer);
 	}
   
-	private readonly static string AccountMergeOutputOfJilSerializer = JilSerializer.Serialize(AccountMergeInput);
+	private static readonly object AccountMergeOutputOfJilSerializer = JilSerializer.Serialize(AccountMergeInput);
 
 	[Benchmark]
-	public string SerializeAccountMergeWithJilSerializer()
+	public object SerializeAccountMergeWithJilSerializer()
 	{
 		return JilSerializer.Serialize(AccountMergeInput);
 	}
@@ -149,10 +149,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.AccountMerge>(AccountMergeOutputOfJilSerializer);
 	}
   
-	private readonly static string AnswerOutputOfJilSerializer = JilSerializer.Serialize(AnswerInput);
+	private static readonly object AnswerOutputOfJilSerializer = JilSerializer.Serialize(AnswerInput);
 
 	[Benchmark]
-	public string SerializeAnswerWithJilSerializer()
+	public object SerializeAnswerWithJilSerializer()
 	{
 		return JilSerializer.Serialize(AnswerInput);
 	}
@@ -162,10 +162,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Answer>(AnswerOutputOfJilSerializer);
 	}
   
-	private readonly static string BadgeOutputOfJilSerializer = JilSerializer.Serialize(BadgeInput);
+	private static readonly object BadgeOutputOfJilSerializer = JilSerializer.Serialize(BadgeInput);
 
 	[Benchmark]
-	public string SerializeBadgeWithJilSerializer()
+	public object SerializeBadgeWithJilSerializer()
 	{
 		return JilSerializer.Serialize(BadgeInput);
 	}
@@ -175,10 +175,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Badge>(BadgeOutputOfJilSerializer);
 	}
   
-	private readonly static string CommentOutputOfJilSerializer = JilSerializer.Serialize(CommentInput);
+	private static readonly object CommentOutputOfJilSerializer = JilSerializer.Serialize(CommentInput);
 
 	[Benchmark]
-	public string SerializeCommentWithJilSerializer()
+	public object SerializeCommentWithJilSerializer()
 	{
 		return JilSerializer.Serialize(CommentInput);
 	}
@@ -188,10 +188,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Comment>(CommentOutputOfJilSerializer);
 	}
   
-	private readonly static string ErrorOutputOfJilSerializer = JilSerializer.Serialize(ErrorInput);
+	private static readonly object ErrorOutputOfJilSerializer = JilSerializer.Serialize(ErrorInput);
 
 	[Benchmark]
-	public string SerializeErrorWithJilSerializer()
+	public object SerializeErrorWithJilSerializer()
 	{
 		return JilSerializer.Serialize(ErrorInput);
 	}
@@ -201,10 +201,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Error>(ErrorOutputOfJilSerializer);
 	}
   
-	private readonly static string EventOutputOfJilSerializer = JilSerializer.Serialize(EventInput);
+	private static readonly object EventOutputOfJilSerializer = JilSerializer.Serialize(EventInput);
 
 	[Benchmark]
-	public string SerializeEventWithJilSerializer()
+	public object SerializeEventWithJilSerializer()
 	{
 		return JilSerializer.Serialize(EventInput);
 	}
@@ -214,10 +214,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Event>(EventOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileFeedOutputOfJilSerializer = JilSerializer.Serialize(MobileFeedInput);
+	private static readonly object MobileFeedOutputOfJilSerializer = JilSerializer.Serialize(MobileFeedInput);
 
 	[Benchmark]
-	public string SerializeMobileFeedWithJilSerializer()
+	public object SerializeMobileFeedWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileFeedInput);
 	}
@@ -227,10 +227,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileFeed>(MobileFeedOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileQuestionOutputOfJilSerializer = JilSerializer.Serialize(MobileQuestionInput);
+	private static readonly object MobileQuestionOutputOfJilSerializer = JilSerializer.Serialize(MobileQuestionInput);
 
 	[Benchmark]
-	public string SerializeMobileQuestionWithJilSerializer()
+	public object SerializeMobileQuestionWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileQuestionInput);
 	}
@@ -240,10 +240,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileQuestion>(MobileQuestionOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileRepChangeOutputOfJilSerializer = JilSerializer.Serialize(MobileRepChangeInput);
+	private static readonly object MobileRepChangeOutputOfJilSerializer = JilSerializer.Serialize(MobileRepChangeInput);
 
 	[Benchmark]
-	public string SerializeMobileRepChangeWithJilSerializer()
+	public object SerializeMobileRepChangeWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileRepChangeInput);
 	}
@@ -253,10 +253,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileRepChange>(MobileRepChangeOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileInboxItemOutputOfJilSerializer = JilSerializer.Serialize(MobileInboxItemInput);
+	private static readonly object MobileInboxItemOutputOfJilSerializer = JilSerializer.Serialize(MobileInboxItemInput);
 
 	[Benchmark]
-	public string SerializeMobileInboxItemWithJilSerializer()
+	public object SerializeMobileInboxItemWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileInboxItemInput);
 	}
@@ -266,10 +266,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileInboxItem>(MobileInboxItemOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileBadgeAwardOutputOfJilSerializer = JilSerializer.Serialize(MobileBadgeAwardInput);
+	private static readonly object MobileBadgeAwardOutputOfJilSerializer = JilSerializer.Serialize(MobileBadgeAwardInput);
 
 	[Benchmark]
-	public string SerializeMobileBadgeAwardWithJilSerializer()
+	public object SerializeMobileBadgeAwardWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileBadgeAwardInput);
 	}
@@ -279,10 +279,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileBadgeAward>(MobileBadgeAwardOutputOfJilSerializer);
 	}
   
-	private readonly static string MobilePrivilegeOutputOfJilSerializer = JilSerializer.Serialize(MobilePrivilegeInput);
+	private static readonly object MobilePrivilegeOutputOfJilSerializer = JilSerializer.Serialize(MobilePrivilegeInput);
 
 	[Benchmark]
-	public string SerializeMobilePrivilegeWithJilSerializer()
+	public object SerializeMobilePrivilegeWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobilePrivilegeInput);
 	}
@@ -292,10 +292,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobilePrivilege>(MobilePrivilegeOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileCommunityBulletinOutputOfJilSerializer = JilSerializer.Serialize(MobileCommunityBulletinInput);
+	private static readonly object MobileCommunityBulletinOutputOfJilSerializer = JilSerializer.Serialize(MobileCommunityBulletinInput);
 
 	[Benchmark]
-	public string SerializeMobileCommunityBulletinWithJilSerializer()
+	public object SerializeMobileCommunityBulletinWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileCommunityBulletinInput);
 	}
@@ -305,10 +305,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileCommunityBulletin>(MobileCommunityBulletinOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileAssociationBonusOutputOfJilSerializer = JilSerializer.Serialize(MobileAssociationBonusInput);
+	private static readonly object MobileAssociationBonusOutputOfJilSerializer = JilSerializer.Serialize(MobileAssociationBonusInput);
 
 	[Benchmark]
-	public string SerializeMobileAssociationBonusWithJilSerializer()
+	public object SerializeMobileAssociationBonusWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileAssociationBonusInput);
 	}
@@ -318,10 +318,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileAssociationBonus>(MobileAssociationBonusOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileCareersJobAdOutputOfJilSerializer = JilSerializer.Serialize(MobileCareersJobAdInput);
+	private static readonly object MobileCareersJobAdOutputOfJilSerializer = JilSerializer.Serialize(MobileCareersJobAdInput);
 
 	[Benchmark]
-	public string SerializeMobileCareersJobAdWithJilSerializer()
+	public object SerializeMobileCareersJobAdWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileCareersJobAdInput);
 	}
@@ -331,10 +331,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileCareersJobAd>(MobileCareersJobAdOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileBannerAdOutputOfJilSerializer = JilSerializer.Serialize(MobileBannerAdInput);
+	private static readonly object MobileBannerAdOutputOfJilSerializer = JilSerializer.Serialize(MobileBannerAdInput);
 
 	[Benchmark]
-	public string SerializeMobileBannerAdWithJilSerializer()
+	public object SerializeMobileBannerAdWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileBannerAdInput);
 	}
@@ -344,10 +344,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileBannerAd>(MobileBannerAdOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileUpdateNoticeOutputOfJilSerializer = JilSerializer.Serialize(MobileUpdateNoticeInput);
+	private static readonly object MobileUpdateNoticeOutputOfJilSerializer = JilSerializer.Serialize(MobileUpdateNoticeInput);
 
 	[Benchmark]
-	public string SerializeMobileUpdateNoticeWithJilSerializer()
+	public object SerializeMobileUpdateNoticeWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileUpdateNoticeInput);
 	}
@@ -357,10 +357,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileUpdateNotice>(MobileUpdateNoticeOutputOfJilSerializer);
 	}
   
-	private readonly static string FlagOptionOutputOfJilSerializer = JilSerializer.Serialize(FlagOptionInput);
+	private static readonly object FlagOptionOutputOfJilSerializer = JilSerializer.Serialize(FlagOptionInput);
 
 	[Benchmark]
-	public string SerializeFlagOptionWithJilSerializer()
+	public object SerializeFlagOptionWithJilSerializer()
 	{
 		return JilSerializer.Serialize(FlagOptionInput);
 	}
@@ -370,10 +370,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.FlagOption>(FlagOptionOutputOfJilSerializer);
 	}
   
-	private readonly static string InboxItemOutputOfJilSerializer = JilSerializer.Serialize(InboxItemInput);
+	private static readonly object InboxItemOutputOfJilSerializer = JilSerializer.Serialize(InboxItemInput);
 
 	[Benchmark]
-	public string SerializeInboxItemWithJilSerializer()
+	public object SerializeInboxItemWithJilSerializer()
 	{
 		return JilSerializer.Serialize(InboxItemInput);
 	}
@@ -383,10 +383,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.InboxItem>(InboxItemOutputOfJilSerializer);
 	}
   
-	private readonly static string InfoOutputOfJilSerializer = JilSerializer.Serialize(InfoInput);
+	private static readonly object InfoOutputOfJilSerializer = JilSerializer.Serialize(InfoInput);
 
 	[Benchmark]
-	public string SerializeInfoWithJilSerializer()
+	public object SerializeInfoWithJilSerializer()
 	{
 		return JilSerializer.Serialize(InfoInput);
 	}
@@ -396,10 +396,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Info>(InfoOutputOfJilSerializer);
 	}
   
-	private readonly static string NetworkUserOutputOfJilSerializer = JilSerializer.Serialize(NetworkUserInput);
+	private static readonly object NetworkUserOutputOfJilSerializer = JilSerializer.Serialize(NetworkUserInput);
 
 	[Benchmark]
-	public string SerializeNetworkUserWithJilSerializer()
+	public object SerializeNetworkUserWithJilSerializer()
 	{
 		return JilSerializer.Serialize(NetworkUserInput);
 	}
@@ -409,10 +409,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.NetworkUser>(NetworkUserOutputOfJilSerializer);
 	}
   
-	private readonly static string NotificationOutputOfJilSerializer = JilSerializer.Serialize(NotificationInput);
+	private static readonly object NotificationOutputOfJilSerializer = JilSerializer.Serialize(NotificationInput);
 
 	[Benchmark]
-	public string SerializeNotificationWithJilSerializer()
+	public object SerializeNotificationWithJilSerializer()
 	{
 		return JilSerializer.Serialize(NotificationInput);
 	}
@@ -422,10 +422,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Notification>(NotificationOutputOfJilSerializer);
 	}
   
-	private readonly static string PostOutputOfJilSerializer = JilSerializer.Serialize(PostInput);
+	private static readonly object PostOutputOfJilSerializer = JilSerializer.Serialize(PostInput);
 
 	[Benchmark]
-	public string SerializePostWithJilSerializer()
+	public object SerializePostWithJilSerializer()
 	{
 		return JilSerializer.Serialize(PostInput);
 	}
@@ -435,10 +435,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Post>(PostOutputOfJilSerializer);
 	}
   
-	private readonly static string PrivilegeOutputOfJilSerializer = JilSerializer.Serialize(PrivilegeInput);
+	private static readonly object PrivilegeOutputOfJilSerializer = JilSerializer.Serialize(PrivilegeInput);
 
 	[Benchmark]
-	public string SerializePrivilegeWithJilSerializer()
+	public object SerializePrivilegeWithJilSerializer()
 	{
 		return JilSerializer.Serialize(PrivilegeInput);
 	}
@@ -448,10 +448,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Privilege>(PrivilegeOutputOfJilSerializer);
 	}
   
-	private readonly static string QuestionOutputOfJilSerializer = JilSerializer.Serialize(QuestionInput);
+	private static readonly object QuestionOutputOfJilSerializer = JilSerializer.Serialize(QuestionInput);
 
 	[Benchmark]
-	public string SerializeQuestionWithJilSerializer()
+	public object SerializeQuestionWithJilSerializer()
 	{
 		return JilSerializer.Serialize(QuestionInput);
 	}
@@ -461,10 +461,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Question>(QuestionOutputOfJilSerializer);
 	}
   
-	private readonly static string QuestionTimelineOutputOfJilSerializer = JilSerializer.Serialize(QuestionTimelineInput);
+	private static readonly object QuestionTimelineOutputOfJilSerializer = JilSerializer.Serialize(QuestionTimelineInput);
 
 	[Benchmark]
-	public string SerializeQuestionTimelineWithJilSerializer()
+	public object SerializeQuestionTimelineWithJilSerializer()
 	{
 		return JilSerializer.Serialize(QuestionTimelineInput);
 	}
@@ -474,10 +474,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.QuestionTimeline>(QuestionTimelineOutputOfJilSerializer);
 	}
   
-	private readonly static string ReputationOutputOfJilSerializer = JilSerializer.Serialize(ReputationInput);
+	private static readonly object ReputationOutputOfJilSerializer = JilSerializer.Serialize(ReputationInput);
 
 	[Benchmark]
-	public string SerializeReputationWithJilSerializer()
+	public object SerializeReputationWithJilSerializer()
 	{
 		return JilSerializer.Serialize(ReputationInput);
 	}
@@ -487,10 +487,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Reputation>(ReputationOutputOfJilSerializer);
 	}
   
-	private readonly static string ReputationHistoryOutputOfJilSerializer = JilSerializer.Serialize(ReputationHistoryInput);
+	private static readonly object ReputationHistoryOutputOfJilSerializer = JilSerializer.Serialize(ReputationHistoryInput);
 
 	[Benchmark]
-	public string SerializeReputationHistoryWithJilSerializer()
+	public object SerializeReputationHistoryWithJilSerializer()
 	{
 		return JilSerializer.Serialize(ReputationHistoryInput);
 	}
@@ -500,10 +500,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.ReputationHistory>(ReputationHistoryOutputOfJilSerializer);
 	}
   
-	private readonly static string RevisionOutputOfJilSerializer = JilSerializer.Serialize(RevisionInput);
+	private static readonly object RevisionOutputOfJilSerializer = JilSerializer.Serialize(RevisionInput);
 
 	[Benchmark]
-	public string SerializeRevisionWithJilSerializer()
+	public object SerializeRevisionWithJilSerializer()
 	{
 		return JilSerializer.Serialize(RevisionInput);
 	}
@@ -513,10 +513,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Revision>(RevisionOutputOfJilSerializer);
 	}
   
-	private readonly static string SearchExcerptOutputOfJilSerializer = JilSerializer.Serialize(SearchExcerptInput);
+	private static readonly object SearchExcerptOutputOfJilSerializer = JilSerializer.Serialize(SearchExcerptInput);
 
 	[Benchmark]
-	public string SerializeSearchExcerptWithJilSerializer()
+	public object SerializeSearchExcerptWithJilSerializer()
 	{
 		return JilSerializer.Serialize(SearchExcerptInput);
 	}
@@ -526,10 +526,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.SearchExcerpt>(SearchExcerptOutputOfJilSerializer);
 	}
   
-	private readonly static string ShallowUserOutputOfJilSerializer = JilSerializer.Serialize(ShallowUserInput);
+	private static readonly object ShallowUserOutputOfJilSerializer = JilSerializer.Serialize(ShallowUserInput);
 
 	[Benchmark]
-	public string SerializeShallowUserWithJilSerializer()
+	public object SerializeShallowUserWithJilSerializer()
 	{
 		return JilSerializer.Serialize(ShallowUserInput);
 	}
@@ -539,10 +539,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.ShallowUser>(ShallowUserOutputOfJilSerializer);
 	}
   
-	private readonly static string SuggestedEditOutputOfJilSerializer = JilSerializer.Serialize(SuggestedEditInput);
+	private static readonly object SuggestedEditOutputOfJilSerializer = JilSerializer.Serialize(SuggestedEditInput);
 
 	[Benchmark]
-	public string SerializeSuggestedEditWithJilSerializer()
+	public object SerializeSuggestedEditWithJilSerializer()
 	{
 		return JilSerializer.Serialize(SuggestedEditInput);
 	}
@@ -552,10 +552,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.SuggestedEdit>(SuggestedEditOutputOfJilSerializer);
 	}
   
-	private readonly static string TagOutputOfJilSerializer = JilSerializer.Serialize(TagInput);
+	private static readonly object TagOutputOfJilSerializer = JilSerializer.Serialize(TagInput);
 
 	[Benchmark]
-	public string SerializeTagWithJilSerializer()
+	public object SerializeTagWithJilSerializer()
 	{
 		return JilSerializer.Serialize(TagInput);
 	}
@@ -565,10 +565,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Tag>(TagOutputOfJilSerializer);
 	}
   
-	private readonly static string TagScoreOutputOfJilSerializer = JilSerializer.Serialize(TagScoreInput);
+	private static readonly object TagScoreOutputOfJilSerializer = JilSerializer.Serialize(TagScoreInput);
 
 	[Benchmark]
-	public string SerializeTagScoreWithJilSerializer()
+	public object SerializeTagScoreWithJilSerializer()
 	{
 		return JilSerializer.Serialize(TagScoreInput);
 	}
@@ -578,10 +578,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.TagScore>(TagScoreOutputOfJilSerializer);
 	}
   
-	private readonly static string TagSynonymOutputOfJilSerializer = JilSerializer.Serialize(TagSynonymInput);
+	private static readonly object TagSynonymOutputOfJilSerializer = JilSerializer.Serialize(TagSynonymInput);
 
 	[Benchmark]
-	public string SerializeTagSynonymWithJilSerializer()
+	public object SerializeTagSynonymWithJilSerializer()
 	{
 		return JilSerializer.Serialize(TagSynonymInput);
 	}
@@ -591,10 +591,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.TagSynonym>(TagSynonymOutputOfJilSerializer);
 	}
   
-	private readonly static string TagWikiOutputOfJilSerializer = JilSerializer.Serialize(TagWikiInput);
+	private static readonly object TagWikiOutputOfJilSerializer = JilSerializer.Serialize(TagWikiInput);
 
 	[Benchmark]
-	public string SerializeTagWikiWithJilSerializer()
+	public object SerializeTagWikiWithJilSerializer()
 	{
 		return JilSerializer.Serialize(TagWikiInput);
 	}
@@ -604,10 +604,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.TagWiki>(TagWikiOutputOfJilSerializer);
 	}
   
-	private readonly static string TopTagOutputOfJilSerializer = JilSerializer.Serialize(TopTagInput);
+	private static readonly object TopTagOutputOfJilSerializer = JilSerializer.Serialize(TopTagInput);
 
 	[Benchmark]
-	public string SerializeTopTagWithJilSerializer()
+	public object SerializeTopTagWithJilSerializer()
 	{
 		return JilSerializer.Serialize(TopTagInput);
 	}
@@ -617,10 +617,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.TopTag>(TopTagOutputOfJilSerializer);
 	}
   
-	private readonly static string UserOutputOfJilSerializer = JilSerializer.Serialize(UserInput);
+	private static readonly object UserOutputOfJilSerializer = JilSerializer.Serialize(UserInput);
 
 	[Benchmark]
-	public string SerializeUserWithJilSerializer()
+	public object SerializeUserWithJilSerializer()
 	{
 		return JilSerializer.Serialize(UserInput);
 	}
@@ -630,10 +630,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.User>(UserOutputOfJilSerializer);
 	}
   
-	private readonly static string UserTimelineOutputOfJilSerializer = JilSerializer.Serialize(UserTimelineInput);
+	private static readonly object UserTimelineOutputOfJilSerializer = JilSerializer.Serialize(UserTimelineInput);
 
 	[Benchmark]
-	public string SerializeUserTimelineWithJilSerializer()
+	public object SerializeUserTimelineWithJilSerializer()
 	{
 		return JilSerializer.Serialize(UserTimelineInput);
 	}
@@ -643,10 +643,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.UserTimeline>(UserTimelineOutputOfJilSerializer);
 	}
   
-	private readonly static string WritePermissionOutputOfJilSerializer = JilSerializer.Serialize(WritePermissionInput);
+	private static readonly object WritePermissionOutputOfJilSerializer = JilSerializer.Serialize(WritePermissionInput);
 
 	[Benchmark]
-	public string SerializeWritePermissionWithJilSerializer()
+	public object SerializeWritePermissionWithJilSerializer()
 	{
 		return JilSerializer.Serialize(WritePermissionInput);
 	}
@@ -656,10 +656,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.WritePermission>(WritePermissionOutputOfJilSerializer);
 	}
   
-	private readonly static string MobileBannerAdImageOutputOfJilSerializer = JilSerializer.Serialize(MobileBannerAdImageInput);
+	private static readonly object MobileBannerAdImageOutputOfJilSerializer = JilSerializer.Serialize(MobileBannerAdImageInput);
 
 	[Benchmark]
-	public string SerializeMobileBannerAdImageWithJilSerializer()
+	public object SerializeMobileBannerAdImageWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MobileBannerAdImageInput);
 	}
@@ -669,10 +669,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.MobileBannerAd.MobileBannerAdImage>(MobileBannerAdImageOutputOfJilSerializer);
 	}
   
-	private readonly static string SiteOutputOfJilSerializer = JilSerializer.Serialize(SiteInput);
+	private static readonly object SiteOutputOfJilSerializer = JilSerializer.Serialize(SiteInput);
 
 	[Benchmark]
-	public string SerializeSiteWithJilSerializer()
+	public object SerializeSiteWithJilSerializer()
 	{
 		return JilSerializer.Serialize(SiteInput);
 	}
@@ -682,10 +682,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Info.Site>(SiteOutputOfJilSerializer);
 	}
   
-	private readonly static string RelatedSiteOutputOfJilSerializer = JilSerializer.Serialize(RelatedSiteInput);
+	private static readonly object RelatedSiteOutputOfJilSerializer = JilSerializer.Serialize(RelatedSiteInput);
 
 	[Benchmark]
-	public string SerializeRelatedSiteWithJilSerializer()
+	public object SerializeRelatedSiteWithJilSerializer()
 	{
 		return JilSerializer.Serialize(RelatedSiteInput);
 	}
@@ -695,10 +695,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Info.RelatedSite>(RelatedSiteOutputOfJilSerializer);
 	}
   
-	private readonly static string ClosedDetailsOutputOfJilSerializer = JilSerializer.Serialize(ClosedDetailsInput);
+	private static readonly object ClosedDetailsOutputOfJilSerializer = JilSerializer.Serialize(ClosedDetailsInput);
 
 	[Benchmark]
-	public string SerializeClosedDetailsWithJilSerializer()
+	public object SerializeClosedDetailsWithJilSerializer()
 	{
 		return JilSerializer.Serialize(ClosedDetailsInput);
 	}
@@ -708,10 +708,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Question.ClosedDetails>(ClosedDetailsOutputOfJilSerializer);
 	}
   
-	private readonly static string NoticeOutputOfJilSerializer = JilSerializer.Serialize(NoticeInput);
+	private static readonly object NoticeOutputOfJilSerializer = JilSerializer.Serialize(NoticeInput);
 
 	[Benchmark]
-	public string SerializeNoticeWithJilSerializer()
+	public object SerializeNoticeWithJilSerializer()
 	{
 		return JilSerializer.Serialize(NoticeInput);
 	}
@@ -721,10 +721,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Question.Notice>(NoticeOutputOfJilSerializer);
 	}
   
-	private readonly static string MigrationInfoOutputOfJilSerializer = JilSerializer.Serialize(MigrationInfoInput);
+	private static readonly object MigrationInfoOutputOfJilSerializer = JilSerializer.Serialize(MigrationInfoInput);
 
 	[Benchmark]
-	public string SerializeMigrationInfoWithJilSerializer()
+	public object SerializeMigrationInfoWithJilSerializer()
 	{
 		return JilSerializer.Serialize(MigrationInfoInput);
 	}
@@ -734,10 +734,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Question.MigrationInfo>(MigrationInfoOutputOfJilSerializer);
 	}
   
-	private readonly static string BadgeCountOutputOfJilSerializer = JilSerializer.Serialize(BadgeCountInput);
+	private static readonly object BadgeCountOutputOfJilSerializer = JilSerializer.Serialize(BadgeCountInput);
 
 	[Benchmark]
-	public string SerializeBadgeCountWithJilSerializer()
+	public object SerializeBadgeCountWithJilSerializer()
 	{
 		return JilSerializer.Serialize(BadgeCountInput);
 	}
@@ -747,10 +747,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.User.BadgeCount>(BadgeCountOutputOfJilSerializer);
 	}
   
-	private readonly static string StylingOutputOfJilSerializer = JilSerializer.Serialize(StylingInput);
+	private static readonly object StylingOutputOfJilSerializer = JilSerializer.Serialize(StylingInput);
 
 	[Benchmark]
-	public string SerializeStylingWithJilSerializer()
+	public object SerializeStylingWithJilSerializer()
 	{
 		return JilSerializer.Serialize(StylingInput);
 	}
@@ -760,10 +760,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Info.Site.Styling>(StylingOutputOfJilSerializer);
 	}
   
-	private readonly static string OriginalQuestionOutputOfJilSerializer = JilSerializer.Serialize(OriginalQuestionInput);
+	private static readonly object OriginalQuestionOutputOfJilSerializer = JilSerializer.Serialize(OriginalQuestionInput);
 
 	[Benchmark]
-	public string SerializeOriginalQuestionWithJilSerializer()
+	public object SerializeOriginalQuestionWithJilSerializer()
 	{
 		return JilSerializer.Serialize(OriginalQuestionInput);
 	}
@@ -773,10 +773,10 @@ using BenchmarkDotNet.Attributes;
 		return JilSerializer.Deserialize<Benchmark.Models.Question.ClosedDetails.OriginalQuestion>(OriginalQuestionOutputOfJilSerializer);
 	}
   
-	private readonly static string AccessTokenOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(AccessTokenInput);
+	private static readonly object AccessTokenOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(AccessTokenInput);
 
 	[Benchmark]
-	public string SerializeAccessTokenWithUtf8JsonSerializer()
+	public object SerializeAccessTokenWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(AccessTokenInput);
 	}
@@ -786,10 +786,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.AccessToken>(AccessTokenOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string AccountMergeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(AccountMergeInput);
+	private static readonly object AccountMergeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(AccountMergeInput);
 
 	[Benchmark]
-	public string SerializeAccountMergeWithUtf8JsonSerializer()
+	public object SerializeAccountMergeWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(AccountMergeInput);
 	}
@@ -799,10 +799,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.AccountMerge>(AccountMergeOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string AnswerOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(AnswerInput);
+	private static readonly object AnswerOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(AnswerInput);
 
 	[Benchmark]
-	public string SerializeAnswerWithUtf8JsonSerializer()
+	public object SerializeAnswerWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(AnswerInput);
 	}
@@ -812,10 +812,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Answer>(AnswerOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string BadgeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(BadgeInput);
+	private static readonly object BadgeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(BadgeInput);
 
 	[Benchmark]
-	public string SerializeBadgeWithUtf8JsonSerializer()
+	public object SerializeBadgeWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(BadgeInput);
 	}
@@ -825,10 +825,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Badge>(BadgeOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string CommentOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(CommentInput);
+	private static readonly object CommentOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(CommentInput);
 
 	[Benchmark]
-	public string SerializeCommentWithUtf8JsonSerializer()
+	public object SerializeCommentWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(CommentInput);
 	}
@@ -838,10 +838,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Comment>(CommentOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string ErrorOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ErrorInput);
+	private static readonly object ErrorOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ErrorInput);
 
 	[Benchmark]
-	public string SerializeErrorWithUtf8JsonSerializer()
+	public object SerializeErrorWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(ErrorInput);
 	}
@@ -851,10 +851,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Error>(ErrorOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string EventOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(EventInput);
+	private static readonly object EventOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(EventInput);
 
 	[Benchmark]
-	public string SerializeEventWithUtf8JsonSerializer()
+	public object SerializeEventWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(EventInput);
 	}
@@ -864,10 +864,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Event>(EventOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileFeedOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileFeedInput);
+	private static readonly object MobileFeedOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileFeedInput);
 
 	[Benchmark]
-	public string SerializeMobileFeedWithUtf8JsonSerializer()
+	public object SerializeMobileFeedWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileFeedInput);
 	}
@@ -877,10 +877,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileFeed>(MobileFeedOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileQuestionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileQuestionInput);
+	private static readonly object MobileQuestionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileQuestionInput);
 
 	[Benchmark]
-	public string SerializeMobileQuestionWithUtf8JsonSerializer()
+	public object SerializeMobileQuestionWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileQuestionInput);
 	}
@@ -890,10 +890,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileQuestion>(MobileQuestionOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileRepChangeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileRepChangeInput);
+	private static readonly object MobileRepChangeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileRepChangeInput);
 
 	[Benchmark]
-	public string SerializeMobileRepChangeWithUtf8JsonSerializer()
+	public object SerializeMobileRepChangeWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileRepChangeInput);
 	}
@@ -903,10 +903,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileRepChange>(MobileRepChangeOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileInboxItemOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileInboxItemInput);
+	private static readonly object MobileInboxItemOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileInboxItemInput);
 
 	[Benchmark]
-	public string SerializeMobileInboxItemWithUtf8JsonSerializer()
+	public object SerializeMobileInboxItemWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileInboxItemInput);
 	}
@@ -916,10 +916,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileInboxItem>(MobileInboxItemOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileBadgeAwardOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileBadgeAwardInput);
+	private static readonly object MobileBadgeAwardOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileBadgeAwardInput);
 
 	[Benchmark]
-	public string SerializeMobileBadgeAwardWithUtf8JsonSerializer()
+	public object SerializeMobileBadgeAwardWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileBadgeAwardInput);
 	}
@@ -929,10 +929,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileBadgeAward>(MobileBadgeAwardOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobilePrivilegeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobilePrivilegeInput);
+	private static readonly object MobilePrivilegeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobilePrivilegeInput);
 
 	[Benchmark]
-	public string SerializeMobilePrivilegeWithUtf8JsonSerializer()
+	public object SerializeMobilePrivilegeWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobilePrivilegeInput);
 	}
@@ -942,10 +942,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobilePrivilege>(MobilePrivilegeOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileCommunityBulletinOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileCommunityBulletinInput);
+	private static readonly object MobileCommunityBulletinOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileCommunityBulletinInput);
 
 	[Benchmark]
-	public string SerializeMobileCommunityBulletinWithUtf8JsonSerializer()
+	public object SerializeMobileCommunityBulletinWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileCommunityBulletinInput);
 	}
@@ -955,10 +955,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileCommunityBulletin>(MobileCommunityBulletinOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileAssociationBonusOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileAssociationBonusInput);
+	private static readonly object MobileAssociationBonusOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileAssociationBonusInput);
 
 	[Benchmark]
-	public string SerializeMobileAssociationBonusWithUtf8JsonSerializer()
+	public object SerializeMobileAssociationBonusWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileAssociationBonusInput);
 	}
@@ -968,10 +968,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileAssociationBonus>(MobileAssociationBonusOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileCareersJobAdOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileCareersJobAdInput);
+	private static readonly object MobileCareersJobAdOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileCareersJobAdInput);
 
 	[Benchmark]
-	public string SerializeMobileCareersJobAdWithUtf8JsonSerializer()
+	public object SerializeMobileCareersJobAdWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileCareersJobAdInput);
 	}
@@ -981,10 +981,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileCareersJobAd>(MobileCareersJobAdOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileBannerAdOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileBannerAdInput);
+	private static readonly object MobileBannerAdOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileBannerAdInput);
 
 	[Benchmark]
-	public string SerializeMobileBannerAdWithUtf8JsonSerializer()
+	public object SerializeMobileBannerAdWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileBannerAdInput);
 	}
@@ -994,10 +994,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileBannerAd>(MobileBannerAdOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileUpdateNoticeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileUpdateNoticeInput);
+	private static readonly object MobileUpdateNoticeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileUpdateNoticeInput);
 
 	[Benchmark]
-	public string SerializeMobileUpdateNoticeWithUtf8JsonSerializer()
+	public object SerializeMobileUpdateNoticeWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileUpdateNoticeInput);
 	}
@@ -1007,10 +1007,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileUpdateNotice>(MobileUpdateNoticeOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string FlagOptionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(FlagOptionInput);
+	private static readonly object FlagOptionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(FlagOptionInput);
 
 	[Benchmark]
-	public string SerializeFlagOptionWithUtf8JsonSerializer()
+	public object SerializeFlagOptionWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(FlagOptionInput);
 	}
@@ -1020,10 +1020,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.FlagOption>(FlagOptionOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string InboxItemOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(InboxItemInput);
+	private static readonly object InboxItemOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(InboxItemInput);
 
 	[Benchmark]
-	public string SerializeInboxItemWithUtf8JsonSerializer()
+	public object SerializeInboxItemWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(InboxItemInput);
 	}
@@ -1033,10 +1033,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.InboxItem>(InboxItemOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string InfoOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(InfoInput);
+	private static readonly object InfoOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(InfoInput);
 
 	[Benchmark]
-	public string SerializeInfoWithUtf8JsonSerializer()
+	public object SerializeInfoWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(InfoInput);
 	}
@@ -1046,10 +1046,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Info>(InfoOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string NetworkUserOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(NetworkUserInput);
+	private static readonly object NetworkUserOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(NetworkUserInput);
 
 	[Benchmark]
-	public string SerializeNetworkUserWithUtf8JsonSerializer()
+	public object SerializeNetworkUserWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(NetworkUserInput);
 	}
@@ -1059,10 +1059,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.NetworkUser>(NetworkUserOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string NotificationOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(NotificationInput);
+	private static readonly object NotificationOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(NotificationInput);
 
 	[Benchmark]
-	public string SerializeNotificationWithUtf8JsonSerializer()
+	public object SerializeNotificationWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(NotificationInput);
 	}
@@ -1072,10 +1072,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Notification>(NotificationOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string PostOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(PostInput);
+	private static readonly object PostOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(PostInput);
 
 	[Benchmark]
-	public string SerializePostWithUtf8JsonSerializer()
+	public object SerializePostWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(PostInput);
 	}
@@ -1085,10 +1085,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Post>(PostOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string PrivilegeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(PrivilegeInput);
+	private static readonly object PrivilegeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(PrivilegeInput);
 
 	[Benchmark]
-	public string SerializePrivilegeWithUtf8JsonSerializer()
+	public object SerializePrivilegeWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(PrivilegeInput);
 	}
@@ -1098,10 +1098,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Privilege>(PrivilegeOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string QuestionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(QuestionInput);
+	private static readonly object QuestionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(QuestionInput);
 
 	[Benchmark]
-	public string SerializeQuestionWithUtf8JsonSerializer()
+	public object SerializeQuestionWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(QuestionInput);
 	}
@@ -1111,10 +1111,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Question>(QuestionOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string QuestionTimelineOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(QuestionTimelineInput);
+	private static readonly object QuestionTimelineOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(QuestionTimelineInput);
 
 	[Benchmark]
-	public string SerializeQuestionTimelineWithUtf8JsonSerializer()
+	public object SerializeQuestionTimelineWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(QuestionTimelineInput);
 	}
@@ -1124,10 +1124,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.QuestionTimeline>(QuestionTimelineOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string ReputationOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ReputationInput);
+	private static readonly object ReputationOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ReputationInput);
 
 	[Benchmark]
-	public string SerializeReputationWithUtf8JsonSerializer()
+	public object SerializeReputationWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(ReputationInput);
 	}
@@ -1137,10 +1137,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Reputation>(ReputationOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string ReputationHistoryOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ReputationHistoryInput);
+	private static readonly object ReputationHistoryOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ReputationHistoryInput);
 
 	[Benchmark]
-	public string SerializeReputationHistoryWithUtf8JsonSerializer()
+	public object SerializeReputationHistoryWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(ReputationHistoryInput);
 	}
@@ -1150,10 +1150,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.ReputationHistory>(ReputationHistoryOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string RevisionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(RevisionInput);
+	private static readonly object RevisionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(RevisionInput);
 
 	[Benchmark]
-	public string SerializeRevisionWithUtf8JsonSerializer()
+	public object SerializeRevisionWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(RevisionInput);
 	}
@@ -1163,10 +1163,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Revision>(RevisionOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string SearchExcerptOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(SearchExcerptInput);
+	private static readonly object SearchExcerptOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(SearchExcerptInput);
 
 	[Benchmark]
-	public string SerializeSearchExcerptWithUtf8JsonSerializer()
+	public object SerializeSearchExcerptWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(SearchExcerptInput);
 	}
@@ -1176,10 +1176,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.SearchExcerpt>(SearchExcerptOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string ShallowUserOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ShallowUserInput);
+	private static readonly object ShallowUserOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ShallowUserInput);
 
 	[Benchmark]
-	public string SerializeShallowUserWithUtf8JsonSerializer()
+	public object SerializeShallowUserWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(ShallowUserInput);
 	}
@@ -1189,10 +1189,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.ShallowUser>(ShallowUserOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string SuggestedEditOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(SuggestedEditInput);
+	private static readonly object SuggestedEditOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(SuggestedEditInput);
 
 	[Benchmark]
-	public string SerializeSuggestedEditWithUtf8JsonSerializer()
+	public object SerializeSuggestedEditWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(SuggestedEditInput);
 	}
@@ -1202,10 +1202,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.SuggestedEdit>(SuggestedEditOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string TagOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TagInput);
+	private static readonly object TagOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TagInput);
 
 	[Benchmark]
-	public string SerializeTagWithUtf8JsonSerializer()
+	public object SerializeTagWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(TagInput);
 	}
@@ -1215,10 +1215,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Tag>(TagOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string TagScoreOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TagScoreInput);
+	private static readonly object TagScoreOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TagScoreInput);
 
 	[Benchmark]
-	public string SerializeTagScoreWithUtf8JsonSerializer()
+	public object SerializeTagScoreWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(TagScoreInput);
 	}
@@ -1228,10 +1228,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.TagScore>(TagScoreOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string TagSynonymOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TagSynonymInput);
+	private static readonly object TagSynonymOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TagSynonymInput);
 
 	[Benchmark]
-	public string SerializeTagSynonymWithUtf8JsonSerializer()
+	public object SerializeTagSynonymWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(TagSynonymInput);
 	}
@@ -1241,10 +1241,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.TagSynonym>(TagSynonymOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string TagWikiOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TagWikiInput);
+	private static readonly object TagWikiOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TagWikiInput);
 
 	[Benchmark]
-	public string SerializeTagWikiWithUtf8JsonSerializer()
+	public object SerializeTagWikiWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(TagWikiInput);
 	}
@@ -1254,10 +1254,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.TagWiki>(TagWikiOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string TopTagOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TopTagInput);
+	private static readonly object TopTagOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(TopTagInput);
 
 	[Benchmark]
-	public string SerializeTopTagWithUtf8JsonSerializer()
+	public object SerializeTopTagWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(TopTagInput);
 	}
@@ -1267,10 +1267,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.TopTag>(TopTagOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string UserOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(UserInput);
+	private static readonly object UserOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(UserInput);
 
 	[Benchmark]
-	public string SerializeUserWithUtf8JsonSerializer()
+	public object SerializeUserWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(UserInput);
 	}
@@ -1280,10 +1280,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.User>(UserOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string UserTimelineOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(UserTimelineInput);
+	private static readonly object UserTimelineOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(UserTimelineInput);
 
 	[Benchmark]
-	public string SerializeUserTimelineWithUtf8JsonSerializer()
+	public object SerializeUserTimelineWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(UserTimelineInput);
 	}
@@ -1293,10 +1293,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.UserTimeline>(UserTimelineOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string WritePermissionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(WritePermissionInput);
+	private static readonly object WritePermissionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(WritePermissionInput);
 
 	[Benchmark]
-	public string SerializeWritePermissionWithUtf8JsonSerializer()
+	public object SerializeWritePermissionWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(WritePermissionInput);
 	}
@@ -1306,10 +1306,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.WritePermission>(WritePermissionOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MobileBannerAdImageOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileBannerAdImageInput);
+	private static readonly object MobileBannerAdImageOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MobileBannerAdImageInput);
 
 	[Benchmark]
-	public string SerializeMobileBannerAdImageWithUtf8JsonSerializer()
+	public object SerializeMobileBannerAdImageWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MobileBannerAdImageInput);
 	}
@@ -1319,10 +1319,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.MobileBannerAd.MobileBannerAdImage>(MobileBannerAdImageOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string SiteOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(SiteInput);
+	private static readonly object SiteOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(SiteInput);
 
 	[Benchmark]
-	public string SerializeSiteWithUtf8JsonSerializer()
+	public object SerializeSiteWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(SiteInput);
 	}
@@ -1332,10 +1332,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Info.Site>(SiteOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string RelatedSiteOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(RelatedSiteInput);
+	private static readonly object RelatedSiteOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(RelatedSiteInput);
 
 	[Benchmark]
-	public string SerializeRelatedSiteWithUtf8JsonSerializer()
+	public object SerializeRelatedSiteWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(RelatedSiteInput);
 	}
@@ -1345,10 +1345,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Info.RelatedSite>(RelatedSiteOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string ClosedDetailsOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ClosedDetailsInput);
+	private static readonly object ClosedDetailsOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(ClosedDetailsInput);
 
 	[Benchmark]
-	public string SerializeClosedDetailsWithUtf8JsonSerializer()
+	public object SerializeClosedDetailsWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(ClosedDetailsInput);
 	}
@@ -1358,10 +1358,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Question.ClosedDetails>(ClosedDetailsOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string NoticeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(NoticeInput);
+	private static readonly object NoticeOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(NoticeInput);
 
 	[Benchmark]
-	public string SerializeNoticeWithUtf8JsonSerializer()
+	public object SerializeNoticeWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(NoticeInput);
 	}
@@ -1371,10 +1371,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Question.Notice>(NoticeOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string MigrationInfoOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MigrationInfoInput);
+	private static readonly object MigrationInfoOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(MigrationInfoInput);
 
 	[Benchmark]
-	public string SerializeMigrationInfoWithUtf8JsonSerializer()
+	public object SerializeMigrationInfoWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(MigrationInfoInput);
 	}
@@ -1384,10 +1384,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Question.MigrationInfo>(MigrationInfoOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string BadgeCountOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(BadgeCountInput);
+	private static readonly object BadgeCountOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(BadgeCountInput);
 
 	[Benchmark]
-	public string SerializeBadgeCountWithUtf8JsonSerializer()
+	public object SerializeBadgeCountWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(BadgeCountInput);
 	}
@@ -1397,10 +1397,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.User.BadgeCount>(BadgeCountOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string StylingOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(StylingInput);
+	private static readonly object StylingOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(StylingInput);
 
 	[Benchmark]
-	public string SerializeStylingWithUtf8JsonSerializer()
+	public object SerializeStylingWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(StylingInput);
 	}
@@ -1410,10 +1410,10 @@ using BenchmarkDotNet.Attributes;
 		return Utf8JsonSerializer.Deserialize<Benchmark.Models.Info.Site.Styling>(StylingOutputOfUtf8JsonSerializer);
 	}
   
-	private readonly static string OriginalQuestionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(OriginalQuestionInput);
+	private static readonly object OriginalQuestionOutputOfUtf8JsonSerializer = Utf8JsonSerializer.Serialize(OriginalQuestionInput);
 
 	[Benchmark]
-	public string SerializeOriginalQuestionWithUtf8JsonSerializer()
+	public object SerializeOriginalQuestionWithUtf8JsonSerializer()
 	{
 		return Utf8JsonSerializer.Serialize(OriginalQuestionInput);
 	}

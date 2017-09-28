@@ -19,7 +19,6 @@ namespace Benchmark
         {
             Add(Job.Default);
             Add(CsvMeasurementsExporter.Default);
-            Add(RPlotExporter.Default);
             Add(new MemoryDiagnoser());
         }
     }

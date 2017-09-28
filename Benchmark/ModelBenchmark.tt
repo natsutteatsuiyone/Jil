@@ -26,12 +26,12 @@ using BenchmarkDotNet.Attributes;
   [Config(typeof(MyConfig))]
   public partial class ModelBenchmark
   {
-	private readonly static ExpressionTreeFixture ExpressionTreeFixture = new ExpressionTreeFixture();
+	private static readonly ExpressionTreeFixture ExpressionTreeFixture = new ExpressionTreeFixture();
 <#  
     foreach(var serializer in serializers)
     { 
 #>  
-	private readonly static <#= serializer.FullName #> <#= serializer.Name #> = new <#= serializer.FullName #>();
+	private static readonly <#= serializer.FullName #> <#= serializer.Name #> = new <#= serializer.FullName #>();
 <#  
     }   
 #>  
@@ -40,7 +40,7 @@ using BenchmarkDotNet.Attributes;
     { 
 		var fullNameFixed = model.FullName.Replace('+','.');		
 #>  
-	private readonly static <#= fullNameFixed #> <#= model.Name #>Input = ExpressionTreeFixture.Create<<#= fullNameFixed #>>();
+	private static readonly <#= fullNameFixed #> <#= model.Name #>Input = ExpressionTreeFixture.Create<<#= fullNameFixed #>>();
 <#  
     }   
 #>  
@@ -51,10 +51,10 @@ using BenchmarkDotNet.Attributes;
     {  
 		var fullNameFixed = model.FullName.Replace('+','.');		
 #>  
-	private readonly static string <#= model.Name #>OutputOf<#= serializer.Name #> = <#= serializer.Name #>.Serialize(<#= model.Name #>Input);
+	private static readonly object <#= model.Name #>OutputOf<#= serializer.Name #> = <#= serializer.Name #>.Serialize(<#= model.Name #>Input);
 
 	[Benchmark]
-	public string Serialize<#= model.Name #>With<#= serializer.Name #>()
+	public object Serialize<#= model.Name #>With<#= serializer.Name #>()
 	{
 		return <#= serializer.Name #>.Serialize(<#= model.Name #>Input);
 	}
