@@ -14,7 +14,9 @@ namespace Benchmark
     {
         private static void Main(string[] args)
         {
-            BenchmarkDotNet.Running.BenchmarkRunner.Run<ModelBenchmark>();
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<ModelBenchmark_Utf8Bytes>();
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<ModelBenchmark_Utf8Stream>();
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<ModelBenchmark_String>();
         }
     }
 }

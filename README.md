@@ -1,371 +1,212 @@
-### Jil
-
-Note: Added a NETSTANDARD2_0 Target, removed the jil.core.dll and jil.strongname and merged pull requests https://github.com/kevin-montrose/Jil/pull/239 and
-https://github.com/kevin-montrose/Jil/pull/267
-
-A fast JSON (de)serializer, built on [Sigil](https://github.com/kevin-montrose/Sigil) with a number of somewhat crazy optimization tricks.
-
-[Releases are available on Nuget](https://www.nuget.org/packages/Jil/) in addition to this repository.
-
-## Usage
-
-### Serializing
-
-```C#
-using(var output = new StringWriter())
-{
-    JSON.Serialize(
-        new
-        {
-            MyInt = 1,
-            MyString = "hello world",
-            // etc.
-        },
-        output
-    );
-}
-```
-
-There is also a `Serialize` method that returns a string.
-
-The first time Jil is used to serialize a given configuration and type pair, it will spend extra time building the serializer.
-Subsequent invocations will be much faster, so if a consistently fast runtime is necessary in your code you may want to "prime the pump"
-with an earlier "throw away" serialization.
-
-### Dynamic Serialization
-
-If you need to serialize compile-time unknown types (including subclasses, and virtual properties) you should use `JSON.SerializeDynamic` instead.
-`JSON.SerializeDynamic` does not require a generic type parameter, and can cope with subclasses, `object`/`dynamic` members, and [DLR](http://msdn.microsoft.com/en-us/library/dd233052(v=vs.110).aspx) participating 
-types such as [ExpandoObject](http://msdn.microsoft.com/en-us/library/system.dynamic.expandoobject(v=vs.110).aspx) and [DynamicObject](http://msdn.microsoft.com/en-us/library/system.dynamic.dynamicobject(v=vs.110).aspx).
-
-### Deserializing
-
-```C#
-using(var input = new StringReader(myString))
-{
-    var result = JSON.Deserialize<MyType>(input);
-}
-```
-
-There is also a `Deserialize` method that takes a string as input.
-
-The first time Jil is used to deserialize a given configuration and type pair, it will spend extra time building the deserializer.
-Subsequent invocations will be much faster, so if a consistently fast runtime is necessary in your code you may want to "prime the pump"
-with an earlier "throw away" deserialization.
-
-### Dynamic Deserialization
-
-```C#
-using(var input = new StringReader(myString))
-{
-    var result = JSON.DeserializeDynamic(input);
-}
-```
-
-There is also a `DeserializeDynamic` method that works directly on strings.
-
-These methods return `dynamic`, and support the following operations:
-
-  - Casts
-    * ie. `(int)JSON.DeserializeDynamic("123")`
-  - Member access
-    * ie. `JSON.DeserializeDynamic(@"{""A"":123}").A`
-  - Indexers
-    * ie. `JSON.DeserializeDynamic(@"{""A"":123}")["A"]`
-    * or `JSON.DeserializeDynamic("[0, 1, 2]")[0]`
-  - Foreach loops
-    * ie. `foreach(var keyValue in JSON.DeserializeDynamic(@"{""A"":123}")) { ... }`
-      - in this example, `keyValue` is a dynamic with `Key` and `Value` properties
-    * or `foreach(var item in JSON.DeserializeDynamic("[0, 1, 2]")) { ... }`
-      - in this example, `item` is a `dynamic` and will have values 0, 1, and 2
-  - Common unary operators (+, -, and !)
-  - Common binary operators (&&, ||, +, -, *, /, ==, !=, <, <=, >, and >=)
-  - `.Length` & `.Count` on arrays
-  - `.ContainsKey(string)` on objects
-
-## Supported Types
-
-Jil will only (de)serialize types that can be reasonably represented as [JSON](http://json.org).
-
-The following types (and any user defined types composed of them) are supported:
-
-  - Strings (including char)
-  - Booleans
-  - Integer numbers (int, long, byte, etc.)
-  - Floating point numbers (float, double, and decimal)
-  - DateTimes & DateTimeOffsets
-    * Note that DateTimes are converted to UTC time to allow for round-tripping, use DateTimeOffsets if you need to preserve timezone information
-    * See Configuration for further details
-  - TimeSpans
-    * See Configuration for further details
-  - Nullable types
-  - Enumerations
-    * Including \[Flags\]
-  - Guids
-    * Only the ["D" format](http://msdn.microsoft.com/en-us/library/97af8hh4.aspx)
-  - IList&lt;T&gt;, ICollection&lt;T&gt;, and IReadOnlyList&lt;T&gt; implementations
-  - IDictionary&lt;TKey, TValue&gt; implementations where TKey is a string or enumeration
-  - ISet&lt;T&gt; 
-
-Jil deserializes public fields and properties; the order in which they are serialized is not defined (it is unlikely to be in
-declaration order).  The [`DataMemberAttribute.Name` property](http://msdn.microsoft.com/en-us/library/ms584759(v=vs.110).aspx) and [`IgnoreDataMemberAttribute`](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.ignoredatamemberattribute.aspx) are respected by Jil, as is the [ShouldSerializeXXX() pattern](http://msdn.microsoft.com/en-us/library/53b8022e(v=vs.110).aspx).  For situations where `DataMemberAttribute` and `IgnoreDataMemberAttribute` cannot be used, Jil provides the [`JilDirectiveAttribute`](https://github.com/kevin-montrose/Jil/blob/master/Jil/JilDirectiveAttribute.cs) which provides equivalent functionality.
-
-Strong typing of primitives types (int, long, etc.) can be done by annotating a wrapper type with `[JilPrimitiveWrapper]`.  Such a type should have one declared field or property, and default or single parameter constructor.
-
-## Unions
-
-Jil has limited support for "unions" (fields on JSON objects that may contain one of several types), provided that they can be distiguished by their first character.
-
-In other words:
-```csharp
-class LegalUnion
-{
-	[JilDirective(Name = "Foo", IsUnion = true)]
-	public string FooString { get; set; }
-	[JilDirective(Name = "Foo", IsUnion = true)]
-	public int FooInt { get; set; }
-}
-```
-Is allowed because the first character of a JSON string is always `"`, while the first character of a JSON number is a digit or `-`.
-
-The following would not be legal, however.
-```csharp
-class IllegalUnion
-{
-	[JilDirective(Name = "Foo", IsUnion = true)]
-	public uint FooUInt { get; set; }
-	[JilDirective(Name = "Foo", IsUnion = true)]
-	public double FooDouble { get; set; }
-}
-```
-Since both properties could start with a digit.
-
-You can also use a `Type` member to determine which field was (de)serialized.
-```csharp
-class WithUnionType
-{
-	[JilDirective(Name = "Foo", IsUnion = true, IsUnionType = true)]
-	public Type FooType { get; set; }
-
-	[JilDirective(Name = "Foo", IsUnion = true)]
-	public uint FooUInt { get; set; }
-	[JilDirective(Name = "Foo", IsUnion = true)]
-	public List<int> FooList { get; set; }
-
-}
-```
-When serializing this field _must_ be set.
-
-## Configuration
-
-Jil's `JSON.Serialize` and `JSON.Deserialize` methods take an optional `Options` parameter which controls:
-
-  - The format of DateTimes, DateTimeOffsets, and TimeSpans; one of
-    * MicrosoftStyleMillisecondsSinceUnixEpoch, a string
-	  - "\/Date(##...##)\/" for DateTimes & DateTimeOffsets
-	  - "1.23:45:56.78" for TimeSpans
-	* MillisecondsSinceUnixEpoch, a number
-	  - for DateTimes & DateTimeOffsets it can be passed directly to [JavaScript's Date() constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
-	  - for TimeSpans it's simply [TimeSpan.TotalMilliseconds](http://msdn.microsoft.com/en-us/library/system.timespan.totalmilliseconds%28v=vs.110%29.aspx)
-	* SecondsSinceUnixEpoch, a number
-	  - for DateTimes & DateTimeOffsets this is commonly refered to as [unix time](http://en.wikipedia.org/wiki/Unix_time)
-	  - for TimeSpans it's simply [TimeSpan.TotalSeconds](http://msdn.microsoft.com/en-us/library/system.timespan.totalseconds%28v=vs.110%29.aspx)
-	* ISO8601, a string
-	  - for DateTimes & DateTimeOffsets, ie. "2011-07-14T19:43:37Z"
-	    * DateTimes are always serialized in UTC (timezone offset = 00:00), because Local DateTimes cannot reliably roundtrip
-		* DateTimeOffsets include their timezone offset when serialized
-	  - for TimeSpans, ie. "P40DT11H10M9.4S" 
-    * RFC1123, a string
-	  - for DateTimes and DateTimeOffsets, ie. "Thu, 10 Apr 2008 13:30:00 GMT"
-	  - "1.23:45:56.78" for TimeSpans
-  - What to treat DateTimes with an [Unspecified DateTimeKind](https://msdn.microsoft.com/en-us/library/shx7s921%28v=vs.110%29.aspx) as; one of
-    * IsLocal, will treat an unspecified DateTime as if it were in local time
-	* IsUtc, will treat an unspecified DateTime as if it were in UTC
-  - Whether or not to exclude null values when serializing dictionaries, and object members
-  - Whether or not to "pretty print" while serializing, which adds extra linebreaks and whitespace for presentation's sake
-  - Whether or not the serialized JSON will be used as JSONP (which requires slightly more work be done w.r.t. escaping)
-  - Whether or not to include inherited members when serializing
-  - The way to format member names; one of
-    * Verbatim
-	  - As it appears in source, unless modified by a `[MemberName]` or `[JilDirective]`
-	* CamelCase
-	  - lowercasing the first letter of members, ie. `"CamelCase"` would become `"camelCase"`
-
-## Benchmarks
-
-Jil aims to be the fastest general purpose JSON (de)serializer for .NET.  Flexibility and "nice to have" features are explicitly discounted
-in the pursuit of speed.
-
-These benchmarks were run on a machine with the following specs:
-
-<ul>
- <li>Operating System: Windows 8.1 Enterprise 64-bit (6.3, Build 9600) (9600.winblue_r3.140827-1500)</li>
- <li>System Manufacturer: Apple Inc.</li>
- <li>System Model: MacBookPro11,3</li>
- <li>Processor: Intel(R) Core(TM) i7-4960HQ CPU @ 2.60GHz (8 CPUs), ~2.6GHz</li>
- <li>Memory: 16384MB RAM</li>
- <ul>
-  <li>DDR3</li>
-  <li>Dual Channel</li>
-  <li>798.1 MHZ</li>
- </ul>
-</ul>
-
-As with all benchmarks, take these with a grain of salt.
-
-### Serialization
-
-For comparison, here's how Jil stacks up against other popular .NET serializers in a [synthetic benchmark](https://github.com/kevin-montrose/Jil/tree/7915b2e8897024e82628c514d63af596fcfd5013/Benchmark):
-
- - [Json.NET](http://james.newtonking.com/json) - JSON library included with ASP.NET MVC, version 6.0.7
- - [ServiceStack.Text](https://github.com/ServiceStack/ServiceStack.Text) - JSON, CSV, and JSV library; a part of the [ServiceStack framework](https://github.com/ServiceStack/ServiceStack), version 3.9.71
- - [protobuf-net](https://code.google.com/p/protobuf-net/) - binary serializer for Google's [Protocol Buffers](https://code.google.com/p/protobuf/), version 2.0.0.688
-   * __does not__ serialize JSON, included as a baseline
-
-All three libraries are in use at [Stack Exchange](https://stackexchange.com/) in various production roles.
-
-<img src="https://i.imgur.com/kagJdod.png" />
-
-<img src="https://i.imgur.com/ggFu8Kw.png" />
-
-<img src="https://i.imgur.com/moSS1Mv.png" />
-
-Note that the bars in each group of each graph are scaled so that the fastest library is 100.
-
-Numbers, include millisecond timings, can found in [this Google Document](https://docs.google.com/spreadsheets/d/1Jx7DAGopJo3BC0St_L5qHJJrWpZe9x9BCHgdeY9-b-w/edit).
-
-The Question, Answer, and User types are taken from the [Stack Exchange API](http://api.stackexchange.com/).
-
-Data for each type is randomly generated from a fixed seed.  Random text is biased towards ASCII<sup>*</sup>, but includes all unicode.
-
-<sub>*This is meant to simulate typical content from the Stack Exchange API.</sub>
-
-### Deserialization
-
-The same libraries and same types were used to test deserialization.
-
-<img src="https://i.imgur.com/Qvdvo44.png" />
-
-<img src="https://i.imgur.com/QPtJzZV.png" />
-
-<img src="https://i.imgur.com/fESbbgm.png" />
-
-Note that the bars in each group of each graph are scaled so that the fastest library is 100.
-
-Numbers, include millisecond timings, can be found in [the same Google Document](https://docs.google.com/spreadsheets/d/1Jx7DAGopJo3BC0St_L5qHJJrWpZe9x9BCHgdeY9-b-w/edit).
-
-## Tricks
-
-Jil has a lot of tricks to make it fast.  These may be interesting, even if Jil itself is too limited for your use.
-
-### Sigil
-
-Jil does a lot of IL generation to produce tight, focused code.  While possible with [ILGenerator](http://msdn.microsoft.com/en-us/library/system.reflection.emit.ilgenerator.aspx), Jil instead uses the [Sigil library](https://github.com/kevin-montrose/Sigil).
-Sigil automatically does a lot of the busy work you'd normally have to do manually to produce ideal IL.
-Using Sigil also makes hacking on Jil much more productive, as debuging IL generation without it is pretty slow going.
-
-### Trade Memory For Speed
-
-Jil's internal serializers and deserializers are (in the absense of recursive types) monolithic, and per-type; avoiding extra runtime lookups, and giving
-.NET's JIT more context when generating machine code.
-
-The methods Jil create also do no Options checking at serialization time; Options are baked in at first use.  This means
-that Jil may create up to 32 different serializers and 8 different deserializers for a single type (though in practice, many fewer).
-
-### Optimizing Member Access Order
-
-Perhaps the [most arcane code in Jil](https://github.com/kevin-montrose/Jil/blob/519a0c552e9fb93a4df94eed0b2f9804271f2fef/Jil/Serialize/Utils.cs#L52) determines the preferred order to access members, so the CPU doesn't stall waiting for values from memory.
-
-Members are divided up into 4 groups:
-<ul>
-  <li>Simple
-    <ul>
-      <li>primitive ValueTypes such as int, double, etc.</li>
-    </ul>
-  </li>
-  <li>Nullable Types</li>
-  <li>Recursive Types</li>
-  <li>Everything Else</li>
-</ul>
-
-Members within each group are ordered by the offset of the fields backing them (properties are decompiled to determine fields they use).
-
-This is a fairly naive implementation of this idea, there's almost certainly more that could be squeezed out especially with regards to consistency of gains.
-
-### Don't Allocate If You Can Avoid It
-
-.NET's GC is excellent, but no-GC is still faster than any-GC.
-
-Jil tries to avoid allocating any reference types, with some exceptions:
-
- - [a 36-length char\[\]](https://github.com/kevin-montrose/Jil/blob/519a0c552e9fb93a4df94eed0b2f9804271f2fef/Jil/Serialize/InlineSerializer.cs#L2785) if any integer numbers, DateTimes, or GUIDs are being serialized
- - [a 32-length char\[\]](https://github.com/kevin-montrose/Jil/blob/44aef95ecb762b34827ec22967ea263056b96434/Jil/Deserialize/InlineDeserializer.cs#L64) if any strings, user defined objects, or ISO8601 DateTimes are being deserialized
-
-Depending on the data being deserialized a `StringBuilder` may also be allocated.  If a `TextWriter` does not have an invariant culture, strings may also be allocated when serializing floating point numbers.
-
-### Escaping Tricks
-
-JSON has escaping rules for `\`, `"`, and control characters.  These can be kind of time consuming to deal with. Jil avoids it as much as possible in two ways.
-
-First, all known key names are determined once and baked into the generated delegates [like so](https://github.com/kevin-montrose/Jil/blob/519a0c552e9fb93a4df94eed0b2f9804271f2fef/Jil/Serialize/InlineSerializer.cs#L980).
-Known keys are member names and enumeration values.
-
-Second, rather than lookup encoded characters in a dictionary or a long series of branches Jil does explicit checks for `"` and `\` and turns the rest into
-a subtraction and jump table lookup.  This comes out to ~three branches (with mostly consistently taken paths, good for branch prediction in theory) per character.
-
-This works because control characters in .NET strings (bascally UTF-16, but might as well be ASCII for this trick) are sequential, being [0,31].
-
-JSONP also requires escaping of line separator (\u2028) and paragraph separator (\u2029) characters.  When configured to serialize JSONP,
-Jil escapes them in the same manner as `\` and `"`.
-
-### Custom Number Formatting
-
-While number formatting in .NET is pretty fast, it has a lot of baggage to handle custom number formatting.
-
-Since JSON has a strict definition of a number, a Write() implementation without configuration is noticeably faster.
-To go the extra mile, Jil contains [separate implementations for `int`, `uint`, `ulong`, and `long`](https://github.com/kevin-montrose/Jil/blob/519a0c552e9fb93a4df94eed0b2f9804271f2fef/Jil/Serialize/Methods.cs#L803).
-
-Jil __does not__ include custom `decimal`, `double`, or `single` Write() implementations, as despite my best efforts I haven't been able to beat the ones built into .NET.
-If you think you're up to the challenge, I'd be really interested in seeing code that *is* faster than the included implementations.
-
-### Custom Date Formatting
-
-Similarly to numbers, each of Jil's date formats has a custom Write() implementation.
-
- - [ISO8601](https://github.com/kevin-montrose/Jil/blob/519a0c552e9fb93a4df94eed0b2f9804271f2fef/Jil/Serialize/Methods.cs#L142) can be unrolled into a smaller number of `/` and `%` instructions
- - [RFC1123](https://github.com/kevin-montrose/Jil/blob/fa66ef27b606f2d39512ed54073377730d065896/Jil/Serialize/Methods.cs#L1574) can be similarly decomposed
- - [Microsoft-style](https://github.com/kevin-montrose/Jil/blob/fa66ef27b606f2d39512ed54073377730d065896/Jil/Serialize/InlineSerializer.cs#L613) is a subtraction and division, then fed into the custom `long` writing code
- - [Milliseconds since the unix epoch](https://github.com/kevin-montrose/Jil/blob/519a0c552e9fb93a4df94eed0b2f9804271f2fef/Jil/Serialize/InlineSerializer.cs#L528) is essentially the same
- - [Seconds since the unix epoch](https://github.com/kevin-montrose/Jil/blob/519a0c552e9fb93a4df94eed0b2f9804271f2fef/Jil/Serialize/InlineSerializer.cs#L577) just has a different divisor
- 
-### Custom Guid Formatting
-
-Noticing a pattern?
-
-Jil has a [custom Guid writer](https://github.com/kevin-montrose/Jil/blob/201a611f1589c07b6a65d4fb07bf1d95616bf1e4/Jil/Serialize/Methods.cs#L100) (which is one of the reasons Jil only supports the D format).
-
-Fun fact about this method, I tested a more branch heavy version (which removed the byte lookup) which turned out to be considerably slower than the built-in method due to [branch prediction failures](http://stackoverflow.com/a/11227902/80572).
-Type 4 Guids being random makes for something quite close to the worst case for branch prediciton.
-
-### Different Code For Arrays
-
-Although arrays implement `IList<T>` the JIT generates much better code if you give it array-ish IL to chew on, so Jil does so.
-
-### Special Casing Enumerations With Sequential Values
-
-Many enums end up having sequential values, Jil will exploit this if possible and generate a subtraction and jump table lookup.
-Non-sequential enumerations are handled with a long series of branches.
-
-### Custom Number Readers
-
-Just like Jil maintains many different methods for writing integer types, it also maintains [different methods for reading them](https://github.com/kevin-montrose/Jil/blob/44aef95ecb762b34827ec22967ea263056b96434/Jil/Deserialize/Methods.ReadNumbers.cs).  These methods omit unnecessary sign checks, overflow checks, and culture-specific formatting support.
-
-### Automata Based Member Name Lookups
-
-Rather than read a member name into a string or buffer when deserializing, Jil will try to match it one character at a time using an [automata](http://en.wikipedia.org/wiki/Automata_theory).
-
-### Avoid Abstractions If Able
-
-If you're serializing to `string` (as indicated by using a particular [`Serialize<T>`](https://github.com/kevin-montrose/Jil/blob/7915b2e8897024e82628c514d63af596fcfd5013/Jil/JSON.cs#L140) method) Jil will avoid the overhead of virtually dispatching calls against `TextWriter`, and instead statically call against its own specialized [`StringBuilder`-eqsue class](https://github.com/kevin-montrose/Jil/blob/7915b2e8897024e82628c514d63af596fcfd5013/Jil/Serialize/ThunkWriter.cs#L133).  In the general case Jil prefers to write against a `TextWriter` so as to keep memory pressure low (a real concern in many real world deployments), but when Jil is going to allocate a `string` anyway avoiding virtual dispatch results in a noticeable speed up. 
-
-Simiarly, deserializing from `string` (as indicated by this [`Deserialize<T>`](https://github.com/kevin-montrose/Jil/blob/fa66ef27b606f2d39512ed54073377730d065896/Jil/JSON.cs#L2012) method) Jil avoid using `TextReader`, and instead issue static calls against a [lightweight wrapper of its own](https://github.com/kevin-montrose/Jil/blob/fa66ef27b606f2d39512ed54073377730d065896/Jil/Deserialize/ThunkReader.cs).
+Benchmark of [Jil](https://github.com/kevin-montrose/Jil) vs [Utf8Json](https://github.com/neuecc/Utf8Json/).
+
+Utf8Json aims optimization for real-case. In almost case, real-case is serialze to/from utf8 binary. This compare table is `Object -> byte[](Utf8), byte[](UTF8) -> Object`, `Object -> Stream(Utf8), Stream(Utf8) -> Object` and `Object -> String(UTF16), String(UTF16) -> Object`.
+
+If target is UTF8(both `byte[]` and `Stream`), Utf8Json wins.
+
+First line is Jil, Second line is Utf8Json. `Processor=Intel Core i7-6700K CPU 4.00GHz (Skylake), ProcessorCount=8`, `.NET Framework 4.7 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.2110.0`.
+
+Object -> byte[](Utf8), byte[](UTF8) -> Object
+---
+ |                                                   Method |        Mean | Error |  Gen 0 | Allocated |
+ |--------------------------------------------------------- |------------:|------:|-------:|----------:|
+ |                    SerializeAccessTokenWithJilSerializer |    811.7 ns |    NA | 0.2489 |    1048 B |
+ |               SerializeAccessTokenWithUtf8JsonSerializer |    467.1 ns |    NA | 0.0358 |     152 B |
+ |                  DeserializeAccessTokenWithJilSerializer |    711.9 ns |    NA | 0.1440 |     608 B |
+ |             DeserializeAccessTokenWithUtf8JsonSerializer |    687.8 ns |    NA | 0.0582 |     248 B |
+ |                   SerializeAccountMergeWithJilSerializer |    621.4 ns |    NA | 0.2565 |    1080 B |
+ |              SerializeAccountMergeWithUtf8JsonSerializer |    385.5 ns |    NA | 0.0319 |     136 B |
+ |                 DeserializeAccountMergeWithJilSerializer |    593.2 ns |    NA | 0.0868 |     368 B |
+ |            DeserializeAccountMergeWithUtf8JsonSerializer |    421.6 ns |    NA | 0.0110 |      48 B |
+ |                         SerializeAnswerWithJilSerializer |  6,912.9 ns |    NA | 2.5482 |   10699 B |
+ |                    SerializeAnswerWithUtf8JsonSerializer |  4,961.9 ns |    NA | 0.4425 |    1889 B |
+ |                       DeserializeAnswerWithJilSerializer | 10,136.8 ns |    NA | 1.4648 |    6192 B |
+ |                  DeserializeAnswerWithUtf8JsonSerializer |  9,208.4 ns |    NA | 0.4730 |    2048 B |
+ |                          SerializeBadgeWithJilSerializer |  1,484.7 ns |    NA | 0.6657 |    2800 B |
+ |                     SerializeBadgeWithUtf8JsonSerializer |  1,014.1 ns |    NA | 0.0992 |     424 B |
+ |                        DeserializeBadgeWithJilSerializer |  2,175.2 ns |    NA | 0.3357 |    1416 B |
+ |                   DeserializeBadgeWithUtf8JsonSerializer |  2,065.2 ns |    NA | 0.1144 |     488 B |
+ |                        SerializeCommentWithJilSerializer |  2,602.0 ns |    NA | 1.2093 |    5088 B |
+ |                   SerializeCommentWithUtf8JsonSerializer |  1,856.2 ns |    NA | 0.1793 |     768 B |
+ |                      DeserializeCommentWithJilSerializer |  3,885.1 ns |    NA | 0.6065 |    2560 B |
+ |                 DeserializeCommentWithUtf8JsonSerializer |  3,653.9 ns |    NA | 0.1869 |     792 B |
+ |                          SerializeErrorWithJilSerializer |    444.0 ns |    NA | 0.2174 |     912 B |
+ |                     SerializeErrorWithUtf8JsonSerializer |    197.6 ns |    NA | 0.0226 |      96 B |
+ |                        DeserializeErrorWithJilSerializer |    423.4 ns |    NA | 0.0968 |     408 B |
+ |                   DeserializeErrorWithUtf8JsonSerializer |    367.3 ns |    NA | 0.0319 |     136 B |
+ |                          SerializeEventWithJilSerializer |    860.6 ns |    NA | 0.3386 |    1424 B |
+ |                     SerializeEventWithUtf8JsonSerializer |    528.7 ns |    NA | 0.0391 |     168 B |
+ |                        DeserializeEventWithJilSerializer |    750.8 ns |    NA | 0.1326 |     560 B |
+ |                   DeserializeEventWithUtf8JsonSerializer |    743.6 ns |    NA | 0.0372 |     160 B |
+ |                     SerializeMobileFeedWithJilSerializer | 12,675.6 ns |    NA | 4.5013 |   18953 B |
+ |                SerializeMobileFeedWithUtf8JsonSerializer |  7,180.7 ns |    NA | 0.7553 |    3202 B |
+ |                   DeserializeMobileFeedWithJilSerializer | 26,383.7 ns |    NA | 2.8687 |   12080 B |
+ |              DeserializeMobileFeedWithUtf8JsonSerializer | 16,645.6 ns |    NA | 1.2207 |    5136 B |
+ |                 SerializeMobileQuestionWithJilSerializer |  1,444.7 ns |    NA | 0.5913 |    2488 B |
+ |            SerializeMobileQuestionWithUtf8JsonSerializer |    662.4 ns |    NA | 0.0753 |     320 B |
+ |               DeserializeMobileQuestionWithJilSerializer |  1,800.6 ns |    NA | 0.2556 |    1080 B |
+ |          DeserializeMobileQuestionWithUtf8JsonSerializer |  1,344.6 ns |    NA | 0.0858 |     368 B |
+ |                SerializeMobileRepChangeWithJilSerializer |    867.1 ns |    NA | 0.3462 |    1456 B |
+ |           SerializeMobileRepChangeWithUtf8JsonSerializer |    421.6 ns |    NA | 0.0377 |     160 B |
+ |              DeserializeMobileRepChangeWithJilSerializer |    730.4 ns |    NA | 0.1440 |     608 B |
+ |         DeserializeMobileRepChangeWithUtf8JsonSerializer |    662.6 ns |    NA | 0.0515 |     216 B |
+ |                SerializeMobileInboxItemWithJilSerializer |  1,279.0 ns |    NA | 0.4349 |    1832 B |
+ |           SerializeMobileInboxItemWithUtf8JsonSerializer |    612.0 ns |    NA | 0.0677 |     288 B |
+ |              DeserializeMobileInboxItemWithJilSerializer |  1,331.6 ns |    NA | 0.2365 |    1000 B |
+ |         DeserializeMobileInboxItemWithUtf8JsonSerializer |  1,105.1 ns |    NA | 0.0839 |     360 B |
+ |               SerializeMobileBadgeAwardWithJilSerializer |  1,041.1 ns |    NA | 0.4120 |    1736 B |
+ |          SerializeMobileBadgeAwardWithUtf8JsonSerializer |    572.4 ns |    NA | 0.0601 |     256 B |
+ |             DeserializeMobileBadgeAwardWithJilSerializer |  1,120.0 ns |    NA | 0.2060 |     872 B |
+ |        DeserializeMobileBadgeAwardWithUtf8JsonSerializer |  1,089.5 ns |    NA | 0.0687 |     296 B |
+ |                SerializeMobilePrivilegeWithJilSerializer |  1,006.2 ns |    NA | 0.4139 |    1744 B |
+ |           SerializeMobilePrivilegeWithUtf8JsonSerializer |    447.7 ns |    NA | 0.0606 |     256 B |
+ |              DeserializeMobilePrivilegeWithJilSerializer |  1,108.9 ns |    NA | 0.2060 |     872 B |
+ |         DeserializeMobilePrivilegeWithUtf8JsonSerializer |    917.1 ns |    NA | 0.0658 |     280 B |
+ |        SerializeMobileCommunityBulletinWithJilSerializer |  1,563.4 ns |    NA | 0.6390 |    2688 B |
+ |   SerializeMobileCommunityBulletinWithUtf8JsonSerializer |    803.4 ns |    NA | 0.0887 |     376 B |
+ |      DeserializeMobileCommunityBulletinWithJilSerializer |  1,959.0 ns |    NA | 0.3109 |    1312 B |
+ | DeserializeMobileCommunityBulletinWithUtf8JsonSerializer |  1,541.9 ns |    NA | 0.1144 |     488 B |
+ |         SerializeMobileAssociationBonusWithJilSerializer |    672.1 ns |    NA | 0.2375 |    1000 B |
+ |    SerializeMobileAssociationBonusWithUtf8JsonSerializer |    297.8 ns |    NA | 0.0281 |     120 B |
+ |       DeserializeMobileAssociationBonusWithJilSerializer |    565.3 ns |    NA | 0.0982 |     416 B |
+ |  DeserializeMobileAssociationBonusWithUtf8JsonSerializer |    436.9 ns |    NA | 0.0243 |     104 B |
+ |             SerializeMobileCareersJobAdWithJilSerializer |    836.4 ns |    NA | 0.3633 |    1528 B |
+ |        SerializeMobileCareersJobAdWithUtf8JsonSerializer |    386.6 ns |    NA | 0.0434 |     184 B |
+ |           DeserializeMobileCareersJobAdWithJilSerializer |    861.4 ns |    NA | 0.1688 |     712 B |
+ |      DeserializeMobileCareersJobAdWithUtf8JsonSerializer |    796.1 ns |    NA | 0.0639 |     272 B |
+ |                 SerializeMobileBannerAdWithJilSerializer |    808.6 ns |    NA | 0.3481 |    1464 B |
+ |            SerializeMobileBannerAdWithUtf8JsonSerializer |    417.5 ns |    NA | 0.0415 |     176 B |
+ |               DeserializeMobileBannerAdWithJilSerializer |    931.6 ns |    NA | 0.1688 |     712 B |
+ |          DeserializeMobileBannerAdWithUtf8JsonSerializer |    829.6 ns |    NA | 0.0677 |     288 B |
+ |             SerializeMobileUpdateNoticeWithJilSerializer |    433.7 ns |    NA | 0.2017 |     848 B |
+ |        SerializeMobileUpdateNoticeWithUtf8JsonSerializer |    176.3 ns |    NA | 0.0265 |     112 B |
+ |           DeserializeMobileUpdateNoticeWithJilSerializer |    444.9 ns |    NA | 0.1006 |     424 B |
+ |      DeserializeMobileUpdateNoticeWithUtf8JsonSerializer |    381.6 ns |    NA | 0.0319 |     136 B |
+ |                     SerializeFlagOptionWithJilSerializer |  1,495.3 ns |    NA | 0.6886 |    2896 B |
+ |                SerializeFlagOptionWithUtf8JsonSerializer |    752.3 ns |    NA | 0.1001 |     424 B |
+ |                   DeserializeFlagOptionWithJilSerializer |  2,021.4 ns |    NA | 0.3471 |    1472 B |
+ |              DeserializeFlagOptionWithUtf8JsonSerializer |  1,672.8 ns |    NA | 0.1087 |     464 B |
+ |                      SerializeInboxItemWithJilSerializer |  3,560.2 ns |    NA | 1.2970 |    5448 B |
+ |                 SerializeInboxItemWithUtf8JsonSerializer |  2,407.4 ns |    NA | 0.2289 |     976 B |
+ |                    DeserializeInboxItemWithJilSerializer |  5,639.5 ns |    NA | 0.8621 |    3632 B |
+ |               DeserializeInboxItemWithUtf8JsonSerializer |  4,720.4 ns |    NA | 0.3967 |    1672 B |
+ |                           SerializeInfoWithJilSerializer |  4,204.1 ns |    NA | 1.9531 |    8200 B |
+ |                      SerializeInfoWithUtf8JsonSerializer |  3,013.0 ns |    NA | 0.3052 |    1296 B |
+ |                         DeserializeInfoWithJilSerializer |  6,849.0 ns |    NA | 0.9308 |    3928 B |
+ |                    DeserializeInfoWithUtf8JsonSerializer |  5,977.9 ns |    NA | 0.4272 |    1816 B |
+ |                    SerializeNetworkUserWithJilSerializer |  1,549.3 ns |    NA | 0.6371 |    2680 B |
+ |               SerializeNetworkUserWithUtf8JsonSerializer |  1,097.3 ns |    NA | 0.0935 |     400 B |
+ |                  DeserializeNetworkUserWithJilSerializer |  2,005.2 ns |    NA | 0.2594 |    1096 B |
+ |             DeserializeNetworkUserWithUtf8JsonSerializer |  1,554.7 ns |    NA | 0.0591 |     256 B |
+ |                   SerializeNotificationWithJilSerializer |  3,303.7 ns |    NA | 1.2436 |    5224 B |
+ |              SerializeNotificationWithUtf8JsonSerializer |  2,293.3 ns |    NA | 0.2098 |     896 B |
+ |                 DeserializeNotificationWithJilSerializer |  5,255.0 ns |    NA | 0.7935 |    3344 B |
+ |            DeserializeNotificationWithUtf8JsonSerializer |  4,600.6 ns |    NA | 0.3662 |    1544 B |
+ |                           SerializePostWithJilSerializer |  6,478.6 ns |    NA | 2.4261 |   10193 B |
+ |                      SerializePostWithUtf8JsonSerializer |  4,402.3 ns |    NA | 0.4044 |    1704 B |
+ |                         DeserializePostWithJilSerializer | 10,632.2 ns |    NA | 1.3275 |    5592 B |
+ |                    DeserializePostWithUtf8JsonSerializer |  8,094.0 ns |    NA | 0.4120 |    1792 B |
+ |                      SerializePrivilegeWithJilSerializer |    450.1 ns |    NA | 0.2227 |     936 B |
+ |                 SerializePrivilegeWithUtf8JsonSerializer |    191.8 ns |    NA | 0.0246 |     104 B |
+ |                    DeserializePrivilegeWithJilSerializer |    449.7 ns |    NA | 0.1006 |     424 B |
+ |               DeserializePrivilegeWithUtf8JsonSerializer |    384.6 ns |    NA | 0.0319 |     136 B |
+ |                       SerializeQuestionWithJilSerializer | 22,965.3 ns |    NA | 8.7891 |   36983 B |
+ |                  SerializeQuestionWithUtf8JsonSerializer | 17,072.8 ns |    NA | 1.4954 |    6365 B |
+ |                     DeserializeQuestionWithJilSerializer | 44,609.4 ns |    NA | 5.1880 |   21817 B |
+ |                DeserializeQuestionWithUtf8JsonSerializer | 31,905.5 ns |    NA | 1.8921 |    8136 B |
+ |               SerializeQuestionTimelineWithJilSerializer |  2,582.6 ns |    NA | 1.2054 |    5072 B |
+ |          SerializeQuestionTimelineWithUtf8JsonSerializer |  1,888.8 ns |    NA | 0.1755 |     752 B |
+ |             DeserializeQuestionTimelineWithJilSerializer |  3,636.2 ns |    NA | 0.5798 |    2448 B |
+ |        DeserializeQuestionTimelineWithUtf8JsonSerializer |  3,570.7 ns |    NA | 0.1602 |     680 B |
+ |                     SerializeReputationWithJilSerializer |    935.3 ns |    NA | 0.4110 |    1728 B |
+ |                SerializeReputationWithUtf8JsonSerializer |    666.9 ns |    NA | 0.0563 |     240 B |
+ |                   DeserializeReputationWithJilSerializer |  1,041.6 ns |    NA | 0.1678 |     712 B |
+ |              DeserializeReputationWithUtf8JsonSerializer |  1,019.2 ns |    NA | 0.0420 |     184 B |
+ |              SerializeReputationHistoryWithJilSerializer |    905.5 ns |    NA | 0.3614 |    1520 B |
+ |         SerializeReputationHistoryWithUtf8JsonSerializer |    528.7 ns |    NA | 0.0467 |     200 B |
+ |            DeserializeReputationHistoryWithJilSerializer |    869.1 ns |    NA | 0.1202 |     504 B |
+ |       DeserializeReputationHistoryWithUtf8JsonSerializer |    684.4 ns |    NA | 0.0143 |      64 B |
+ |                       SerializeRevisionWithJilSerializer |  2,298.7 ns |    NA | 1.0834 |    4553 B |
+ |                  SerializeRevisionWithUtf8JsonSerializer |  1,671.7 ns |    NA | 0.1545 |     656 B |
+ |                     DeserializeRevisionWithJilSerializer |  3,460.3 ns |    NA | 0.5569 |    2344 B |
+ |                DeserializeRevisionWithUtf8JsonSerializer |  3,273.4 ns |    NA | 0.2327 |     992 B |
+ |                  SerializeSearchExcerptWithJilSerializer |  3,797.3 ns |    NA | 1.3733 |    5793 B |
+ |             SerializeSearchExcerptWithUtf8JsonSerializer |  2,895.1 ns |    NA | 0.2441 |    1040 B |
+ |                DeserializeSearchExcerptWithJilSerializer |  5,211.0 ns |    NA | 0.7782 |    3272 B |
+ |           DeserializeSearchExcerptWithUtf8JsonSerializer |  4,940.1 ns |    NA | 0.2365 |    1016 B |
+ |                    SerializeShallowUserWithJilSerializer |    930.7 ns |    NA | 0.4177 |    1752 B |
+ |               SerializeShallowUserWithUtf8JsonSerializer |    597.0 ns |    NA | 0.0620 |     264 B |
+ |                  DeserializeShallowUserWithJilSerializer |  1,159.2 ns |    NA | 0.2060 |     872 B |
+ |             DeserializeShallowUserWithUtf8JsonSerializer |  1,126.6 ns |    NA | 0.0610 |     264 B |
+ |                  SerializeSuggestedEditWithJilSerializer |  2,340.0 ns |    NA | 1.0338 |    4344 B |
+ |             SerializeSuggestedEditWithUtf8JsonSerializer |  1,667.6 ns |    NA | 0.1392 |     592 B |
+ |                DeserializeSuggestedEditWithJilSerializer |  3,113.7 ns |    NA | 0.4501 |    1904 B |
+ |           DeserializeSuggestedEditWithUtf8JsonSerializer |  2,759.2 ns |    NA | 0.1602 |     680 B |
+ |                            SerializeTagWithJilSerializer |    936.0 ns |    NA | 0.3834 |    1616 B |
+ |                       SerializeTagWithUtf8JsonSerializer |    600.2 ns |    NA | 0.0544 |     232 B |
+ |                          DeserializeTagWithJilSerializer |  1,113.1 ns |    NA | 0.1888 |     800 B |
+ |                     DeserializeTagWithUtf8JsonSerializer |  1,001.9 ns |    NA | 0.0648 |     280 B |
+ |                       SerializeTagScoreWithJilSerializer |  1,175.5 ns |    NA | 0.5913 |    2488 B |
+ |                  SerializeTagScoreWithUtf8JsonSerializer |    742.7 ns |    NA | 0.0753 |     320 B |
+ |                     DeserializeTagScoreWithJilSerializer |  1,594.7 ns |    NA | 0.2403 |    1008 B |
+ |                DeserializeTagScoreWithUtf8JsonSerializer |  1,397.4 ns |    NA | 0.0725 |     304 B |
+ |                     SerializeTagSynonymWithJilSerializer |  1,080.4 ns |    NA | 0.3605 |    1520 B |
+ |                SerializeTagSynonymWithUtf8JsonSerializer |    638.2 ns |    NA | 0.0486 |     208 B |
+ |                   DeserializeTagSynonymWithJilSerializer |  1,055.3 ns |    NA | 0.1459 |     616 B |
+ |              DeserializeTagSynonymWithUtf8JsonSerializer |    809.4 ns |    NA | 0.0401 |     168 B |
+ |                        SerializeTagWikiWithJilSerializer |  2,594.7 ns |    NA | 1.1826 |    4976 B |
+ |                   SerializeTagWikiWithUtf8JsonSerializer |  1,790.0 ns |    NA | 0.1717 |     728 B |
+ |                      DeserializeTagWikiWithJilSerializer |  3,479.2 ns |    NA | 0.5798 |    2440 B |
+ |                 DeserializeTagWikiWithUtf8JsonSerializer |  3,202.2 ns |    NA | 0.1793 |     760 B |
+ |                         SerializeTopTagWithJilSerializer |    667.9 ns |    NA | 0.3500 |    1472 B |
+ |                    SerializeTopTagWithUtf8JsonSerializer |    379.7 ns |    NA | 0.0415 |     176 B |
+ |                       DeserializeTopTagWithJilSerializer |    798.8 ns |    NA | 0.1268 |     536 B |
+ |                  DeserializeTopTagWithUtf8JsonSerializer |    689.1 ns |    NA | 0.0257 |     112 B |
+ |                           SerializeUserWithJilSerializer |  3,484.6 ns |    NA | 1.2627 |    5313 B |
+ |                      SerializeUserWithUtf8JsonSerializer |  2,251.5 ns |    NA | 0.2213 |     936 B |
+ |                         DeserializeUserWithJilSerializer |  4,703.3 ns |    NA | 0.5798 |    2464 B |
+ |                    DeserializeUserWithUtf8JsonSerializer |  3,560.0 ns |    NA | 0.1411 |     600 B |
+ |                   SerializeUserTimelineWithJilSerializer |  1,248.4 ns |    NA | 0.5741 |    2416 B |
+ |              SerializeUserTimelineWithUtf8JsonSerializer |    809.2 ns |    NA | 0.0715 |     304 B |
+ |                 DeserializeUserTimelineWithJilSerializer |  1,431.3 ns |    NA | 0.2174 |     920 B |
+ |            DeserializeUserTimelineWithUtf8JsonSerializer |  1,336.2 ns |    NA | 0.0591 |     256 B |
+ |                SerializeWritePermissionWithJilSerializer |    657.5 ns |    NA | 0.3614 |    1520 B |
+ |           SerializeWritePermissionWithUtf8JsonSerializer |    395.3 ns |    NA | 0.0472 |     200 B |
+ |              DeserializeWritePermissionWithJilSerializer |    788.2 ns |    NA | 0.1392 |     584 B |
+ |         DeserializeWritePermissionWithUtf8JsonSerializer |    660.6 ns |    NA | 0.0277 |     120 B |
+ |            SerializeMobileBannerAdImageWithJilSerializer |    428.2 ns |    NA | 0.1621 |     680 B |
+ |       SerializeMobileBannerAdImageWithUtf8JsonSerializer |    202.2 ns |    NA | 0.0205 |      88 B |
+ |          DeserializeMobileBannerAdImageWithJilSerializer |    384.5 ns |    NA | 0.0801 |     336 B |
+ |     DeserializeMobileBannerAdImageWithUtf8JsonSerializer |    343.4 ns |    NA | 0.0205 |      88 B |
+ |                           SerializeSiteWithJilSerializer |  2,827.4 ns |    NA | 1.1368 |    4776 B |
+ |                      SerializeSiteWithUtf8JsonSerializer |  1,785.2 ns |    NA | 0.1755 |     744 B |
+ |                         DeserializeSiteWithJilSerializer |  4,174.0 ns |    NA | 0.6943 |    2928 B |
+ |                    DeserializeSiteWithUtf8JsonSerializer |  3,637.3 ns |    NA | 0.3357 |    1424 B |
+ |                    SerializeRelatedSiteWithJilSerializer |    486.5 ns |    NA | 0.2298 |     968 B |
+ |               SerializeRelatedSiteWithUtf8JsonSerializer |    239.8 ns |    NA | 0.0281 |     120 B |
+ |                  DeserializeRelatedSiteWithJilSerializer |    524.6 ns |    NA | 0.1202 |     504 B |
+ |             DeserializeRelatedSiteWithUtf8JsonSerializer |    511.6 ns |    NA | 0.0448 |     192 B |
+ |                  SerializeClosedDetailsWithJilSerializer |  1,660.3 ns |    NA | 0.6943 |    2920 B |
+ |             SerializeClosedDetailsWithUtf8JsonSerializer |  1,022.2 ns |    NA | 0.1106 |     472 B |
+ |                DeserializeClosedDetailsWithJilSerializer |  2,758.6 ns |    NA | 0.4044 |    1704 B |
+ |           DeserializeClosedDetailsWithUtf8JsonSerializer |  2,201.5 ns |    NA | 0.1640 |     704 B |
+ |                         SerializeNoticeWithJilSerializer |    631.6 ns |    NA | 0.2298 |     968 B |
+ |                    SerializeNoticeWithUtf8JsonSerializer |    366.6 ns |    NA | 0.0300 |     128 B |
+ |                       DeserializeNoticeWithJilSerializer |    564.8 ns |    NA | 0.0944 |     400 B |
+ |                  DeserializeNoticeWithUtf8JsonSerializer |    459.8 ns |    NA | 0.0224 |      96 B |
+ |                  SerializeMigrationInfoWithJilSerializer |  3,171.9 ns |    NA | 1.1902 |    5000 B |
+ |             SerializeMigrationInfoWithUtf8JsonSerializer |  2,106.7 ns |    NA | 0.1945 |     824 B |
+ |                DeserializeMigrationInfoWithJilSerializer |  4,507.9 ns |    NA | 0.7401 |    3128 B |
+ |           DeserializeMigrationInfoWithUtf8JsonSerializer |  4,193.1 ns |    NA | 0.3433 |    1472 B |
+ |                     SerializeBadgeCountWithJilSerializer |    335.0 ns |    NA | 0.1602 |     672 B |
+ |                SerializeBadgeCountWithUtf8JsonSerializer |    207.0 ns |    NA | 0.0207 |      88 B |
+ |                   DeserializeBadgeCountWithJilSerializer |    383.2 ns |    NA | 0.0663 |     280 B |
+ |              DeserializeBadgeCountWithUtf8JsonSerializer |    290.6 ns |    NA | 0.0091 |      40 B |
+ |                        SerializeStylingWithJilSerializer |    474.3 ns |    NA | 0.2093 |     880 B |
+ |                   SerializeStylingWithUtf8JsonSerializer |    175.1 ns |    NA | 0.0284 |     120 B |
+ |                      DeserializeStylingWithJilSerializer |    487.1 ns |    NA | 0.1173 |     496 B |
+ |                 DeserializeStylingWithUtf8JsonSerializer |    437.2 ns |    NA | 0.0434 |     184 B |
+ |               SerializeOriginalQuestionWithJilSerializer |    483.1 ns |    NA | 0.2375 |    1000 B |
+ |          SerializeOriginalQuestionWithUtf8JsonSerializer |    252.2 ns |    NA | 0.0300 |     128 B |
+ |             DeserializeOriginalQuestionWithJilSerializer |    606.1 ns |    NA | 0.1001 |     424 B |
+ |        DeserializeOriginalQuestionWithUtf8JsonSerializer |    434.8 ns |    NA | 0.0224 |      96 B |

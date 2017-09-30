@@ -17,9 +17,15 @@ namespace Benchmark
     {
         public MyConfig()
         {
-            Add(Job.Default);
+            // Add(Job.Default);
+
+            // run quickly:)
+            var baseConfig = Job.ShortRun.WithLaunchCount(1).WithTargetCount(1).WithWarmupCount(1);
+            Add(baseConfig.With(Runtime.Clr).With(Jit.RyuJit).With(Platform.X64));
+
             Add(CsvMeasurementsExporter.Default);
-            Add(new MemoryDiagnoser());
+            Add(MarkdownExporter.GitHub);
+            Add(MemoryDiagnoser.Default);
         }
     }
 }
