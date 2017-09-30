@@ -8,7 +8,7 @@ First line is Jil, Second line is Utf8Json. `Processor=Intel Core i7-6700K CPU 4
 
 `Object <-> byte[](Utf8)`
 ---
-`StackExchange.Redis`'s RedisValue, `gRPC`'s in/out is `byte[]` and others for real-usecases.
+`StackExchange.Redis`'s RedisValue, `gRPC`'s in/out are `byte[]` and others for real-usecases.
 
  |                                                   Method |        Mean | Error |  Gen 0 | Allocated |
  |--------------------------------------------------------- |------------:|------:|-------:|----------:|
