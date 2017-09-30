@@ -1,6 +1,6 @@
 Benchmark of [Jil](https://github.com/kevin-montrose/Jil) vs [Utf8Json](https://github.com/neuecc/Utf8Json/) borrowed from Jil benchmark.
 
-Utf8Json aims optimization for real-case. In almost case, real-case is serialze to/from utf8 binary. This compare table is `Object <-> byte[](Utf8), `Object <-> Stream(Utf8)` and `Object <-> String(UTF16)`.
+Utf8Json aims optimization for real-case. In almost case, real-case is serialze to/from utf8 binary. This compare table is `Object <-> byte[](Utf8)`, `Object <-> Stream(Utf8)` and `Object <-> String(UTF16)`.
 
 If target is UTF8(both `byte[]` and `Stream`), Utf8Json wins and memory allocated is extremely small.
 
